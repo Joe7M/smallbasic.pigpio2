@@ -1,0 +1,13 @@
+import gpio
+
+gpio.Open()
+gpio.SetOutput(18)
+
+for ii = 1 to 10
+  v = !v
+  gpio.Write(18, v)
+  delay(100)
+next
+
+print "done"
+
