@@ -1,14 +1,25 @@
 # I2C
 
-## Command Reference
+Before start coding you need to setup I2C on the Raspberry Pi. Please following these [instructions](setupi2c.html).
 
-### Library
+## I2C Pins
+
+![GPIO PIN NUMBERING](./images/RaspberryPiGPIO.png)
+
+| Pin | Function |
+|:---:|:--------:|
+| 2   | SDA      |
+| 3   | SCL      |
+
+## Library
 
 Access the basic I2C command with the library `i2c`:
 
 ```SmallBASIC
 import i2c
 ```
+
+## Function Reference
 
 ### Open device
 
@@ -17,17 +28,23 @@ id = Open(address)
 id = Open(address, interface)
 ```
 
-__address__ = 0 ... 127 : I2C device address.  
-__interface__: String containing the I2C interface name. Default value: `/dev/i2c-1`  
-__id__: device id
-
 Open a connected I2C device with address `address` on I2C interface `interface`.
 `interface` is an optional parameter. Several devices can be opened. `id` will be
-used to identify device.
+used to identify the device.
+
+- `address`
+  - Integer: 0 ... 127
+  - I2C device address
+- `interface`
+  - String
+  - I2C interface name
+  - Optional parameter. Default value is `/dev/i2c-1`
+- `id`
+  - Device id
 
 Example:
 
-```
+```smallbasic
 id = open(0x55)
 id = open(0x55, "/dev/i2c-1")
 ```
@@ -38,10 +55,11 @@ id = open(0x55, "/dev/i2c-1")
 Close(id)
 ```
 
-__id__: Device id
-
 When closing a SmallBASIC program, I2C access will be automatically closed. If you want
 to manually close I2C access for the device with device id `id`, use this function.
+
+- `id`
+  - Device id
 
 ### Write to I2C device
 
@@ -50,15 +68,21 @@ Write(id, dataByte)
 Write(id, dataArray)
 ```
 
-__id__: device id  
-__dataByte__ = 0 ... 255: one byte of data  
-__dataArray__ = [0 ... 255, 0 ... 255, ... ]: 1D-array of bytes
+Send one byte `dataByte` or an 1d array `dataArray` of bytes to the devices with
+device id `id`.
 
-Send one byte `dataByte` or an 1d array `dataArray` of bytes to the devices with device id `id`.
+- `id`
+  - Device id
+- dataByte
+  - Integer: 0 ... 255
+  - One byte of data
+- dataArray
+  - 1D-array of integers [0 ... 255, 0 ... 255, ... ]
+  - Array of byte data
 
 Example:
 
-```
+```SmallBasic
 Write(id, 0x20)
 Write(id, [0x20, 0x21, 0xA3])
 ```
@@ -70,16 +94,24 @@ WriteReg(id, reg, dataByte)
 WriteReg(id, reg, dataArray)
 ```
 
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__dataByte__ = 0 ... 255: one byte of data  
-__dataArray__ = [0 ... 255, 0 ... 255, ... ]: 1D-array of bytes
+Send one byte `dataByte` or an 1d array `dataBytes` of bytes to the devices with
+device id `id`.
 
-Send one byte `dataByte` or an 1d array `dataBytes` of bytes to the devices with device id `id`.
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- dataByte
+  - Integer: 0 ... 255
+  - One byte of data
+- dataArray
+  - 1D-array of integers [0 ... 255, 0 ... 255, ... ]
+  - Array of byte data
 
 Example:
 
-```
+```smallbasic
 WriteReg(id, 0x05, 0x20)
 WriteReg(id, 0x05, [0x20, 0x21, 0xA3])
 ```
@@ -91,11 +123,19 @@ res = Read(id)
 res = Read(id, bytes)
 ```
 
-__id__: device id  
-__bytes__: number of bytes to read from device. Default value is `1`  
-__res__: data read from device. if more than 1 byte is read, `res` is an 1d array.
+Read number of bytes `bytes` from the device with device id `id`. `bytes` is an
+optional parameter.
 
-Read number of bytes `bytes` from the device with device id `id`. `bytes` is an optional parameter.
+- `id`
+  - Device id
+- bytes
+  - Integer
+  - Number of bytes to read from device
+  - Optional paramater. Default value is `1`
+- `res`
+  - Integer or 1d-array of integer
+  - Data read from device
+  - If more than 1 byte is read, `res` is an 1d array.
 
 ### Read register of I2C device
 
@@ -103,17 +143,26 @@ Read number of bytes `bytes` from the device with device id `id`. `bytes` is an 
 res = Read(id, reg)
 res = Read(id, reg, bytes)
 ```
+Read number of bytes `bytes` from the register `reg` of the device with device id
+`id`. `bytes` is an optional parameter.
 
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__bytes__: number of bytes to read from device. Default value is `1`  
-__res__: data read from device. if more than 1 byte is read, `res` is an 1d array.
-
-Read number of bytes `bytes` from the register `reg` of the device with device id `id`. `bytes` is an optional parameter.
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- `bytes`
+  - Integer
+  - Number of bytes to read from device.
+  - Optional paramaeter. Default value is `1`
+- `res`
+  - Integer or 1d-array of integer
+  - Data read from device
+  - If more than 1 byte is read, `res` is an 1d array.
 
 Example:
 
-```
+```smallbasic
 res = ReadReg(id, 0x05)       ' Read one byte from register 0x05
 res = ReadReg(id, 0x05, 5)    ' Read five bytes from register 0x05
 ```
@@ -124,15 +173,20 @@ res = ReadReg(id, 0x05, 5)    ' Read five bytes from register 0x05
 res = SmbusReadByte(id, reg)
 ```
 
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__res__: data read from device.
-
 Read one byte from the register `reg` of the SMBus device with device id `id`.
+
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- `res`
+  - Integer: 0 ... 255
+  - Data read from device
 
 Example:
 
-```
+```smallbasic
 res = SmbusReadByte(id, 0x05)       ' Read one byte from register 0x05
 ```
 
@@ -142,15 +196,20 @@ res = SmbusReadByte(id, 0x05)       ' Read one byte from register 0x05
 res = SmbusReadWord(id, reg)
 ```
 
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__res__: data read from device.
-
 Read one word (2 bytes) from the register `reg` of the SMBus device with device id `id`.
+
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- `res`
+  - Integer: 0 ... 65535
+  - Data read from device
 
 Example:
 
-```
+```smallbasic
 res = SmbusReadWord(id, 0x05)       ' Read one byte from register 0x05
 ```
 
@@ -160,15 +219,20 @@ res = SmbusReadWord(id, 0x05)       ' Read one byte from register 0x05
 SmbusWriteByte(id, reg, data)
 ```
 
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__data__ = 0 ... 255: data
-
 Send one byte to the register `reg` of the SMBus device with device id `id`.
+
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- `data`
+  - Integer: 0 ... 255
+  - One byte of data
 
 Example:
 
-```
+```smallbasic
 SmbusWriteByte(id, 0x05, 0xA2)       ' Write 0xA2 to register 0x05
 ```
 
@@ -177,22 +241,28 @@ SmbusWriteByte(id, 0x05, 0xA2)       ' Write 0xA2 to register 0x05
 ```
 SmbusWriteWord(id, reg, data)
 ```
-
-__id__: device id  
-__reg__ = 0 ... 255: register  
-__data__ = 0 ... 65535: data
-
 Send one word (2 bytes) to the register `reg` of the SMBus device with device id `id`.
+
+- `id`
+  - Device id
+- `reg`
+  - Integer: 0 ... 255
+  - Device register
+- `data`
+  - Integer: 0 ... 65535
+  - Two byte of data
 
 Example:
 
-```
+```smallbasic
 SmbusWriteWord(id, 0x05, 0xA202)       ' Write 0xA202 to register 0x05
 ```
 
 ## Examples
 
 ### 1. BH1750 - Ambient Light Sensor
+
+![EXAMPLE BH1750](./images/bh1750_wiring.png)
 
 ```SmallBASIC
 import i2c
