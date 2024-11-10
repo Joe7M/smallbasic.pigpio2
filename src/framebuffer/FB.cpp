@@ -314,7 +314,7 @@ int CMD_RoundRect(int argc, slib_par_t *params, var_t *retval)
   uint16_t y1 = get_param_int(argc, params, 2, 0);
   uint16_t x2 = get_param_int(argc, params, 3, 0);
   uint16_t y2 = get_param_int(argc, params, 4, 0);
-  uint8_t r = get_param_int(argc, params, 5, 3);
+  uint8_t r = get_param_int(argc, params, 5, 4);
   uint32_t c = get_param_int(argc, params, 6, fblist.at(id).GetFGColor());
   uint8_t filled = get_param_int(argc, params, 7, 0);
 

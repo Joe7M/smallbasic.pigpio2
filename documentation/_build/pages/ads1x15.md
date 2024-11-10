@@ -22,7 +22,8 @@ Open(interface, address)
 Open(interface, address, version)
 ```
 
-Open the ADS1X15 on interface `interface` with I2C address `address` and device type `version`.
+Open the ADS1X15 on interface `interface` with I2C address `address`
+and device type `version`.
 
 
 - `interface`
@@ -156,7 +157,20 @@ Close()
 Close the ADS1X15 device.
 
 
-## SmallBASIC Example
+## Example
+
+For running this example, you need an ADS1015 or ADS1115 sensor. SmallBASIC
+PiGPIO 2 is using the I2C-protocol for communication. The Raspberry Pi
+supports this protocol in hardware, but by default the protocol is disabled.
+Therefore you have to setup I2C as described [here](./setupi2c.html).
+
+In the next step please wire the sensor as shown in the following image.
+The example is using an ADS1115 but the ADS1015 will work, too. Use a 10K
+potentiometer.
+
+![Wiring ads1115](./images/ads1115_wiring.png)
+
+The I2C bus is using pin 2 (SDA1) and 3 (SCL1). The sensor can be driven with a voltage from 2.2 to 5.5V. The input pins can be connected to -0.3V to VDD + 0.3V. If you drive the sensor with 5V from the Pi, the maximum allowed voltage at the input pins is 5.3V. If you drive the sensor with 3.3V, the maximum allowed voltage at the input pins is 3.6V.
 
 ```SmallBasic
 import ads1x15 as adc

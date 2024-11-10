@@ -73,10 +73,10 @@ device id `id`.
 
 - `id`
   - Device id
-- dataByte
+- `dataByte`
   - Integer: 0 ... 255
   - One byte of data
-- dataArray
+- `dataArray`
   - 1D-array of integers [0 ... 255, 0 ... 255, ... ]
   - Array of byte data
 
@@ -102,10 +102,10 @@ device id `id`.
 - `reg`
   - Integer: 0 ... 255
   - Device register
-- dataByte
+- `dataByte`
   - Integer: 0 ... 255
   - One byte of data
-- dataArray
+- `dataArray`
   - 1D-array of integers [0 ... 255, 0 ... 255, ... ]
   - Array of byte data
 
@@ -128,7 +128,7 @@ optional parameter.
 
 - `id`
   - Device id
-- bytes
+- `bytes`
   - Integer
   - Number of bytes to read from device
   - Optional paramater. Default value is `1`
@@ -258,11 +258,9 @@ Example:
 SmbusWriteWord(id, 0x05, 0xA202)       ' Write 0xA202 to register 0x05
 ```
 
-## Examples
+## Example Code
 
 ### 1. BH1750 - Ambient Light Sensor
-
-![EXAMPLE BH1750](./images/bh1750_wiring.png)
 
 ```SmallBASIC
 import i2c
@@ -312,3 +310,7 @@ print "USB Power connected: "; IsPowerConnected
 
 print "Seconds of RTC: "; i2c.SmbusReadByte(PiSugar, 0x37)
 ```
+
+## Links
+
+- [BH1750 - Ambient Light Sensor](./bh1750_generic_i2c.html)

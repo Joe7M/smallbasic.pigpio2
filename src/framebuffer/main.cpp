@@ -31,21 +31,21 @@ FUNC_SIG lib_func[] =
 
 static FUNC_SIG lib_proc[] =
 {
-  {1, 1, "CLOSE",         CMD_Close},
+  {1, 3, "AT",            CMD_At},
+  {4, 6, "CIRCLE",        CMD_Circle},
   {1, 2, "CLEAR",         CMD_Clear},
-  {3, 6, "CIRCLE",        CMD_Circle},
-  {1, 3, "COLOR",         CMD_Color},
-  {1, 5, "SETARRAY",      CMD_CopyToDisplay},
+  {1, 1, "CLOSE",         CMD_Close},
+  {2, 3, "COLOR",         CMD_Color},
   {5, 6, "LINE",          CMD_Line},
   {5, 7, "RECT",          CMD_Rect},
-  {6, 8, "ROUNDRECT",     CMD_RoundRect},
+  {5, 8, "ROUNDRECT",     CMD_RoundRect},
   {7, 9, "TRIANGLE",      CMD_Triangle},
   {2, 3, "PRINT",         CMD_Print},
+  {2, 5, "SETARRAY",      CMD_CopyToDisplay},
   {3, 4, "SETPIXEL",      CMD_SetPixel},
   {2, 2, "SETTEXTSIZE",   CMD_SetTextSize},
-  {1, 3, "AT",            CMD_At},
-  {1, 1, "WAITFORVSYNC",  CMD_WaitForVSync},
-  {1, 1, "SWAPBUFFER",    CMD_SwapBuffer}
+  {1, 1, "SWAPBUFFER",    CMD_SwapBuffer},
+  {1, 1, "WAITFORVSYNC",  CMD_WaitForVSync}
 };
 
 

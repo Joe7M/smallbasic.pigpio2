@@ -3,13 +3,11 @@ title: Digital Input and Output using the GPIO pins
 date: 08.11.2024
 ---
 
-# GPIO
-
 ## GPIO pin numbering
 
 The pins on the Raspberry Pi are number according to Broadcom's GPIO numbering:
 
-![GPIO PIN NUMBERING](./images/RaspberryPiGPIO.png)
+![GPIO pin numbering](./images/RaspberryPiGPIO.png)
 
 ## Library
 
@@ -179,11 +177,9 @@ Close()
 When closing a SmallBASIC program, gpio access will be automatically closed. If you want
 to manually close gpio access, use this function.
 
-## Examples
+## Example Code
 
 ### 1. LED
-
-![EXAMPLE LED](./images/LED_wiring.png)
 
 ```SmallBASIC
 import gpio
@@ -199,8 +195,6 @@ next
 ```
 
 ### 2. Button
-
-![EXAMPLE PUSH BUTTON](./images/PushButton_wiring.png)
 
 ```SmallBASIC
 import gpio
@@ -234,8 +228,6 @@ next
 
 ### 4. Wait for Trigger
 
-![EXAMPLE PUSH BUTTON](./images/PushButton_wiring.png)
-
 ```SmallBASIC
 import gpio
 
@@ -252,3 +244,8 @@ select case result
   case -1: print "Error"
 end select
 ```
+
+## Links
+
+- [Blinking LED](./led_gpio.html)
+- [Push button](./pushbutton_gpio.html)
