@@ -8,6 +8,7 @@
 
 
 
+#include <cstdint>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
@@ -54,6 +55,8 @@ int CMD_Init(int argc, slib_par_t *params, var_t *retval)
   uint8_t UseDoubleBuffering = false;
 
   const char *fbdevice = get_param_str(argc, params, 0, "/dev/fb0");
+  uint8_t UseMouse = get_param_int(argc, params, 1, 1);
+  uint8_t HideText = get_param_int(argc, params, 2, 1);
 
   // Open the framebuffer device file for reading and writing
   fbfd = open(fbdevice, O_RDWR);
@@ -160,30 +163,37 @@ int CMD_Init(int argc, slib_par_t *params, var_t *retval)
   }
   */
 
-  // Open Mouse
-  const char *pDevice = "/dev/input/mice";
-
-  MouseID = open(pDevice, O_RDWR);
-  if(MouseID == -1)
+  
+  if(UseMouse)
   {
-    v_setstr(retval, "Cannot open mouse device.");
-    return(0);
+    // Open Mouse
+    const char *pDevice = "/dev/input/mice";
+
+    MouseID = open(pDevice, O_RDWR);
+    if(MouseID == -1)
+    {
+      v_setstr(retval, "Cannot open mouse device.");
+      return(0);
+    }
   }
 
-  // hide cursor
-  const char *kbfds = "/dev/tty0";
-  kbfd = open(kbfds, O_WRONLY);
-  if (kbfd >= 0)
+  if(HideText)
   {
-      ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
+    // hide cursor
+    const char *kbfds = "/dev/tty0";
+    kbfd = open(kbfds, O_WRONLY);
+    if (kbfd >= 0)
+    {
+        ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
+    }
+    else
+    {
+      printf("Failed hidding cursor and text. Start with sudo might help.\n");
+      //v_setstr(retval, "Failed hidding cursor.");
+      //return(0);
+    }
   }
-  else
-  {
-    printf("Failed hidding cursor and text. Start with sudo might help.\n");
-    //v_setstr(retval, "Failed hidding cursor.");
-    //return(0);
-  }
-
+  
   fbdrawtemp.Init(vinfo.xres, vinfo.yres, vinfo.bits_per_pixel, fbp);
   fbdrawtemp.SetDoubleBuffering(UseDoubleBuffering);
   fbdrawtemp.SetFrameBufferFileID(fbfd);

@@ -25,7 +25,7 @@ FUNC_SIG lib_func[] =
 {
   {1, 5, "GETARRAY",  CMD_CopyFromDisplay},
   {0, 0, "GETMOUSE",  CMD_GetMouse},
-  {0, 1, "OPEN",      CMD_Init},
+  {0, 3, "OPEN",      CMD_Init},
 };
 
 

@@ -19,7 +19,7 @@ for xx = 10 to 40
     next
 next
 
-id = FB.Open("/dev/fb0")
+id = FB.Open("/dev/fb0", 1, 1)
 
 StartTime = ticks()
 
@@ -61,6 +61,9 @@ FB.SwapBuffer(id)
 
 ElapsedTime = ticks() - StartTime
 
-print "Time per frame: " + ElapsedTime/60 + "ms"
+FB.at(id, 0, 350)
+FB.print(id, "Time per frame: " + ElapsedTime/60 + "ms")
+
+delay(5000)
 
 FB.Close(id)

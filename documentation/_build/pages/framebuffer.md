@@ -25,17 +25,31 @@ import framebuffer
 ```
 id = Open()
 id = Open(device)
+id = Open(device, UseMouse)
+id = Open(device, UseMouse, HideText)
 
 ```
 
 Open the framebuffer with device name `device` and return a device
 id `id`. Serveral framebuffers can be opened at the same time. `id`
-is used to select a framebuffer.
+is used to select a framebuffer. `UseMouse` can be set to `0`, if 
+you don't want to use the mouse. If `HideText` is `1`, the current
+text dislay on the console will be hidden. Additionally the blinking
+text cursor will be disabled. After ending the program, the console
+will be restored.
 
 - `device`
   - String
   - Framebuffer device
   - Parameter is optional. Default value is `"/dev/fb0"`
+- `UseMouse`
+  - Integer: 0, 1
+  - If 1, the mouse will be initialized
+  - Optional parameter. Default value is 1.
+- `HideText`
+  - Integer: 0, 1
+  - If 1, console text will be hidden and cursor disabled.
+  - Optional parameter. Default value is 1.
 - `id`
   - Device id
 

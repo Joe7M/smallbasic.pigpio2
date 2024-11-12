@@ -33,6 +33,7 @@ autom4te.cache
 /src/missing
 /src/stamp-h1
 /src/aux-dist
+/src/config.h
 
 # https://www.gnu.org/software/libtool/
 
@@ -139,3 +140,4 @@ dkms.conf
 .*
 Makefile
 !/documentation/_build/Makefile
+/src/libtool
