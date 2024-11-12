@@ -13,23 +13,30 @@ AC_LANG([C])
 AC_LANG([C++])
 AM_INIT_AUTOMAKE([subdir-objects foreign])
 
-AC_CHECK_LIB(gpiod, gpiod_chip_open_by_name, [], [
-        echo "Error! libgpiod not found."
-        exit -1
-        ])
+BUILD_SUBDIRS=""
 
-AC_CHECK_LIB(i2c, i2c_smbus_read_byte_data, [], [
-        echo "Error! libi2c not found."
-        exit -1
-        ])
+AC_CHECK_LIB(gpiod, gpiod_chip_open_by_name, [have_gpiod="yes"], [have_gpiod="no"])
+if test "${have_gpiod}" = "no" ; then
+    AC_MSG_WARN([libgpiod v1.6. not installed: building without gpio support.])
+else
+    GPIO_LDFLAGS="-lgpiod"
+    AC_SUBST(GPIO_LDFLAGS)
+    BUILD_SUBDIRS="${BUILD_SUBDIRS} gpio"
+fi
+
+
+AC_CHECK_LIB(i2c, i2c_smbus_read_byte_data, [have_i2c="yes"], [have_i2c="no"])
+if test "${have_i2c}" = "no" ; then
+    AC_MSG_WARN([libi2c not installed: building without I2C support.])
+else
+    I2C_LDFLAGS="-li2c"
+    AC_SUBST(I2C_LDFLAGS)
+    BUILD_SUBDIRS="${BUILD_SUBDIRS} i2c bmp180 ads1x15 ssd1306"
+fi
 
 PLATFORM_LDFLAGS="-Wl,--no-undefined -avoid-version"
-GPIO_LDFLAGS="-lgpiod"
-I2C_LDFLAGS="-li2c"
-
 AC_SUBST(PLATFORM_LDFLAGS)
-AC_SUBST(GPIO_LDFLAGS)
-AC_SUBST(I2C_LDFLAGS)
+
 
 dnl change default aru setting to avoid warning
 ARFLAGS=cr
@@ -39,7 +46,7 @@ LT_INIT([dlopen])
 LT_PREREQ([2.2])
 AC_PROG_CXX
 
-BUILD_SUBDIRS="spi bmp180 ads1x15 ssd1306 i2c gpio framebuffer"
+BUILD_SUBDIRS="${BUILD_SUBDIRS} spi framebuffer"
 AC_SUBST(BUILD_SUBDIRS)
 
 libdir=${libdir}/smallbasic
