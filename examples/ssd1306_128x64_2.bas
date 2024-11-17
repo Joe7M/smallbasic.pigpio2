@@ -44,17 +44,17 @@ dim Background
 
 for xx = 1 to 127
   ' Save the part of the OLED display, where we want to draw the smiley.
-  Background = ssd1306.CopyFromDisplay(xx, 25, 16, 16)
+  Background = ssd1306.GetArray(xx, 25, 16, 16)
   ' Copy the array to the display: 
   ' Mode = 3 -> Pixel value: 0=Black;
   ' 255=White; Every other number is
   ' rendered transparent
-  ssd1306.CopyToDisplay(SmilyGuyArray, xx, 25, 3)
+  ssd1306.SetArray(SmilyGuyArray, xx, 25, 3)
   ssd1306.Display()
   ' Copy the saved background back to the display. This will remove the
   ' smiley. In the next iteration of the loop, you have the original
   ' background image.
-  ssd1306.CopyToDisplay(Background, xx, 25)
+  ssd1306.SetArray(Background, xx, 25)
 next
 
 delay(2000)

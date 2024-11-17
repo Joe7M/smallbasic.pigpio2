@@ -21,12 +21,12 @@ char *programSource = nullptr;
 //Min. parameter , max. parameters, function name in Basic, function in c 
 FUNC_SIG lib_func[] =
 {
-  {0, 4, "CopyFromDisplay", CMD_CopyFromDisplay}
+  {0, 4, "GetArray", CMD_CopyFromDisplay}
 };
 
 static FUNC_SIG lib_proc[] =
 {
-  {1, 4, "Open",          CMD_Open},
+  {0, 4, "Open",          CMD_Open},
   {0, 0, "Close",         CMD_Close},
   {0, 0, "Display",       CMD_Display},
   {0, 1, "Cls",           CMD_ClearDisplay},
@@ -37,7 +37,7 @@ static FUNC_SIG lib_proc[] =
   {3, 5, "Circle",        CMD_Circle},
   {6, 8, "Triangle",      CMD_Triangle},
   {0, 2, "Print",         CMD_Print},
-  {1, 4, "CopyToDisplay", CMD_CopyToDisplay},
+  {1, 4, "SetArray",      CMD_CopyToDisplay},
   {1, 1, "SetTextSize",   CMD_SetTextSize},
   {2, 2, "At",            CMD_At},
   {0, 1, "SetBrightness", CMD_SetBrightness},

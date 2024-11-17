@@ -26,9 +26,6 @@ ssd1306.Circle(118,10,5,1,1) 'Filled with white
 'ssd1306.SetTextSize(16)
 'ssd1306.Print("SmallBASIC")
 ssd1306.Display()
-ssd1306.Display()
-
-
 
 delay(2000)
 ssd1306.Close()

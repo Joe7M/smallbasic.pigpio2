@@ -116,7 +116,7 @@ void SSD1306_Command(uint8_t command)
 
 int CMD_Open(int argc, slib_par_t *params, var_t *retval)
 {
-  const char *text = get_param_str(argc, params, 0, NULL);
+  const char *text = get_param_str(argc, params, 0, "/dev/i2c-1");
   char *device = new char[strlen(text) + 2];
   strcpy(device,text);
   uint8_t Address = get_param_int(argc, params, 1, 0x3C);

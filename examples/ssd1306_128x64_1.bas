@@ -18,7 +18,7 @@ ssd1306.rect(0,0,127,63)
 
 ' Transfer framebuffer to display
 s = ticks
-ssd1306.Display()         ' c._dat is the canvas framebuffer
+ssd1306.Display()
 print ticks - s
 delay(2000)
 
