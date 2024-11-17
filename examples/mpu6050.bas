@@ -4,12 +4,12 @@
 ' This examample demonstrates how to use
 ' the MPU-6050 I2C sensor.
 ' 
-' Connect the sensor to the IOIO-OTG board:
+' Connect the sensor to the Raspberry Pi:
 '
 ' ------         ------
-'  IOIO |       |MPU6050
-'  PIN 4|-------|SDA 
-'  PIN 5|-------|SCL
+'  RPi  |       |MPU6050
+'  PIN 2|-------|SDA 
+'  PIN 3|-------|SCL
 '  GND  |-------|GND
 '  3.3V |-------|VIN
 '       |       |XCL
@@ -19,11 +19,8 @@
 '-------         ------
 
 ' If ADD is open or connected to GND, 0x68 as I2C address 
-' will be used. Otherwise 0x69. 
+' will be used. Otherwise 0x69.
 ' Don't connect XCL, XDA, ADD and INT
-' 
-' "https://github.com/tockn/MPU6050_tockn" was very helpful
-' to get the sensor working
 
 import mpu6050
 

@@ -33,11 +33,11 @@ float GyroscopeLSBSensitivity = 65.5;
 
 int CMD_Open(int argc, slib_par_t *params, var_t *retval)
 {
-  const char *text = get_param_str(argc, params, 0, NULL);
+  const char *text = get_param_str(argc, params, 0, "/dev/i2c-0");
   char *device = new char[strlen(text) + 2];
   strcpy(device,text);
   uint8_t Address = get_param_int(argc, params, 1, 0x68);
-  
+
   fd = open(device, O_RDWR);
   if (fd < 0)
   {
@@ -172,7 +172,7 @@ int CMD_GetTemperature(int argc, slib_par_t *params, var_t *retval)
  */
 int CMD_GyroscopeConfig(int argc, slib_par_t *params, var_t *retval)
 {
-  uint16_t Setting = get_param_int(argc, params, 1, 250);
+  uint16_t Setting = get_param_int(argc, params, 0, 250);
 
   switch(Setting)
   {
@@ -219,7 +219,7 @@ int CMD_GyroscopeConfig(int argc, slib_par_t *params, var_t *retval)
  */
 int CMD_AccelerationConfig(int argc, slib_par_t *params, var_t *retval)
 {
-  uint8_t Setting = get_param_int(argc, params, 1, 2);
+  uint8_t Setting = get_param_int(argc, params, 0, 2);
 
   switch(Setting)
   {
