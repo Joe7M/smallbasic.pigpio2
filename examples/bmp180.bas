@@ -1,22 +1,15 @@
-' MPU6050 - Accelerometer, gyroscope and temperature sensor
-' =========================================================
+' BMP180 - Measure temperature and pressure
+' =========================================
 '
 ' This examample demonstrates how to use
-' the MPU-6050 I2C sensor.
-' 
-' Connect the sensor to the IOIO-OTG board:
+' the BMP180 I2C sensor.
 '
-' ------         ------
-'  IOIO |       |MPU6050
-'  PIN 4|-------|SDA 
-'  PIN 5|-------|SCL
-'  GND  |-------|GND
-'  3.3V |-------|VIN
-'       |       |XCL
-'       |       |XDA
-'       |       |ADD
-'       |       |INT
-'-------         ------
+' -------         -------
+' BMP180 |       | RPi
+'    VIN |-------| 3.3V
+'    GND |-------| GND
+'    SDA |-------| GPIO 2 (SDA)
+'    SCL |-------| GPIO 3 (SCL)
 
 
 import bmp180
@@ -26,11 +19,10 @@ bmp180.open("/dev/i2c-1", 0x77)
 delay(500)
 
 for ii = 1 to 50
-    M = bmp180.StartMeasurement()
-    
-    locate 5,0
-    print "T: "; M[0]; "  P: "; M[1]    
+  M = bmp180.StartMeasurement()
 
-    delay(500)
-    showpage
+  locate 5,0
+  print "T: "; M[0]; "  P: "; M[1]
+
+  delay(500)
 next

@@ -27,7 +27,7 @@ FUNC_SIG lib_func[] =
 static FUNC_SIG lib_proc[] =
 {
   {0, 0, "Close", CMD_Close},
-  {1, 2, "Open",  CMD_Open},
+  {0, 2, "Open",  CMD_Open},
 };
 
 SBLIB_API int sblib_proc_count()
