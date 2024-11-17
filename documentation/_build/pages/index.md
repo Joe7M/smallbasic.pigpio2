@@ -46,11 +46,11 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [Generic I2C](./i2c.html): Generic I2C and SMBus interface
 - X [Generic SPI](./spi.html): Generic SPI interface
 - [Framebuffer](./framebuffer.html): Graphics output to the Linux framebuffer
-- X [SSD1306 compatible OLED Display](./ssd1306.html): Graphics on this a small and cheap b&w OLED display
+- [SSD1306 compatible OLED Display](./ssd1306.html): Graphics on this a small and cheap b&w OLED display
 - [BH1750 Ambient Light Sensor](./bh1750.html): Measure ambient light
 - [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html): Measure voltages
-- X [BMP180](./bmp180.html): Measure temperature and pressure
-- X [MPU6050](./mpu6050.html): Accelerometer and gyroscope
+- [BMP180](./bmp180.html): Measure temperature and pressure
+- [MPU6050](./mpu6050.html): Accelerometer and gyroscope
 
 ## Examples
 

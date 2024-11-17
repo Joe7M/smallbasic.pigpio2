@@ -4,7 +4,7 @@ dnl
 dnl This program is distributed under the terms of MIT
 dnl
 
-AC_INIT([smallbasicpigpio],[1.0])
+AC_INIT([smallbasicpigpio],[2.0])
 AC_CONFIG_AUX_DIR(aux-dist)
 AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_SRCDIR([include/param.cpp])

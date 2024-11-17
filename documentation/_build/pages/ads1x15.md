@@ -3,6 +3,8 @@ title: "ADS1X15 - Analog to Digital Converter"
 date : 07.11.2024
 ---
 
+The ADS1015 and ADS1115 are analog voltage sensors using the I2C-protocol for communication.
+
 ## Library
 
 To use the ADS1x15, import the library `ads1x15`
