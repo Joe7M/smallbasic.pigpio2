@@ -25,6 +25,7 @@ FUNC_SIG lib_func[] =
 {
   {1, 5, "GETARRAY",  CMD_CopyFromDisplay},
   {0, 0, "GETMOUSE",  CMD_GetMouse},
+  {1, 1, "GETINFO",   CMD_GetInfo},
   {0, 3, "OPEN",      CMD_Init},
 };
 
@@ -33,7 +34,7 @@ static FUNC_SIG lib_proc[] =
 {
   {1, 3, "AT",            CMD_At},
   {4, 6, "CIRCLE",        CMD_Circle},
-  {1, 2, "CLEAR",         CMD_Clear},
+  {1, 2, "CLS",           CMD_Clear},
   {1, 1, "CLOSE",         CMD_Close},
   {2, 3, "COLOR",         CMD_Color},
   {5, 6, "LINE",          CMD_Line},
@@ -42,7 +43,7 @@ static FUNC_SIG lib_proc[] =
   {7, 9, "TRIANGLE",      CMD_Triangle},
   {2, 3, "PRINT",         CMD_Print},
   {2, 5, "SETARRAY",      CMD_CopyToDisplay},
-  {3, 4, "SETPIXEL",      CMD_SetPixel},
+  {3, 4, "PSET",          CMD_SetPixel},
   {2, 2, "SETTEXTSIZE",   CMD_SetTextSize},
   {1, 1, "SWAPBUFFER",    CMD_SwapBuffer},
   {1, 1, "WAITFORVSYNC",  CMD_WaitForVSync}

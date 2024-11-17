@@ -20,6 +20,7 @@ class LinuxFrameBufferDraw : public FBDraw
 {
   public:
     void SetDoubleBuffering(uint8_t TrueFalse) {UseDoubleBuffer = TrueFalse;};
+    uint8_t GetDoubleBuffering(void) {return UseDoubleBuffer;};
     int32_t GetFrameBufferFileID(void) {return fbfd;};
     void SetFrameBufferFileID(int32_t f) {fbfd = f;};
     void SwapBuffers(void);
@@ -51,5 +52,6 @@ int CMD_At(int argc, slib_par_t *params, var_t *retval);
 int CMD_WaitForVSync(int argc, slib_par_t *params, var_t *retval);
 int CMD_SwapBuffer(int argc, slib_par_t *params, var_t *retval);
 int CMD_GetMouse(int argc, slib_par_t *params, var_t *retval);
+int CMD_GetInfo(int argc, slib_par_t *params, var_t *retval);
 
 #endif /* !_FB_H_ */ 

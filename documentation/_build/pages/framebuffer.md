@@ -64,6 +64,25 @@ Close the framebuffer device with device id `id`.
 - `id`
   - Deviced id
 
+### Get Framebuffer Information
+
+```
+info = GetInfo(id)
+```
+
+Provide resolution, color bit-depth per pixel (bpp) and if double buffering is enabled.
+
+- `id`
+  - Deviced id
+- `info`
+  - 1d-array of integers
+  - `info[0]`: pixel in x
+  - `info[1]`: pixel in y
+  - `info[2]`: bits per pixel
+  - `info[3]`: 0,1
+    - 0: Double buffering disabled
+    - 1: Double buffering enabled
+
 ### Set Color
 
 ```
@@ -104,8 +123,8 @@ Color(id, BLUE)
 ### Clear Screen
 
 ```
-Clear(id)
-Clear(id, color)
+Cls(id)
+Cls(id, color)
 ```
 
 Clear the screen using color `color`. If color is omitted, the current
@@ -116,12 +135,13 @@ background color is used.
 - `color`
   - Integer: 32bit
   - Clear color
+  - Optional parameter. Default value is current background color.
 
 ### Draw a Pixel
 
 ```
-SetPixel(id, x1, y1)
-SetPixel(id, x1, y1, color)
+Pset(id, x1, y1)
+Pset(id, x1, y1, color)
 ```
 
 Draw a pixel at point `(x1, y1)` with color `color`

@@ -34,6 +34,7 @@ class FBDraw
     void Text(char *_text, uint32_t color);
     uint16_t GetWidth(void) {return width;};
     uint16_t GetHeight(void) {return height;};
+    uint8_t  GetBpp(void) {return bpp;};
     uint8_t* GetFrameBufferAddress(void) {return FrameBuffer;};
     uint32_t GetScreensize(void) {return width * height * bpp / 8;};
     uint32_t GetFGColor(void) {return FG_Color;};

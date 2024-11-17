@@ -1,6 +1,6 @@
 OPTION BASE 1
 
-import Framebuffer as FB
+import framebuffer as FB
 
 FILL = true
 TRANSPARENT = true
@@ -19,15 +19,15 @@ for xx = 10 to 40
     next
 next
 
-id = FB.Open("/dev/fb0", 1, 1)
+id = FB.Open("/dev/fb0", 0, 1)
 
 StartTime = ticks()
 
-FB.Clear(id)
+FB.Cls(id)
 FB.Color(id, 0x0000FF00)
-FB.SetPixel(id, 10,10)
-FB.SetPixel(id, 20,10, 0x0000FFFF)
-FB.setPixel(id, 30,10, 0x000000FF)
+FB.PSet(id, 10,10)
+FB.PSet(id, 20,10, 0x0000FFFF)
+FB.PSet(id, 30,10, 0x000000FF)
 
 FB.Line(id, 50,10,100,60, 0x00FFFFFF)
 
@@ -63,6 +63,11 @@ ElapsedTime = ticks() - StartTime
 
 FB.at(id, 0, 350)
 FB.print(id, "Time per frame: " + ElapsedTime/60 + "ms")
+
+Info = FB.GetInfo(id)
+FB.Print(id, "Resolution: " + Info[0] + " x " + Info[1] + " pixel")
+FB.Print(id, "BPP:        " + Info[2] + " bit")
+FB.Print(id, "Double Buffering: " + Info[3])
 
 delay(5000)
 

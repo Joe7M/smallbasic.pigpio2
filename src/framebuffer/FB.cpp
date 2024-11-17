@@ -206,6 +206,19 @@ int CMD_Init(int argc, slib_par_t *params, var_t *retval)
   return(1);
 }
 
+int CMD_GetInfo(int argc, slib_par_t *params, var_t *retval)
+{
+  uint8_t id = get_param_int(argc, params, 0, 0);
+
+  v_toarray1(retval, 4);
+  v_setint(v_elem(retval, 0), fblist.at(id).GetWidth());
+  v_setint(v_elem(retval, 1), fblist.at(id).GetHeight());
+  v_setint(v_elem(retval, 2), fblist.at(id).GetBpp());
+  v_setint(v_elem(retval, 3), fblist.at(id).GetDoubleBuffering());
+
+  return(1);
+}
+
 int CMD_SwapBuffer(int argc, slib_par_t *params, var_t *retval)
 {
   uint8_t id = get_param_int(argc, params, 0, 0);
