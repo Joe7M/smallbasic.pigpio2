@@ -181,6 +181,20 @@ to manually close gpio access, use this function.
 
 ### 1. LED
 
+In the following image you can see how to wire a LED.
+
+![LED wiring](./images/led_wiring.png)
+
+Depending on the type of LED you need a certain resistor. When using the LED without a resistor,
+you will destroy the LED and maybe even parts of your Raspberry Pi.
+
+When you buy a LED, look for two important values in the specification: Forward Voltage and Forward Current.
+The third important value is the Supply Voltage. In case of a Raspberry Pi it is 3.3V. Online you
+can find many LED resistor calculators. But if you want to see your LED blinking without studying to much
+and you don't expect maximum brightness, then go for 220 Ohms or even 1000 Ohms.
+
+Connect the resistor to pin 4 and the LED to ground.
+
 ```SmallBASIC
 import gpio
 
@@ -195,6 +209,13 @@ next
 ```
 
 ### 2. Button
+
+In the following image you see the wiring of a push button. 
+When you press the button, the circuit will be closed, otherwise
+the circuit is open. The button is connected to pin 4 and
+ground. An internal pullup resistor will be enabled automatically.
+
+![Wiring push button](./images/PushButton_wiring.png)
 
 ```SmallBASIC
 import gpio
@@ -244,8 +265,3 @@ select case result
   case -1: print "Error"
 end select
 ```
-
-## Links
-
-- [Blinking LED](./led_gpio.html)
-- [Push button](./pushbutton_gpio.html)

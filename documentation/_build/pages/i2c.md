@@ -1,4 +1,7 @@
-# I2C
+---
+title: Generic I2C Interface
+date: 17.11.2024
+---
 
 Before start coding you need to setup I2C on the Raspberry Pi. Please following these [instructions](setupi2c.html).
 
@@ -262,6 +265,12 @@ SmbusWriteWord(id, 0x05, 0xA202)       ' Write 0xA202 to register 0x05
 
 ### 1. BH1750 - Ambient Light Sensor
 
+![Wiring BH1750](./images/bh1750_wiring.png)
+
+Please be careful, the sensors are usually driven with 3.3V. The sensor
+from Adafruit can be driven with 3.3V or 5V. If you don't connect the
+address pin, then the sensor will use address 0x23.
+
 ```SmallBASIC
 import i2c
 
@@ -311,6 +320,3 @@ print "USB Power connected: "; IsPowerConnected
 print "Seconds of RTC: "; i2c.SmbusReadByte(PiSugar, 0x37)
 ```
 
-## Links
-
-- [BH1750 - Ambient Light Sensor](./bh1750_generic_i2c.html)

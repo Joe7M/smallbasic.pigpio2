@@ -1,3 +1,12 @@
+' Example on how to a push button
+' Tested with SmallBASIC 12.28
+' By Joerg Siebenmorgen
+' MIT Licence, 2024
+'
+' Console version:  sbasic -m /home/pi/SmallBasicPIGPIO/bin gpio_led.bas
+' SDL version:      sbasicg -m/home/pi/SmallBasicPIGPIO/bin -r gpio_led.bas
+'
+
 import gpio
 
 gpio.Open()
