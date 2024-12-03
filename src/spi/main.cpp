@@ -21,18 +21,25 @@ char *programSource = nullptr;
 //Min. parameter , max. parameters, function name in Basic, function in c
 FUNC_SIG lib_func[] =
 {
-  {1, 2, "Read", CMD_Read},
-  {0, 0, "GetMaxSpeed", CMD_GetMaxSpeed},
+  {0, 1, "Read", CMD_Read},
+  {1, 2, "ReadReg", CMD_ReadReg},
+  {1, 2, "ReadWrite", CMD_ReadWrite},
+  {0, 0, "GetSpeed", CMD_GetMaxSpeed},
+  {0, 0, "GetLSBFirst", CMD_GetLSBFirst},
+  {0, 0, "GetBitsPerWord", CMD_GetBitsPerWord},
   {0, 0, "GetMode", CMD_GetMode}
 };
 
 static FUNC_SIG lib_proc[] =
 {
-  {1, 1, "Open", CMD_Open},
+  {0, 2, "Open", CMD_Open},
   {0, 0, "Close", CMD_Close},
   {1, 2, "Write", CMD_Write},
-  {1, 1, "SetMaxSpeed", CMD_SetMaxSpeed},
-  {1, 1, "SetMode", CMD_GetMode}
+  {1, 1, "SetSpeed", CMD_SetMaxSpeed},
+  {0, 1, "SetLSBFirst", CMD_SetLSBFirst},
+  {1, 1, "SetMode", CMD_SetMode},
+  {1, 1, "SetBitsPerWord", CMD_SetBitsPerWord},
+  {1, 1, "SetDelay", CMD_SetDelay}
 };
 
 SBLIB_API int sblib_proc_count()

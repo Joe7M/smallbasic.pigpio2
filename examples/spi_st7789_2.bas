@@ -28,6 +28,7 @@
 
 import spi
 import gpio
+import canvas
 
 const DC   = 17      ' Data or command -> HIGH = data / LOW = command 
 const RST  = 27      ' Chip reset
@@ -65,27 +66,36 @@ const WHITE   = 0xFFFF
 
 const HIGH      = TRUE
 const LOW       = FALSE
-const PIN_DELAY = 1
+const PIN_DELAY = 0
 
 colstart = 0
 rowstart = 0
 ystart   = 0
 xstart   = 0
-width    = 240
-height   = 240
+const WIDTH    = 240
+const HEIGHT   = 240
 
 Setup(240, 240)             ' parameter: TFT width , TFT height
 
+' Init canvas
+c = canvas.create(WIDTH, HEIGHT, BLACK)
+c._fontSize = 29
+
+' Draw some graphics
+c._pen = BLACK                                 
+canvas.draw_rect_filled(c, 0, 0, WIDTH, HEIGHT) ' Clear screen
+c._pen = RED                                  
+canvas.draw_circle(c, 25, 210, 16, true)
+c._pen = RGBto565(140, 130,255)
+canvas.draw_string(c, "SPI with", 90, 15)
+canvas.draw_string(c, "SMALLBASIC", 90, 50)
+c._pen = WHITE
+canvas.draw_line(c, 0, 0, 239, 239)
+canvas.draw_rect(c, 0, 0, 239, 239)
+
+
 t1 = ticks()
-
-FillScreen(RED)
-FillRect(50,50,50,50, GREEN)
-
-for xx = 100 to 150
-   DrawPixel(xx, xx, BLUE)
-next
-
-
+TransferFramebuffer(c._dat)         ' c._dat is the canvas framebuffer
 print ticks() - t1
 
 spi.close()
@@ -99,8 +109,6 @@ sub Setup(w, h)
     print "Max. speed: ", spi.GetMaxSpeed()
     Print "Set speed to 10 MHz"
     spi.SetMaxSpeed(10000000)
-    print "Set delay to 0"
-    spi.SetDelay(0)
     Print "Set mode to SPI 0"
     spi.SetMode(0)
     Print "Open GPIO"
@@ -125,14 +133,12 @@ sub Setup(w, h)
     delay(50)
     gpio.write(RST, HIGH)
     delay(150)
-
-    
-
+  
     'Init
     writeCmd(ST7789_SWRESET) : delay(150)
     writeCmd(ST7789_SLPOUT)  : delay(500)
     writeCmd(ST7789_COLMOD)  : writeData8(0x55) : delay(10)     ' RGB565
-    writeCmd(ST7789_MADCTL)  : writeData8(0x00)
+    writeCmd(ST7789_MADCTL)  : writeData8(0x0)
     writeCmd(ST7789_CASET)   : writeData16(ST7789_240x240_XSTART) : writeData16(ST7789_TFTWIDTH + ST7789_240x240_XSTART)
     writeCmd(ST7789_RASET)   : writeData16(ST7789_240x240_YSTART) : writeData16(ST7789_TFTHEIGHT + ST7789_240x240_YSTART)
     writeCmd(ST7789_INVON)   : delay(10)
@@ -148,60 +154,17 @@ end
 
 sub WriteCmd(c) 
   gpio.write(DC, LOW)
-  delay(PIN_DELAY)
   spi.write(c)
 end
 
 sub WriteData8(Data_Uint8)
   gpio.write(DC, HIGH)
-  delay(PIN_DELAY)
   spi.write(Data_Uint8)
 end
 
 sub WriteData16(Data_Uint16)
   gpio.write(DC, HIGH)
-  delay(PIN_DELAY)
   spi.write([Data_Uint16 rshift 8, Data_Uint16 BAND 0xFF])
-end
-
-sub DrawPixel(x, y, c)
-  setAddrWindow(x, y, x + 1, y + 1)  
-  WriteCmd(ST7789_RAMWR)
-  writeData16(c)
-end
-
-sub FillRect(x, y, w, h, col)
-  if(x >= width OR y >= height OR w <= 0 OR h <= 0) then return
-  if(x + w - 1 >= width) then w = width - x
-  if(y + h - 1 >= height) then h = height - y
-  
-  setAddrWindow(x, y, x + w - 1, y + h - 1) 
-  WriteCmd(ST7789_RAMWR)
-  delay(PIN_DELAY)
-  gpio.write(DC, HIGH)
-  delay(PIN_DELAY)
-  num = w * h
-  c_high = col rshift 8
-  c_low  = col BAND 0xFF
-
-  ' Write whole array -> fast
-  dim A(2*num)
-  MaxSteps = 2*w*h - 1  
-  for ii = 0 to MaxSteps Step 2
-    A[ii]   = c_high
-    A[ii+1] = c_low
-  next
-  spi.write(A)
-
-  ' Write every pixel -> slow
-'  while(num)
-'    num--
-'    spi.write([c_high, c_low])     
-'  wend
-end
-
-sub FillScreen(col) 
-  FillRect(0, 0,  width, height, col)
 end
 
 sub SetRotation(m) 
@@ -238,13 +201,34 @@ sub setAddrWindow(xs, ys, xe, ye)
   'CASET
   WriteCmd(ST7789_CASET)  
   gpio.write(DC, HIGH)                                  ' data (active high)
-  delay(PIN_DELAY)
   spi.write([xs rshift 8, xs BAND 0xFF])
   spi.write([xe rshift 8, xe BAND 0xFF])
   ' RASET
   WriteCmd(ST7789_RASET)
   gpio.write(DC, HIGH)                                  ' data (active high)
-  delay(PIN_DELAY)
   spi.write([ys rshift 8, ys BAND 0xFF])
   spi.write([ye rshift 8, ye BAND 0xFF])
+end
+
+
+sub TransferFramebuffer(byref fb)
+  local ii, xx, yy, FrameBuffer_8bit, w, h
+
+  dim FrameBuffer_8bit(2 * WIDTH * HEIGHT)
+
+  ii = 0
+  h = HEIGHT - 1
+  w = WIDTH - 1
+  for xx = 0 to w
+    for yy = 0 to h
+      FrameBuffer_8bit[ii]     = fb[xx, yy] rshift 8
+      FrameBuffer_8bit[ii + 1] = fb[xx, yy] BAND 0xFF
+      ii += 2
+    next
+  next 
+
+  setAddrWindow(0, 0, w, h) 
+  WriteCmd(ST7789_RAMWR)
+  gpio.Write(DC, HIGH)
+  spi.Write(FrameBuffer_8bit)
 end
