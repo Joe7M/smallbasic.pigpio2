@@ -397,7 +397,7 @@ int CMD_WriteReg(int argc, slib_par_t *params, var_t *retval)
     WriteBuffer[0] = Reg;
     WriteBuffer[1] = WriteByte;
 
-    xfer[0].tx_buf = (unsigned long)(&WriteBuffer);
+    xfer[0].tx_buf = (unsigned long)(WriteBuffer);
     xfer[0].rx_buf = (unsigned long)NULL;
     xfer[0].delay_usecs = Delay;
     xfer[0].len = 2;
