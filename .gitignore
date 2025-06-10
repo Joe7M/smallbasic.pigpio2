@@ -138,6 +138,7 @@ dkms.conf
 /documentation/pages
 *~
 .*
+!.gitignore
 Makefile
 !/documentation/_build/Makefile
 /src/libtool

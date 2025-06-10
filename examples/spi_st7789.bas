@@ -12,12 +12,12 @@
 '
 ' ----------------         ----------
 '  RP             |       |TFT
-'  PIN 19 (MOSI)  |-------|DIN (MOSI) 
-'  PIN 23 (SCLK)  |-------|CLK (SCL)
-'  PIN 26 (CE0)   |-------|CS
-'  PIN 11 (GPIO17)|-------|DC
-'  PIN 13 (GPIO27)|-------|RST
-'  PIN 15 (GPIO22)|-------|BL
+'  GPIO 10 (MOSI) |-------|DIN (MOSI) 
+'  GPIO 11 (SCLK) |-------|CLK (SCL)
+'  GPIO  8 (CE0)  |-------|CS
+'  GPIO17         |-------|DC
+'  GPIO27         |-------|RST
+'  GPIO22         |-------|BL
 '  GND            |-------|GND
 '  5V             |-------|VIN
 '-----------------         ---------
