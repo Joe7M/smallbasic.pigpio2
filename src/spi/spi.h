@@ -16,10 +16,19 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval);
 int Close(void);
 int CMD_Close(int argc, slib_par_t *params, var_t *retval);
 int CMD_Read(int argc, slib_par_t *params, var_t *retval);
+int CMD_ReadReg(int argc, slib_par_t *params, var_t *retval);
+int CMD_ReadWrite(int argc, slib_par_t *params, var_t *retval);
+int CMD_ReadWriteParallel(int argc, slib_par_t *params, var_t *retval);
 int CMD_Write(int argc, slib_par_t *params, var_t *retval);
+int CMD_WriteReg(int argc, slib_par_t *params, var_t *retval);
 int CMD_GetMode(int argc, slib_par_t *params, var_t *retval);
 int CMD_SetMode(int argc, slib_par_t *params, var_t *retval);
 int CMD_GetMaxSpeed(int argc, slib_par_t *params, var_t *retval);
 int CMD_SetMaxSpeed(int argc, slib_par_t *params, var_t *retval);
+int CMD_SetBitsPerWord(int argc, slib_par_t *params, var_t *retval);
+int CMD_GetBitsPerWord(int argc, slib_par_t *params, var_t *retval);
+int CMD_SetDelay(int argc, slib_par_t *params, var_t *retval);
+int CMD_SetLSBFirst(int argc, slib_par_t *params, var_t *retval);
+int CMD_GetLSBFirst(int argc, slib_par_t *params, var_t *retval);
 
 #endif /* !SRC_SPI_H_ */
