@@ -1,6 +1,6 @@
 ---
-title: Setup I2C on the Raspberry Pi
-date: 08.11.2024
+title: Setup SPI on the Raspberry Pi
+date: 29.06.2025
 ---
 
 ### Desktop
@@ -9,7 +9,7 @@ date: 08.11.2024
 - Select "Preferences"
 - Start "Raspberry Pi Configuration"
 - Open the tab "Interfaces"
-- Enable "I2C"
+- Enable "SPI"
 - Save settings
 - Restart Raspberry Pi
 
@@ -20,5 +20,5 @@ date: 08.11.2024
 
 - Type "sudo raspi-config"
 - Select "Interface Options"
-- Select "P5 I2C"
+- Select "I3 SPI"
 - Select "Yes"

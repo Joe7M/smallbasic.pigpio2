@@ -39,7 +39,7 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval)
   const char *text = get_param_str(argc, params, 0, "/dev/spidev0.0");
   char *device = new char[strlen(text) + 2];
   strcpy(device,text);
-  PageSize = get_param_int(argc, params, 2, 4096);
+  PageSize = get_param_int(argc, params, 1, 4096);
 
   fd = open(device, O_RDWR);
   if (fd < 0)
@@ -246,78 +246,78 @@ int CMD_Write(int argc, slib_par_t *params, var_t *retval)
   {
     var_p_t WriteArray = params[0].var_p;  //Get array
 
-	  if(v_maxdim(WriteArray) > 1)
-	  {
-	    v_setstr(retval, "ReadWrite requires an 1D-array");
-	    close(fd);
-	    return 0;
-	  }
+    if(v_maxdim(WriteArray) > 1)
+    {
+      v_setstr(retval, "ReadWrite requires an 1D-array");
+      close(fd);
+      return 0;
+    }
 
-	  uint32_t WriteBytes  = v_ubound(WriteArray, 0) - v_lbound(WriteArray, 0) + 1;
-	  uint8_t* WriteBuffer = new uint8_t[WriteBytes];
-	  uint8_t* pWriteBuffer = WriteBuffer;
+    uint32_t WriteBytes  = v_ubound(WriteArray, 0) - v_lbound(WriteArray, 0) + 1;
+    uint8_t* WriteBuffer = new uint8_t[WriteBytes];
+    uint8_t* pWriteBuffer = WriteBuffer;
 
-	  for(uint32_t ii = 0; ii < WriteBytes; ii++)
-	  {
-	    WriteBuffer[ii] = get_array_elem_num(WriteArray, ii);
-	  }
+    for(uint32_t ii = 0; ii < WriteBytes; ii++)
+    {
+      WriteBuffer[ii] = get_array_elem_num(WriteArray, ii);
+    }
 
-	  // Setup SPI read and write messages
-	  //   Only PageSize bytes can be read/write at once.
-	  //   Read/write data in chunks of PageSize
+    // Setup SPI read and write messages
+    // Only PageSize bytes can be read/write at once.
+    // Read/write data in chunks of PageSize
 
-	  uint32_t FullMessages_Write = WriteBytes / PageSize;
-	  uint32_t PartialMessages_Write = 0;
-	  if(WriteBytes % PageSize > 0) PartialMessages_Write = 1;
+    uint32_t FullMessages_Write = WriteBytes / PageSize;
+    uint32_t PartialMessages_Write = 0;
+    if(WriteBytes % PageSize > 0) PartialMessages_Write = 1;
 
-	  struct spi_ioc_transfer xfer[FullMessages_Write + PartialMessages_Write] = {0};
+    struct spi_ioc_transfer xfer[FullMessages_Write + PartialMessages_Write] = {0};
 
-	  // Write messages
-	  uint32_t n = 0;
-	  for(uint32_t ii = 0; ii < FullMessages_Write; ii++)
-	  {
-	    xfer[n].tx_buf = (unsigned long)(pWriteBuffer);
-	    xfer[n].rx_buf = (unsigned long)NULL;
-	    xfer[n].delay_usecs = Delay;
-	    xfer[n].len = PageSize;
-	    pWriteBuffer += PageSize;
-	    n++;
-	  }
-	  if(PartialMessages_Write)
-	  {
-	    xfer[n].tx_buf = (unsigned long)(pWriteBuffer);
-	    xfer[n].rx_buf = (unsigned long)NULL;
-	    xfer[n].delay_usecs = Delay;
-	    xfer[n].len = WriteBytes % PageSize;
-	    n++;
-	  }
+    // Write messages
+    uint32_t n = 0;
+    for(uint32_t ii = 0; ii < FullMessages_Write; ii++)
+    {
+      xfer[n].tx_buf = (unsigned long)(pWriteBuffer);
+      xfer[n].rx_buf = (unsigned long)NULL;
+      xfer[n].delay_usecs = Delay;
+      xfer[n].len = PageSize;
+      pWriteBuffer += PageSize;
+      n++;
+    }
+    if(PartialMessages_Write)
+    {
+      xfer[n].tx_buf = (unsigned long)(pWriteBuffer);
+      xfer[n].rx_buf = (unsigned long)NULL;
+      xfer[n].delay_usecs = Delay;
+      xfer[n].len = WriteBytes % PageSize;
+      n++;
+    }
 
-	  // Transfer data
-	  if(ioctl(fd, SPI_IOC_MESSAGE(n), &xfer) < 0)
-	  {
-	    v_setstr(retval, "Error transmitting SPI data");
-	    close(fd);
-	    delete[] WriteBuffer;
-	    return(0);
-	  }
+    // Transfer data
+    if(ioctl(fd, SPI_IOC_MESSAGE(n), &xfer) < 0)
+    {
+      v_setstr(retval, "Error transmitting SPI data");
+      close(fd);
+      delete[] WriteBuffer;
+      return(0);
+    }
 
-	  delete[] WriteBuffer;
-	}
-	else
-	{
-		uint32_t WriteByte = get_param_int(argc, params, 0, 1);
-		struct spi_ioc_transfer xfer[1] = {0};
+    delete[] WriteBuffer;
+  }
+  else
+  {
+    uint32_t WriteByte = get_param_int(argc, params, 0, 1);
+    struct spi_ioc_transfer xfer[1] = {0};
     xfer[0].tx_buf = (unsigned long)(&WriteByte);
     xfer[0].rx_buf = (unsigned long)NULL;
     xfer[0].delay_usecs = Delay;
     xfer[0].len = 1;
     if(ioctl(fd, SPI_IOC_MESSAGE(1), &xfer) < 0)
-	  {
-	    v_setstr(retval, "Error transmitting SPI data");
-	    close(fd);
-	    return(0);
-	  }
-	}
+    {
+      v_setstr(retval, "Error transmitting SPI data");
+      close(fd);
+      return(0);
+    }
+  }
 
   return(1);
 }
@@ -331,68 +331,68 @@ int CMD_WriteReg(int argc, slib_par_t *params, var_t *retval)
   {
     var_p_t WriteArray = params[1].var_p;  //Get array
 
-	  if(v_maxdim(WriteArray) > 1)
-	  {
-	    v_setstr(retval, "ReadWrite requires an 1D-array");
-	    close(fd);
-	    return 0;
-	  }
+    if(v_maxdim(WriteArray) > 1)
+    {
+      v_setstr(retval, "ReadWrite requires an 1D-array");
+      close(fd);
+      return 0;
+    }
 
-	  uint32_t WriteBytes  = v_ubound(WriteArray, 0) - v_lbound(WriteArray, 0) + 1 + 1;
-	  uint8_t* WriteBuffer = new uint8_t[WriteBytes];
-	  uint8_t* pWriteBuffer = WriteBuffer;
+    uint32_t WriteBytes  = v_ubound(WriteArray, 0) - v_lbound(WriteArray, 0) + 1 + 1;
+    uint8_t* WriteBuffer = new uint8_t[WriteBytes];
+    uint8_t* pWriteBuffer = WriteBuffer;
 
     WriteBuffer[0] = Reg;
 
-	  for(uint32_t ii = 1; ii < WriteBytes; ii++)
-	  {
-	    WriteBuffer[ii] = get_array_elem_num(WriteArray, ii - 1);
-	  }
+    for(uint32_t ii = 1; ii < WriteBytes; ii++)
+    {
+      WriteBuffer[ii] = get_array_elem_num(WriteArray, ii - 1);
+    }
 
-	  // Setup SPI read and write messages
-	  //   Only PageSize bytes can be read/write at once.
-	  //   Read/write data in chunks of PageSize
+    // Setup SPI read and write messages
+    // Only PageSize bytes can be read/write at once.
+    // Read/write data in chunks of PageSize
 
-	  uint32_t FullMessages_Write = WriteBytes / PageSize;
-	  uint32_t PartialMessages_Write = 0;
-	  if(WriteBytes % PageSize > 0) PartialMessages_Write = 1;
+    uint32_t FullMessages_Write = WriteBytes / PageSize;
+    uint32_t PartialMessages_Write = 0;
+    if(WriteBytes % PageSize > 0) PartialMessages_Write = 1;
 
-	  struct spi_ioc_transfer xfer[FullMessages_Write + PartialMessages_Write] = {0};
+    struct spi_ioc_transfer xfer[FullMessages_Write + PartialMessages_Write] = {0};
 
-	  // Write messages
-	  for(uint32_t ii = 0; ii < FullMessages_Write; ii++)
-	  {
-	    xfer[ii].tx_buf = (unsigned long)(pWriteBuffer);
-	    xfer[ii].rx_buf = (unsigned long)NULL;
-	    xfer[ii].delay_usecs = Delay;
-	    xfer[ii].len = PageSize;
-	    pWriteBuffer += PageSize;
-	  }
-	  if(PartialMessages_Write)
-	  {
-	    xfer[FullMessages_Write].tx_buf = (unsigned long)(pWriteBuffer);
-	    xfer[FullMessages_Write].rx_buf = (unsigned long)NULL;
-	    xfer[FullMessages_Write].delay_usecs = Delay;
-	    xfer[FullMessages_Write].len = WriteBytes % PageSize;
-	  }
+    // Write messages
+    for(uint32_t ii = 0; ii < FullMessages_Write; ii++)
+    {
+      xfer[ii].tx_buf = (unsigned long)(pWriteBuffer);
+      xfer[ii].rx_buf = (unsigned long)NULL;
+      xfer[ii].delay_usecs = Delay;
+      xfer[ii].len = PageSize;
+      pWriteBuffer += PageSize;
+    }
+    if(PartialMessages_Write)
+    {
+      xfer[FullMessages_Write].tx_buf = (unsigned long)(pWriteBuffer);
+      xfer[FullMessages_Write].rx_buf = (unsigned long)NULL;
+      xfer[FullMessages_Write].delay_usecs = Delay;
+      xfer[FullMessages_Write].len = WriteBytes % PageSize;
+    }
 
-	  // Transfer data
-	  if(ioctl(fd, SPI_IOC_MESSAGE(FullMessages_Write + PartialMessages_Write), &xfer) < 0)
-	  {
-	    v_setstr(retval, "Error transmitting SPI data");
-	    close(fd);
-	    delete[] WriteBuffer;
-	    return(0);
-	  }
+    // Transfer data
+    if(ioctl(fd, SPI_IOC_MESSAGE(FullMessages_Write + PartialMessages_Write), &xfer) < 0)
+    {
+      v_setstr(retval, "Error transmitting SPI data");
+      close(fd);
+      delete[] WriteBuffer;
+      return(0);
+    }
 
-	  delete[] WriteBuffer;
-	}
-	else
-	{
-		uint8_t WriteByte = get_param_int(argc, params, 1, 0);
-		struct spi_ioc_transfer xfer[1] = {0};
+    delete[] WriteBuffer;
+  }
+  else
+  {
+      uint8_t WriteByte = get_param_int(argc, params, 1, 0);
+      struct spi_ioc_transfer xfer[1] = {0};
 
-		uint8_t* WriteBuffer = new uint8_t[2];
+      uint8_t* WriteBuffer = new uint8_t[2];
 
     WriteBuffer[0] = Reg;
     WriteBuffer[1] = WriteByte;
@@ -402,14 +402,14 @@ int CMD_WriteReg(int argc, slib_par_t *params, var_t *retval)
     xfer[0].delay_usecs = Delay;
     xfer[0].len = 2;
     if(ioctl(fd, SPI_IOC_MESSAGE(1), &xfer) < 0)
-	  {
-	    v_setstr(retval, "Error transmitting SPI data");
-	    close(fd);
-	    delete[] WriteBuffer;
-	    return(0);
-	  }
-    delete[] WriteBuffer;
-	}
+    {
+      v_setstr(retval, "Error transmitting SPI data");
+      close(fd);
+      delete[] WriteBuffer;
+      return(0);
+    }
+  delete[] WriteBuffer;
+  }
 
   return(1);
 }
@@ -457,7 +457,7 @@ int CMD_Read(int argc, slib_par_t *params, var_t *retval)
 
   if(Bytes > 1)
   {
-	  v_toarray1(retval, Bytes);
+    v_toarray1(retval, Bytes);
     for(uint32_t ii = 0; ii < Bytes; ii++)
     {
       v_setint(v_elem(retval, ii), buffer[ii]);
@@ -522,7 +522,7 @@ int CMD_ReadReg(int argc, slib_par_t *params, var_t *retval)
 
   if(Bytes > 1)
   {
-	  v_toarray1(retval, Bytes);
+    v_toarray1(retval, Bytes);
     for(uint32_t ii = 0; ii < Bytes; ii++)
     {
       v_setint(v_elem(retval, ii), buffer[ii]);

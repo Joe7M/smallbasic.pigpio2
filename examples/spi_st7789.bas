@@ -1,9 +1,9 @@
 ' ST7789 - TFT controller
 ' =============================
 '
-' This example demonstrates how to drive a TFT display with a ST7789 controller.
-' With the current IOIO implementation the example works but is unusable slow.
-'                                          ----------------------------------
+' This example demonstrates how to drive a TFT display with a ST7789 controller using
+' the generic spi interface.
+'
 ' There exist many TFT displays using the ST7789 controller. This examples is written
 ' for the Waveshare 1.3inch LCD module with 240x240 pixels. With some minor modification
 ' especially for the pins, TFTs from other manufacturers should also work. Be carefull
@@ -12,12 +12,12 @@
 '
 ' ----------------         ----------
 '  RP             |       |TFT
-'  GPIO 10 (MOSI) |-------|DIN (MOSI) 
-'  GPIO 11 (SCLK) |-------|CLK (SCL)
-'  GPIO  8 (CE0)  |-------|CS
-'  GPIO17         |-------|DC
-'  GPIO27         |-------|RST
-'  GPIO22         |-------|BL
+'  PIN 19 (MOSI)  |-------|DIN (MOSI) 
+'  PIN 23 (SCLK)  |-------|CLK (SCL)
+'  PIN 22 (CE0)   |-------|CS
+'  PIN 11 (GPIO17)|-------|DC
+'  PIN 13 (GPIO27)|-------|RST
+'  PIN 15 (GPIO22)|-------|BL
 '  GND            |-------|GND
 '  5V             |-------|VIN
 '-----------------         ---------
@@ -125,8 +125,6 @@ sub Setup(w, h)
     delay(50)
     gpio.write(RST, HIGH)
     delay(150)
-
-    
 
     'Init
     writeCmd(ST7789_SWRESET) : delay(150)

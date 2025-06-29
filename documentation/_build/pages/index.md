@@ -34,9 +34,9 @@ anymore compatible with SmallBASIC PiGPIO 1.
 
 ## Setup and Pin Numbering
 
-- X [Setup of SmallBASIC PIGPIO 2](./setup.html)
-- [Setup I2C](./setupi2c.html)
-- X [Setup SPI](./setupspi.html)
+- [Setup SmallBASIC PIGPIO 2](./setup.html)
+- [Setup I2C](./setup_i2c.html)
+- [Setup SPI](./setup_spi.html)
 - X [Setup PWM](./gpio_numbering.html)
 - [Naming and Numbering of the GPIO pins](./gpio_numbering.html)
 
@@ -44,10 +44,9 @@ anymore compatible with SmallBASIC PiGPIO 1.
 
 - [Generic GPIO](./gpio.html): Digital input and output
 - [Generic I2C](./i2c.html): Generic I2C and SMBus interface
-- X [Generic SPI](./spi.html): Generic SPI interface
+- [Generic SPI](./spi.html): Generic SPI interface
 - [Framebuffer](./framebuffer.html): Graphics output to the Linux framebuffer
 - [SSD1306 compatible OLED Display](./ssd1306.html): Graphics on this a small and cheap b&w OLED display
-- [BH1750 Ambient Light Sensor](./bh1750.html): Measure ambient light
 - [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html): Measure voltages
 - [BMP180](./bmp180.html): Measure temperature and pressure
 - [MPU6050](./mpu6050.html): Accelerometer and gyroscope
@@ -55,17 +54,17 @@ anymore compatible with SmallBASIC PiGPIO 1.
 ## Supported Hardware
 
 - [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html)
-- [BH1750 Ambient Light Sensor](./i2c.html)
+- [BH1750 Ambient Light Sensor (generic I2C)](./i2c.html)
 - [BMP180 Temperature and Pressure Sensor](./bmp180.html)
-- [LED](./gpio.html)
+- [BMP280 Temperature and Pressure Sensor (generic SPI)](./spi.html)
+- [LED (generic GPIO)](./gpio.html)
 - [MPU6050 - Accelerometer and Gyroscope](./mpu6050.html)
-- [Pi Sugar 3 plus - Battery/USB power supply and charger](./i2c.html)
-- [Push Button](./gpio.html)
+- [Pi Sugar 3 plus - Battery/USB power supply and charger (generic I2C)](./i2c.html)
+- [Push Button (generic GPIO)](./gpio.html)
 - [SSD1306 OLED Display](./ssd1306.html)
 
 ## Links
 
-- X [SmallBasicPIGPIO at Github](https://github.com/Joe7M/SmallBasicPIGPIO)
-- X [Feedback for SmallBasicPIGPIO](https://github.com/Joe7M/SmallBasicPIGPIO/discussions)
+- [SmallBasicPIGPIO at Github](https://github.com/Joe7M/smallbasic.pigpio2)
 - [SmallBASIC website](https://smallbasic.github.io/)
-- [SmallBASIC forum](https://www.syntaxbomb.com/smallbasic/)
+- [SmallBASIC forum](https://smallbasic.discourse.group/)
