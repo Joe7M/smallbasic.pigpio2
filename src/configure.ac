@@ -46,7 +46,7 @@ LT_INIT([dlopen])
 LT_PREREQ([2.2])
 AC_PROG_CXX
 
-BUILD_SUBDIRS="${BUILD_SUBDIRS} spi framebuffer"
+BUILD_SUBDIRS="${BUILD_SUBDIRS} spi framebuffer pwm"
 AC_SUBST(BUILD_SUBDIRS)
 
 libdir=${libdir}/smallbasic
@@ -60,6 +60,7 @@ ssd1306/Makefile
 ads1x15/Makefile
 mpu6050/Makefile
 bmp180/Makefile
-spi/Makefile])
+spi/Makefile
+pwm/Makefile])
 
 AC_OUTPUT
