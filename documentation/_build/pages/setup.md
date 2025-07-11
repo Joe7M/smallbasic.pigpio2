@@ -59,18 +59,34 @@ The libraries have been installed in `/usr/local/lib/smallbasic`.
 
 ### Start SmallBASIC with the plugin
 
-Start a console and type:
+Start a terminal and type:
 
 ```
 sbasicg -m/usr/local/lib/smallbasic -r 'file'
 ```
 
-For example you want to execute `led.bas` in the example folder:
+to start the SDL2-version of SmallBASIC.
+
+For example you want to execute `gpio_led.bas` in the example folder:
 
 ```
 cd ~
 cd smallbasic.pigpio2/examples
 sbasicg -m/usr/local/lib/smallbasic -r gpio_led.bas
+```
+
+If you want to use the console version of SmallBASIC please use:
+
+```
+sbasic -m /usr/local/lib/smallbasic 'file'
+```
+
+For example:
+
+```
+cd ~
+cd smallbasic.pigpio2/examples
+sbasic -m /usr/local/lib/smallbasic gpio_led.bas
 ```
 
 Now you can start coding your own programs. :)
