@@ -14,7 +14,7 @@
 '  RP             |       |TFT
 '  PIN 19 (MOSI)  |-------|DIN (MOSI) 
 '  PIN 23 (SCLK)  |-------|CLK (SCL)
-'  PIN 22 (CE0)   |-------|CS
+'  PIN 24 (CE0)   |-------|CS
 '  PIN 11 (GPIO17)|-------|DC
 '  PIN 13 (GPIO27)|-------|RST
 '  PIN 15 (GPIO22)|-------|BL
@@ -76,8 +76,6 @@ height   = 240
 
 Setup(240, 240)             ' parameter: TFT width , TFT height
 
-t1 = ticks()
-
 FillScreen(RED)
 FillRect(50,50,50,50, GREEN)
 
@@ -85,10 +83,8 @@ for xx = 100 to 150
    DrawPixel(xx, xx, BLUE)
 next
 
-
-print ticks() - t1
-
 spi.close()
+
 print "done"
 
 '########################################
@@ -96,13 +92,14 @@ print "done"
 sub Setup(w, h)
     Print "Connect to TFT"
     spi.open("/dev/spidev0.0")
-    print "Max. speed: ", spi.GetMaxSpeed()
     Print "Set speed to 10 MHz"
-    spi.SetMaxSpeed(10000000)
+    spi.SetSpeed(10000000)
+    Print "Speed is "; spi.GetSpeed()
     print "Set delay to 0"
     spi.SetDelay(0)
     Print "Set mode to SPI 0"
     spi.SetMode(0)
+    Print "Mode is "; spi.GetMode()
     Print "Open GPIO"
     gpio.Open()
     Print "Configure gpio"    

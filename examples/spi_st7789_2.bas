@@ -14,7 +14,7 @@
 '  RP             |       |TFT
 '  PIN 19 (MOSI)  |-------|DIN (MOSI) 
 '  PIN 23 (SCLK)  |-------|CLK (SCL)
-'  PIN 22 (CE0)   |-------|CS
+'  PIN 24 (CE0)   |-------|CS
 '  PIN 11 (GPIO17)|-------|DC
 '  PIN 13 (GPIO27)|-------|RST
 '  PIN 15 (GPIO22)|-------|BL
@@ -82,9 +82,9 @@ c = canvas.create(WIDTH, HEIGHT, BLACK)
 c._fontSize = 29
 
 ' Draw some graphics
-c._pen = BLACK                                 
+c._pen = BLACK         
 canvas.draw_rect_filled(c, 0, 0, WIDTH, HEIGHT) ' Clear screen
-c._pen = RED                                  
+c._pen = RED                                
 canvas.draw_circle(c, 25, 210, 16, true)
 c._pen = RGBto565(140, 130,255)
 canvas.draw_string(c, "SPI with", 90, 15)
@@ -93,10 +93,9 @@ c._pen = WHITE
 canvas.draw_line(c, 0, 0, 239, 239)
 canvas.draw_rect(c, 0, 0, 239, 239)
 
-
 t1 = ticks()
 TransferFramebuffer(c._dat)         ' c._dat is the canvas framebuffer
-print ticks() - t1
+print "Time for 1 frame: "; ticks() - t1; "ms"
 
 spi.close()
 print "done"
@@ -106,14 +105,15 @@ print "done"
 sub Setup(w, h)
     Print "Connect to TFT"
     spi.open("/dev/spidev0.0")
-    print "Max. speed: ", spi.GetMaxSpeed()
     Print "Set speed to 10 MHz"
-    spi.SetMaxSpeed(10000000)
+    spi.SetSpeed(10000000)
+    Print "Speed is "; spi.GetSpeed()
     Print "Set mode to SPI 0"
     spi.SetMode(0)
+    Print "Mode is "; spi.GetMode()
     Print "Open GPIO"
     gpio.Open()
-    Print "Configure gpio"    
+    Print "Configure gpio"
     gpio.SetOutput(RST)
     gpio.SetOutput(DC)
     gpio.SetOutput(BL)
@@ -146,6 +146,7 @@ sub Setup(w, h)
     writeCmd(ST7789_DISPON)  : delay(10)
 
     'SetRotation(2)
+    print "Init done"
 end
 
 func RGBto565(r,g,b)
