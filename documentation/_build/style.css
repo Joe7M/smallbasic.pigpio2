@@ -129,8 +129,8 @@ pre, code, kbd, samp {
 
 pre {
   white-space: pre;
-  white-space: pre-wrap;
   word-wrap: break-word;
+  overflow-x:auto;
 }
 
 b, strong {
@@ -329,7 +329,6 @@ table td {
 #float-left {text-align: right;}
 
 
-code {white-space: pre-wrap;}
 span.smallcaps {font-variant: small-caps;}
 div.columns {display: flex; gap: min(4vw, 1.5em);}
 div.column {flex: auto; overflow-x: auto;}

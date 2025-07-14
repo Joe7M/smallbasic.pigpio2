@@ -1,6 +1,6 @@
 ---
 title: SmallBASIC PiGPIO 2
-date: 17.11.2024
+date: 11.07.2025
 ---
 
 If you want to let a LED blink or measure the temperature in your room, you can use
@@ -16,19 +16,18 @@ const PIN_GPIO4 = 4
 gpio.SetOutput(PIN_GPIO4)
 
 for ii = 1 to 5
-	gpio.Write(PIN_GPIO4, 1)
-	delay(500)
-	gpio.Write(PIN_GPIO4, 0)
-	delay(500)
+  gpio.Write(PIN_GPIO4, 1)
+  delay(500)
+  gpio.Write(PIN_GPIO4, 0)
+  delay(500)
 next
 ```
 
 ![Blinking LED](./images/blink.gif)
 
-
 ## News
 
-__December 14 2024__: SmallBASIC PiGPIO 2 supports now all Pi's from Zero to 5. It can
+__July 11 2025__: SmallBASIC PiGPIO 2 supports now all Pi's from Zero to 5. It can
 even run on other LINUX systems. The API got a complete rewrite and is therefore not
 anymore compatible with SmallBASIC PiGPIO 1.
 
@@ -37,7 +36,7 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [Setup SmallBASIC PIGPIO 2](./setup.html)
 - [Setup I2C](./setup_i2c.html)
 - [Setup SPI](./setup_spi.html)
-- X [Setup PWM](./gpio_numbering.html)
+- [Setup PWM](./setup_pwm.html)
 - [Naming and Numbering of the GPIO pins](./gpio_numbering.html)
 
 ## Function Reference and Examples
@@ -45,11 +44,15 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [Generic GPIO](./gpio.html): Digital input and output
 - [Generic I2C](./i2c.html): Generic I2C and SMBus interface
 - [Generic SPI](./spi.html): Generic SPI interface
+- [PWM](./pwm.html): PWM output
 - [Framebuffer](./framebuffer.html): Graphics output to the Linux framebuffer
 - [SSD1306 compatible OLED Display](./ssd1306.html): Graphics on this a small and cheap b&w OLED display
 - [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html): Measure voltages
 - [BMP180](./bmp180.html): Measure temperature and pressure
 - [MPU6050](./mpu6050.html): Accelerometer and gyroscope
+- HD44780: Text display - coming soon
+- DS18B20: Temperature sensor - coming soon
+- ST7789: SPI color display - coming soon
 
 ## Supported Hardware
 
