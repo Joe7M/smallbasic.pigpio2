@@ -21,9 +21,8 @@ if test "${have_gpiod}" = "no" ; then
 else
     GPIO_LDFLAGS="-lgpiod"
     AC_SUBST(GPIO_LDFLAGS)
-    BUILD_SUBDIRS="${BUILD_SUBDIRS} gpio"
+    BUILD_SUBDIRS="${BUILD_SUBDIRS} gpio st7789"
 fi
-
 
 AC_CHECK_LIB(i2c, i2c_smbus_read_byte_data, [have_i2c="yes"], [have_i2c="no"])
 if test "${have_i2c}" = "no" ; then
@@ -36,7 +35,6 @@ fi
 
 PLATFORM_LDFLAGS="-Wl,--no-undefined -avoid-version"
 AC_SUBST(PLATFORM_LDFLAGS)
-
 
 dnl change default aru setting to avoid warning
 ARFLAGS=cr
@@ -61,6 +59,7 @@ ads1x15/Makefile
 mpu6050/Makefile
 bmp180/Makefile
 spi/Makefile
-pwm/Makefile])
+pwm/Makefile
+st7789/Makefile])
 
 AC_OUTPUT

@@ -266,7 +266,7 @@ int CMD_SetPixel(int argc, slib_par_t *params, var_t *retval)
 int CMD_Clear(int argc, slib_par_t *params, var_t *retval)
 {
   uint8_t id = get_param_int(argc, params, 0, 0);
-  uint32_t color = get_param_int(argc, params, 1, fbdraw.GetBGColor());
+  uint32_t color = get_param_int(argc, params, 1, fblist.at(id).GetBGColor());
 
   fblist.at(id).Clear(color);
   return(1);
