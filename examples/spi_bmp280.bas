@@ -1,3 +1,25 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' Generic SPI: BMP280 - Temperature and Pressure Sensor
+' =====================================================
+'
+' This example demonstrates how control a BMP280 using
+' the generic SPI interface
+'
+' ---------------         ----------
+'  RPi           |       | BMP280
+'  PIN 1 (3.3V)  |-------| VCC
+'  PIN 19 (MOSI) |-------| SDA
+'  PIN 23 (SCLK) |-------| SCL
+'  PIN 24 (CE0)  |-------| CSB
+'  PIN 6 (GND)   |-------| GND
+' ---------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ spi_bmp280.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r spi_bmp280.bas
+
+
 import spi
 
 spi.Open("/dev/spidev0.0")

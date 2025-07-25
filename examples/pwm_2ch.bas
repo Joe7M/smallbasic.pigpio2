@@ -1,7 +1,19 @@
-' SmallBASIC PiGPIO v2 - Dual channel pwm
-' 
-' SDL version	 :  sudo sbasicg -m/usr/local/lib/smallbasic/ -n pwm_2ch.bas
-' Console version: sudo sbasic -m /usr/local/lib/smallbasic/ pwm_2ch.bas
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' PWM - Pulse Width Modulation: Dual Channel
+' =====================================================
+'
+' This example demonstrates how to use dual channel
+' PWM
+'
+' Connect a LED with a 1KOhm resitor to pin 12 (PWM0)
+' and pin 6 (GND).
+' Connect a second LED with a 1KOhm resitor to pin 35
+' (PWM1) and pin 39 (GND).
+
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ pwm_2ch.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r pwm_2ch.bas
 
 import pwm
 

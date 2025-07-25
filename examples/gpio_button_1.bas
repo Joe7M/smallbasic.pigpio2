@@ -1,23 +1,27 @@
-' Example on how to a push button
-' Tested with SmallBASIC 12.28
-' By Joerg Siebenmorgen
-' MIT Licence, 2024
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' Console version:  sbasic -m /home/pi/SmallBasicPIGPIO/bin ads1x15.bas
-' SDL version:      sbasicg -m/home/pi/SmallBasicPIGPIO/bin -r ads1x15.bas
+' Generic GPIO - Button
+' =====================================================
+'
+' This example demonstrates how to use a push button.
+'
+' ---------------         ----------
+'  RPi           |       |Button
+'  PIN 7 (GPIO4) |-------|Pin 1 
+'  PIN 2 (GND)   |-------|Pin 2
+'----------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ gpio_button_1.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r gpio_button_1.bas
 '
 
 import gpio
 
-v = 0
-
 gpio.Open()
-gpio.SetInput(21)
+gpio.SetInput(4)
 
 while(1)
-  print gpio.Read(21)
+  print gpio.Read(4)
   delay(500)
 wend
-
-print "done"
-

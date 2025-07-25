@@ -1,3 +1,23 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' Generic I2C: PiSugar 3 Plus
+' =====================================================
+'
+' This example demonstrates how control a PiSugar 3
+' Plus using the generic I2C (SMBus) interface
+'
+' --------------         ----------
+'  RPi          |       | PiSugar 3 Plus
+'  PIN 3 (SDA)  |-------| SDA
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+'---------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ i2c_pisugar3plus.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r i2c_pisugar3plus.bas
+
+
 import i2c
 
 Print "Connect to PiSugar 3 Plus"

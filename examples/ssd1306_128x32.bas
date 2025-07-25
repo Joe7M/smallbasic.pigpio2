@@ -1,13 +1,23 @@
-' SmallBASIC
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' Example on how to use a SSD1306 OLED Display
-' Tested with SmallBASIC 12.27
-' By Joerg Siebenmorgen
-' MIT Licence, 2024
+' SSD1306 - 128x32 Pixel OLED Display
+' =====================================================
 '
-' Console version: 	sudo sbasic -m /home/pi/SmallBasicPIGPIO/bin ssd1306_2.bas
-' SDL version: 		sudo sbasicg -m/home/pi/SmallBasicPIGPIO/bin -n ssd1306_2.bas
+' This example demonstrates how control a SSD1306 with
+' 128x32 pixel
 '
+' --------------         ----------
+'  RPi          |       | SSD1306
+'  PIN 1 (3.3V) |-------| VCC
+'  PIN 3 (SDA)  |-------| SDA
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+' --------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ ssd1306_128x32.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r ssd1306_128x32.bas
+
 
 import ssd1306
 

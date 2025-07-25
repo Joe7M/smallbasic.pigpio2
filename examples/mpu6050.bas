@@ -1,26 +1,28 @@
-' MPU6050 - Accelerometer, gyroscope and temperature sensor
-' =========================================================
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' This examample demonstrates how to use
-' the MPU-6050 I2C sensor.
+' MPU6050 - Accelerometer, gyroscope and temperature 
+' =====================================================
+'
+' This examample demonstrates how to use the MPU-6050
+' I2C sensor.
 ' 
 ' Connect the sensor to the Raspberry Pi:
 '
-' ------         ------
-'  RPi  |       |MPU6050
-'  PIN 2|-------|SDA 
-'  PIN 3|-------|SCL
-'  GND  |-------|GND
-'  3.3V |-------|VIN
-'       |       |XCL
-'       |       |XDA
-'       |       |ADD
-'       |       |INT
-'-------         ------
+' --------------         --------
+'  RPi          |       | MPU6050
+'  PIN 3 (SDA)  |-------| SDA 
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+'  PIN 1 (3.3V) |-------| VIN
+'               |       | XCL
+'               |       | XDA
+'               |       | ADD
+'               |       | INT
+' --------------         --------
 
-' If ADD is open or connected to GND, 0x68 as I2C address 
-' will be used. Otherwise 0x69.
-' Don't connect XCL, XDA, ADD and INT
+' If ADD is open or connected to GND, 0x68 as I2C
+' address will be used. Otherwise 0x69. Don't connect
+' XCL, XDA, ADD and INT
 
 import mpu6050
 

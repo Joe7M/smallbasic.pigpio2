@@ -1,11 +1,16 @@
-' Example on how to a push button
-' Tested with SmallBASIC 12.28
-' By Joerg Siebenmorgen
-' MIT Licence, 2024
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' Console version:  sbasic -m /home/pi/SmallBasicPIGPIO/bin gpio_led.bas
-' SDL version:      sbasicg -m/home/pi/SmallBasicPIGPIO/bin -r gpio_led.bas
+' Generic GPIO - LED
+' =====================================================
 '
+' This example demonstrates how to turn on/off a LED.
+'
+' Connect a LED and a 1kOhm resistor to the RPi pin 7
+' (GPIO4) and pin 6 (GND).
+
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ gpio_led.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r gpio_led.bas
 
 import gpio
 
@@ -19,4 +24,3 @@ for ii = 1 to 10
 next
 
 print "done"
-

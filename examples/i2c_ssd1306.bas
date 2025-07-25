@@ -1,3 +1,24 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' Generic I2C: SSD1306 - OLED Display
+' =====================================================
+'
+' This example demonstrates how control a SSD1306
+' using the generic I2C interface
+'
+' --------------         ----------
+'  RPi          |       | SSD1306
+'  PIN 1 (3.3V) |-------| VCC
+'  PIN 3 (SDA)  |-------| SDA
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+'---------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ i2c_ssd1306.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r i2c_ssd1306.bas
+
+
 import i2c
 import canvas       ' unit to draw graphics in a framebuffer
 

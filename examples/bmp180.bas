@@ -1,8 +1,11 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+
+
 ' BMP180 - Measure temperature and pressure
-' =========================================
+' =====================================================
 '
-' This examample demonstrates how to use
-' the BMP180 I2C sensor.
+' This examample demonstrates how to use the BMP180
+' I2C sensor.
 '
 ' -------         -------
 ' BMP180 |       | RPi
@@ -10,6 +13,10 @@
 '    GND |-------| GND
 '    SDA |-------| GPIO 2 (SDA)
 '    SCL |-------| GPIO 3 (SCL)
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ bmp180.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r bmp180.bas
 
 
 import bmp180

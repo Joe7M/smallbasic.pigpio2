@@ -1,3 +1,27 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' Generic I2C: MPU6050 - Acceleromter and Gyroscope
+' =====================================================
+'
+' This example demonstrates how control a MPU6050
+' using the generic I2C interface
+'
+' --------------         ----------
+'  RPi          |       | MPU6050
+'  PIN 1 (3.3V) |-------| VCC
+'  PIN 3 (SDA)  |-------| SDA
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+'               |       | XCL
+'               |       | XDA
+'               |       | ADD
+'               |       | INT
+' --------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ i2c_mpu6050.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r i2c_mpu6050.bas
+
 import i2c
 
 Print "Connect to MPU-6050"
@@ -8,17 +32,6 @@ delay(500)
 
 WhoamI = i2c.ReadReg(sensor, 0x75)
 print "WHO_AM_I: ", hex(WhoamI)     ' Check for connection: sensor returns 0x68
-
-
-'i2c.WriteReg(sensor, 0x19, 0x00)
-
-'i2c.WriteReg(sensor, 0x1A, 0x00)
-
-'i2c.WriteReg(sensor, 0x1B, 0x08)
-
-'i2c.WriteReg(sensor, 0x1C, 0x00)
-
-'i2c.WriteReg(sensor, 0x6B, 0x01)
 
 ' SMPLRT_DIV
 i2c.Write(sensor, [0x19,0x00])
@@ -93,4 +106,3 @@ func short(dat)
         return dat
     endif
 end
-

@@ -1,18 +1,25 @@
-' Example on how to a push button
-' Tested with SmallBASIC 12.28
-' By Joerg Siebenmorgen
-' MIT Licence, 2024
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' Console version:  sbasic -m /home/pi/SmallBasicPIGPIO/bin ads1x15.bas
-' SDL version:      sbasicg -m/home/pi/SmallBasicPIGPIO/bin -r ads1x15.bas
+' Generic GPIO - Button
+' =====================================================
 '
-' Connect two push buttons to the Raspberry Pi to the pins 20 and 26.
-' The example demonstrates the creation of a button object and testing if
-' the button was pressed. One button will use the `ButtonPressed()` function,
-' which will return `1` if the button is pressed. The other button will use
-' the `ButtonPressedAgain()` function. It will return `1`, if the button state
-' changed from not-pressed to pressed. If you keep the button pressed
-' without releasing it, this function will return `0`.
+' The example demonstrates the creation of a button
+' object and testing if the button was pressed. One
+' button will use the `ButtonPressed()` function, which
+'  will return `1` if the button is pressed. The other
+' button will use the `ButtonPressedAgain()` function.
+' It will return `1`, if the button state changed from
+' not-pressed to pressed. If you keep the button
+' pressed without releasing it, this function will
+' return `0`.
+'
+' Connect two push buttons to the Raspberry Pi to the
+' pin 37 (GPIO26) and pin 38 (GPIO20) and Pin 39 (GND).
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ gpio_button_2.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r gpio_button_2.bas
+
 
 import gpio
 

@@ -1,8 +1,27 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' SSD1306 - 128x64 Pixel OLED Display
+' =====================================================
+'
+' This example demonstrates how control a SSD1306 with
+' 128x64 pixel
+'
+' --------------         ----------
+'  RPi          |       | SSD1306
+'  PIN 1 (3.3V) |-------| VCC
+'  PIN 3 (SDA)  |-------| SDA
+'  PIN 5 (SCL)  |-------| SCL
+'  PIN 6 (GND)  |-------| GND
+' --------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ ssd1306_128x64_1.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r ssd1306_128x64_1.bas
+
+
 import ssd1306
 
 const ADDRESS = 0x3C
-const WIDTH   = 128
-const HEIGHT  = 64
 
 Print "Connect to SSD1306 OLED display"
 ssd1306.Open("/dev/i2c-1", ADDRESS)

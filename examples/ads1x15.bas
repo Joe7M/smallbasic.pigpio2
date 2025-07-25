@@ -1,12 +1,15 @@
-' Example on how to measure analog voltage signals with a ADS1015 or
-' ADS1115 sensor using SmallBASIC PiGPIO plugin
-' Tested with SmallBASIC 12.28
-' By Joerg Siebenmorgen
-' MIT Licence, 2024
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' Console version: 	sudo sbasic -m /home/pi/SmallBasicPIGPIO/bin ads1x15.bas
-' SDL version: 		sudo sbasicg -m/home/pi/SmallBasicPIGPIO/bin -r ads1x15.bas
+' ADS1x15 - Measure analog voltages
+' =====================================================
 '
+' This example shows, how to measure analog voltage
+' signals with an ADS1015 or ADS1115 sensor using
+' 
+' Console version:
+'  sbasic -m /usr/local/lib/smallbasic/ ads1x15.bas
+' SDL version:
+'  sbasicg -m/usr/local/lib/smallbasic/ -r ads1x15.bas
 
 import ads1x15 as adc
 

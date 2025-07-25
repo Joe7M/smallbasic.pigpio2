@@ -1,3 +1,16 @@
+' ---------------SmallBASIC PiGPIO v2------------------
+'
+' Linux Framebuffer support
+' =====================================================
+'
+' This example demonstrates how to use the Linux
+' framebuffer
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ framebuffer.bas
+
+
+
 OPTION BASE 1
 
 import framebuffer as FB

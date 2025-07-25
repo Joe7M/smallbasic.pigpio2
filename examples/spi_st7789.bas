@@ -1,13 +1,18 @@
-' ST7789 - TFT controller
-' =============================
+' ---------------SmallBASIC PiGPIO v2------------------
 '
-' This example demonstrates how to drive a TFT display with a ST7789 controller using
-' the generic spi interface.
+' ST7789 - TFT RGB Display Controller
+' =====================================================
 '
-' There exist many TFT displays using the ST7789 controller. This examples is written
-' for the Waveshare 1.3inch LCD module with 240x240 pixels. With some minor modification
-' especially for the pins, TFTs from other manufacturers should also work. Be carefull
-' with VCC. If you are using a bare TFT, then drive it only with 3.3V. Many breakout
+' This example demonstrates how to drive a TFT display
+' with a ST7789 controller.
+'
+' There exist many TFT displays using the ST7789
+' controller. This examples is written for the
+' Waveshare 1.3inch LCD module with 240x240 pixels.
+' With some minor modification especially for the pins
+' and pixels, TFTs from other manufacturers should also
+' work. Be carefull with VCC. If you are using a bare
+' TFT, then drive it only with 3.3V. Many breakout
 ' boards (i.e. Adafruit) support 5V.
 '
 ' ----------------         ----------
@@ -20,8 +25,12 @@
 '  PIN 15 (GPIO22)|-------|BL
 '  GND            |-------|GND
 '  5V             |-------|VIN
-'-----------------         ---------
-
+' ----------------         ---------
+'
+' To run type:
+' sbasic -m /usr/local/lib/smallbasic/ st7789.bas
+' sbasicg -m/usr/local/lib/smallbasic/ -r st7789.bas
+'
 ' This example is based on the C library for Arduino:
 ' https://github.com/cbm80amiga/Arduino_ST7789_Fast/blob/master/Arduino_ST7789_Fast.cpp
 ' -------------------------------------------------------------------------------------
