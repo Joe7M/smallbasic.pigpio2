@@ -16,8 +16,8 @@
 ' boards (i.e. Adafruit) support 5V.
 '
 ' ----------------         ----------
-'  RP             |       |TFT
-'  PIN 19 (MOSI)  |-------|DIN (MOSI) 
+'  RPi            |       |TFT
+'  PIN 19 (MOSI)  |-------|DIN (MOSI, SDA) 
 '  PIN 23 (SCLK)  |-------|CLK (SCL)
 '  PIN 24 (CE0)   |-------|CS
 '  PIN 11 (GPIO17)|-------|DC

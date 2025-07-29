@@ -50,21 +50,23 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html): Measure voltages
 - [BMP180](./bmp180.html): Measure temperature and pressure
 - [MPU6050](./mpu6050.html): Accelerometer and gyroscope
+- [ST7789](./st7789.html): SPI color display
 - HD44780: Text display - coming soon
 - DS18B20: Temperature sensor - coming soon
-- ST7789: SPI color display - coming soon
+
 
 ## Supported Hardware
 
-- [ADS1015 and ADS1115 Voltage Sensor](./ads1x15.html)
-- [BH1750 Ambient Light Sensor (generic I2C)](./i2c.html)
-- [BMP180 Temperature and Pressure Sensor](./bmp180.html)
-- [BMP280 Temperature and Pressure Sensor (generic SPI)](./spi.html)
-- [LED (generic GPIO)](./gpio.html)
-- [MPU6050 - Accelerometer and Gyroscope](./mpu6050.html)
-- [Pi Sugar 3 plus - Battery/USB power supply and charger (generic I2C)](./i2c.html)
-- [Push Button (generic GPIO)](./gpio.html)
-- [SSD1306 OLED Display](./ssd1306.html)
+- [ADS1015 and ADS1115](./ads1x15.html): Analog to Digital Converter (Voltage Sensor)
+- [BH1750](./i2c.html):  Ambient Light Sensor (generic I2C)
+- [BMP180](./bmp180.html): Temperature and Pressure Sensor
+- [BMP280](./spi.html): Temperature and Pressure Sensor (generic SPI)
+- [LED](./gpio.html):  Control a LED (generic GPIO)
+- [MPU6050](./mpu6050.html): Accelerometer and Gyroscope
+- [Pi Sugar 3 plus](./i2c.html): Battery/USB power supply and charger (generic I2C)
+- [Push Button](./gpio.html): Read buttons (generic GPIO)
+- [SSD1306](./ssd1306.html): OLED Display
+- [ST7789](./st7789.html): SPI color display
 
 ## Links
 

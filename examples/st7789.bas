@@ -16,8 +16,8 @@
 ' boards (i.e. Adafruit) support 5V.
 '
 ' ----------------         ----------
-'  RP             |       |TFT
-'  PIN 19 (MOSI)  |-------|DIN (MOSI) 
+'  RPi            |       |TFT
+'  PIN 19 (MOSI)  |-------|DIN (MOSI, SDA)
 '  PIN 23 (SCLK)  |-------|CLK (SCL)
 '  PIN 24 (CE0)   |-------|CS
 '  PIN 11 (GPIO17)|-------|DC
@@ -35,9 +35,8 @@
 import st7789
 
 func RGBto565(r,g,b)
-    'return (((r BAND 0xF8) lshift 8) BOR ((g BAND 0xFC) lshift 3) BOR (b rshift 3))
+    'Convert RGB 888 to 16bit RGB565 and swap bytes
     return ( (r BAND 0b11111000) BOR (g rshift 5) BOR ((g BAND 0b00011100) lshift 11) BOR ((b BAND 0b11111000) lshift 5) ) 
-
 end
 
 const BLACK   = 0
