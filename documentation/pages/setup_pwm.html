@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>Setup PWM on the Raspberry Pi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 08.07.2025</div>
+<h1>Setup PWM on the Raspberry Pi</h1>
+<h3 id="on-the-fly">On-the-Fly</h3>
+<p>To load a PWM overlay while Linux is running, execute the following
+commands in a terminal:</p>
+<ul>
+<li>For single channel PWM: <code>sudo dtoverlay pwm</code></li>
+<li>For dual channel PWM: <code>sudo dtoverlay pwm-2chan</code></li>
+</ul>
+<p>Use <code>sudo dtoverlay -r pwm</code> to remove the single channel
+overlay, or <code>sudo dtoverlay -r pwm-2chan</code> to remove the dual
+channel overlay.</p>
+<p>Overlays loaded with <code>dtoverlay</code> stay active until the
+Raspberry Pi is restarted.</p>
+<h3 id="at-startup">At Startup</h3>
+<p>To load a PWM overlay at startup edit the file
+<code>/boot/firmware/config.txt</code> and add
+<code>dtoverlay=pwm</code> for single channel PWM, or
+<code>dtoverlay=pwm-2chan</code> for dual channel PWM. Restart the
+Raspberry Pi to activate the overlay.</p>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

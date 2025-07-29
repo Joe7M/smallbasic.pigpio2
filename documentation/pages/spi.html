@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>Generic SPI Interface</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 23.06.2025</div>
+<h1>Generic SPI Interface</h1>
+<p>Before start coding you need to setup SPI on the Raspberry Pi. Please
+follow these <a href="setupspi.html">instructions</a>.</p>
+<h2 id="spi-pins">SPI Pins</h2>
+<figure>
+<img src="./images/RaspberryPiGPIO.png" alt="RPI PINS" />
+<figcaption aria-hidden="true">RPI PINS</figcaption>
+</figure>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">MOSI</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">21</td>
+<td style="text-align: center;">MISO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">SCLK</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">CE0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">CE1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="library">Library</h2>
+<p>Access the basic SPI commands with the library <code>spi</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> spi</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open device</h3>
+<pre><code>Open()
+Open(interface)
+Open(interface, pagesize)</code></pre>
+<p>Open the SPI interface <code>interface</code> with a page size of
+<code>pagesize</code> in bytes. <code>interface</code> and
+<code>pagesize</code> are optional parameters. Only
+<code>pagesize</code> bytes can be read/written at once. Larger amount
+of data will be transferred in chunks. Change page size only if you
+know, what you are doing.</p>
+<ul>
+<li><code>interface</code>
+<ul>
+<li>String</li>
+<li>SPI interface name</li>
+<li>Optional parameter. Default value is
+<code>/dev/dev/spidev0.0</code></li>
+</ul></li>
+<li><code>pagesize</code>
+<ul>
+<li>Integer</li>
+<li>Page size in bytes</li>
+<li>Optional parameter. Default value is <code>4096</code>.</li>
+</ul></li>
+</ul>
+<p>When opening a SPI interface, the following default settings will be
+applied:</p>
+<ul>
+<li>MaxSpeed = 1MHz</li>
+<li>LSBFirst = 0 -&gt; MSB first</li>
+<li>BitsPerWord = 8</li>
+<li>Mode = SPI_MODE_0</li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/spidev0.0&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/spidev0.0&quot;</span>, <span class="dv">4096</span>)</span></code></pre></div>
+<h3 id="get-spi-mode">Get SPI Mode</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Mode = GetMode()</span></code></pre></div>
+<p>Returns the current SPI mode.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mode</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SPI_MODE_0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SPI_MODE_1</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SPI_MODE_2</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SPI_MODE_3</td>
+<td style="text-align: left;">3</td>
+</tr>
+</tbody>
+</table>
+<h3 id="set-spi-mode">Set SPI Mode</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SetMode(mode)</span></code></pre></div>
+<p>Set current SPI mode to <code>mode</code>.</p>
+<ul>
+<li><code>mode</code>
+<ul>
+<li>Integer</li>
+<li><table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mode</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SPI_MODE_0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SPI_MODE_1</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SPI_MODE_2</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SPI_MODE_3</td>
+<td style="text-align: left;">3</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+<h3 id="get-spi-speed">Get SPI Speed</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>speed = GetSpeed()</span></code></pre></div>
+<p>Get current SPI speed <code>speed</code> in Hz.</p>
+<h3 id="set-spi-speed">Set SPI Speed</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SetSpeed(speed)</span></code></pre></div>
+<p>Set SPI speed to <code>speed</code> in Hz.</p>
+<ul>
+<li><code>speed</code>
+<ul>
+<li>Integer</li>
+<li>Speed in Hz</li>
+</ul></li>
+</ul>
+<h3 id="get-bits-per-word">Get Bits per Word</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>BitsPerWord = GetBitsPerWord()</span></code></pre></div>
+<p>Get the current setting for bits per word.</p>
+<h3 id="set-bits-per-word">Set Bits per Word</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SetBitsPerWord(BitsPerWord)</span></code></pre></div>
+<p>Set bits per word.</p>
+<ul>
+<li><code>BitsPerWord</code>
+<ul>
+<li>Integer</li>
+</ul></li>
+</ul>
+<h3 id="get-lsbfirst">Get LSBFirst</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>LSBFirst = GetLSBFirst()</span></code></pre></div>
+<p>Get the current setting for LSBFirst. Returns <code>true</code> for
+LSBFirst or <code>false</code> for MSBFirst.</p>
+<h3 id="set-lsbfirst">Set LSBFirst</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SetLSBFirst()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SetLSBFirst(LSBFirst)</span></code></pre></div>
+<p>Set LSBFirst or MSBFirst.</p>
+<ul>
+<li><code>LSBFirst</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li><code>true</code> for LSBFirst; <code>false</code> for MSBFirst</li>
+<li>Optional parameter. Default value is <code>true</code>.</li>
+</ul></li>
+</ul>
+<h3 id="set-delay">Set Delay</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SetDelay(<span class="fu">delay</span>)</span></code></pre></div>
+<p>Set transfer delay in microseconds.</p>
+<ul>
+<li><code>delay</code>
+<ul>
+<li>Integer</li>
+<li>Delay in microseconds</li>
+</ul></li>
+</ul>
+<h3 id="close-device">Close device</h3>
+<pre><code>Close()</code></pre>
+<p>When closing a SmallBASIC program, SPI connection will be
+automatically closed. If you want to manually close SPI access , use
+this function.</p>
+<h3 id="write-to-spi-interface">Write to SPI interface</h3>
+<pre><code>Write(dataByte)
+Write(dataArray)</code></pre>
+<p>Send one byte <code>dataByte</code> or an 1d array
+<code>dataArray</code> of bytes to the interface.</p>
+<ul>
+<li><code>dataByte</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>One byte of data</li>
+</ul></li>
+<li><code>dataArray</code>
+<ul>
+<li>1D-array of integers [0 … 255, 0 … 255, … ]</li>
+<li>Array of byte data</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Write</span>(<span class="dv">0x20</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Write</span>([<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>])</span></code></pre></div>
+<h3 id="write-to-register-of-a-spi-device">Write to register of a SPI
+device</h3>
+<pre><code>WriteReg(reg, dataByte)
+WriteReg(reg, dataArray)</code></pre>
+<p>Send one byte <code>dataByte</code> or an 1d array
+<code>dataBytes</code> of bytes to a register <code>reg</code> of the
+devices.</p>
+<ul>
+<li><code>reg</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device register</li>
+</ul></li>
+<li><code>dataByte</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>One byte of data</li>
+</ul></li>
+<li><code>dataArray</code>
+<ul>
+<li>1D-array of integers [0 … 255, 0 … 255, … ]</li>
+<li>Array of byte data</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>WriteReg(id, <span class="dv">0x05</span>, <span class="dv">0x20</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>WriteReg(id, <span class="dv">0x05</span>, [<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>])</span></code></pre></div>
+<h3 id="read-from-a-spi-device">Read from a SPI device</h3>
+<pre><code>res = Read()
+res = Read(bytes)</code></pre>
+<p>Read number of bytes <code>bytes</code> from the device with device
+id <code>id</code>. <code>bytes</code> is an optional parameter.</p>
+<ul>
+<li><code>bytes</code>
+<ul>
+<li>Integer</li>
+<li>Number of bytes to read from device</li>
+<li>Optional parameter. Default value is <code>1</code></li>
+</ul></li>
+<li><code>res</code>
+<ul>
+<li>Integer or 1d-array of integers</li>
+<li>Data read from device</li>
+<li>If more than 1 byte is read, <code>res</code> is an 1d array.</li>
+</ul></li>
+</ul>
+<h3 id="read-from-a-register-of-a-spi-device">Read from a register of a
+SPI device</h3>
+<pre><code>res = Read(reg)
+res = Read(reg, bytes)</code></pre>
+<p>Read number of bytes <code>bytes</code> from the register
+<code>reg</code> of the device. <code>bytes</code> is an optional
+parameter.</p>
+<ul>
+<li><code>reg</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device register</li>
+</ul></li>
+<li><code>bytes</code>
+<ul>
+<li>Integer</li>
+<li>Number of bytes to read from device.</li>
+<li>Optional parameter. Default value is <code>1</code></li>
+</ul></li>
+<li><code>res</code>
+<ul>
+<li>Integer or 1d-array of integers</li>
+<li>Data read from device</li>
+<li>If more than 1 byte is read, <code>res</code> is an 1d array.</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>res = ReadReg(<span class="dv">0x05</span>)       <span class="co">&#39; Read one byte from register 0x05</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>res = ReadReg(<span class="dv">0x05</span>, <span class="dv">5</span>)    <span class="co">&#39; Read five bytes from register 0x05</span></span></code></pre></div>
+<h3 id="sequential-read-and-write">Sequential Read and Write</h3>
+<pre><code>res = ReadWrite(writeArray)
+res = ReadWrite(writeArray, bytes)</code></pre>
+<p>First transfer the 1d-array <code>writeArray</code> to the device and
+after finishing the write-action number of bytes <code>bytes</code> will
+be read. <code>bytes</code> is an optional parameter.</p>
+<ul>
+<li><code>dataArray</code>
+<ul>
+<li>1D-array of integers [0 … 255, 0 … 255, … ]</li>
+<li>Array of byte data</li>
+<li>Array with 1 element is allowed</li>
+</ul></li>
+<li><code>res</code>
+<ul>
+<li>1d array of integers: [0 … 255, 0 … 255, …]</li>
+<li>Data read from device</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>res = ReadWrite([<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>])</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>res = ReadWrite([<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>], <span class="dv">1</span>)</span></code></pre></div>
+<h3 id="parallel-read-and-write">Parallel Read and Write</h3>
+<pre><code>res = ReadWriteParallel(writeArray)
+res = ReadWriteParallel(writeArray, bytes)</code></pre>
+<p>Transfer the 1d-array <code>writeArray</code> to the device and at
+the same time read number of bytes <code>bytes</code>.
+<code>bytes</code> is an optional parameter.</p>
+<ul>
+<li><code>dataArray</code>
+<ul>
+<li>1D-array of integers [0 … 255, 0 … 255, … ]</li>
+<li>Array of byte data</li>
+<li>Array with 1 element is allowed</li>
+</ul></li>
+<li><code>res</code>
+<ul>
+<li>1d array of integers: [0 … 255, 0 … 255, …]</li>
+<li>Data read from device</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res = ReadWriteParallel([<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>])</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>res = ReadWriteParallel([<span class="dv">0x20</span>, <span class="dv">0x21</span>, <span class="dv">0xA3</span>], <span class="dv">1</span>)</span></code></pre></div>
+<h2 id="example-code">Example Code</h2>
+<h3 id="bmp280---temperature-and-pressure-sensor">1. BMP280 -
+Temperature and Pressure Sensor</h3>
+<figure>
+<img src="./images/bmp280_wiring.png" alt="Wiring BMP280" />
+<figcaption aria-hidden="true">Wiring BMP280</figcaption>
+</figure>
+<p>Please be careful, the sensors are usually driven with 3.3V but
+depending on the breakout board supply voltages of 5V are possible.</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> spi</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>spi.<span class="fu">Open</span>(<span class="st">&quot;/dev/spidev0.0&quot;</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Read chip id. BMP280 has id 0x58</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>id = spi.ReadReg(<span class="dv">0xD0</span>, <span class="dv">1</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> <span class="st">&quot;Chip ID:&quot;</span>, <span class="st">&quot;0x&quot;</span>; <span class="fu">hex</span>(id)  </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Get calibration data</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>cal = spi.ReadReg(<span class="dv">0x88</span>, <span class="dv">24</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>dig_T1 = ByteTo16Bit(cal[<span class="dv">0</span>], cal[<span class="dv">1</span>])</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>dig_T2 = Short(ByteTo16Bit(cal[<span class="dv">2</span>], cal[<span class="dv">3</span>]))</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>dig_T3 = Short(ByteTo16Bit(cal[<span class="dv">4</span>], cal[<span class="dv">5</span>]))</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>dig_P1 = ByteTo16Bit(cal[<span class="dv">6</span>], cal[<span class="dv">7</span>])</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>dig_P2 = Short(ByteTo16Bit(cal[<span class="dv">8</span>], cal[<span class="dv">9</span>]))</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>dig_P3 = Short(ByteTo16Bit(cal[<span class="dv">10</span>], cal[<span class="dv">11</span>]))</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>dig_P4 = Short(ByteTo16Bit(cal[<span class="dv">12</span>], cal[<span class="dv">13</span>]))</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>dig_P5 = Short(ByteTo16Bit(cal[<span class="dv">14</span>], cal[<span class="dv">15</span>]))</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>dig_P6 = Short(ByteTo16Bit(cal[<span class="dv">16</span>], cal[<span class="dv">17</span>]))</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>dig_P7 = Short(ByteTo16Bit(cal[<span class="dv">18</span>], cal[<span class="dv">19</span>]))</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>dig_P8 = Short(ByteTo16Bit(cal[<span class="dv">20</span>], cal[<span class="dv">21</span>]))</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>dig_P9 = Short(ByteTo16Bit(cal[<span class="dv">22</span>], cal[<span class="dv">23</span>]))</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Configure sensor</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>spi.WriteReg(<span class="dv">0x74</span>, <span class="dv">0</span>b01101111)     <span class="co">&#39; 011: 4x oversampling temperature; 011: 4x oversampling pressure; 11: normal power mode</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>spi.WriteReg(<span class="dv">0x75</span>, <span class="dv">0</span>b01010000)     <span class="co">&#39; 010: t_standby = 125ms;  100: 5 Samples to reach 75%; 00: 4-wire SPI</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">5</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  M = Measure()</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>  <span class="kw">print</span> <span class="st">&quot;T = &quot;</span>; M[<span class="dv">0</span>]; <span class="st">&quot; °C   P = &quot;</span>; <span class="fu">round</span>(M[<span class="dv">1</span>]/<span class="dv">100</span>,<span class="dv">2</span>);<span class="st">&quot; hPa&quot;</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">200</span>)</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;#############################################################################</span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>ByteTo16bit(LSB, MSB)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> (MSB <span class="kw">lshift</span> <span class="dv">8</span>) | LSB</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>Short(a)</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if(</span>a &gt; <span class="dv">32767</span>) <span class="kw">then</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> a - <span class="dv">65536</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>  <span class="kw">else</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> a</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">endif</span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>Measure()</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>  <span class="dt">local</span> var1, var2, T, M, T_uncompensated, t_fine, P_uncompensated, P</span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Get temperature</span></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>  M = spi.ReadReg(<span class="dv">0xFA</span>, <span class="dv">3</span>)  </span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>  T_uncompensated = (M[<span class="dv">0</span>] <span class="kw">lshift</span> <span class="dv">12</span>) | (M[<span class="dv">1</span>] <span class="kw">lshift</span> <span class="dv">4</span>) | (M[<span class="dv">2</span>] <span class="kw">rshift</span> <span class="dv">4</span>)  </span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  var1 = (((T_uncompensated <span class="kw">rshift</span> <span class="dv">3</span>) - (dig_T1 <span class="kw">lshift</span> <span class="dv">1</span>))*dig_T2) <span class="kw">rshift</span> <span class="dv">11</span></span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>  var2 = (((((T_uncompensated <span class="kw">rshift</span> <span class="dv">4</span>) - dig_T1) * ((T_uncompensated <span class="kw">rshift</span> <span class="dv">4</span>) - dig_T1)) <span class="kw">rshift</span> <span class="dv">12</span>) * dig_T3) <span class="kw">rshift</span> <span class="dv">14</span></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>  t_fine = var1 + var2</span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>  T = (t_fine * <span class="dv">5</span> + <span class="dv">128</span>) <span class="kw">rshift</span> <span class="dv">8</span></span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>  T = T / <span class="dv">100</span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Get pressure</span></span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>  M = spi.ReadWrite([<span class="dv">0xF7</span>], <span class="dv">3</span>)</span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>  P_uncompensated = (M[<span class="dv">0</span>] <span class="kw">lshift</span> <span class="dv">12</span>) | (M[<span class="dv">1</span>] <span class="kw">lshift</span> <span class="dv">4</span>) | (M[<span class="dv">2</span>] <span class="kw">rshift</span> <span class="dv">4</span>) </span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>  var1 = t_fine - <span class="dv">128000</span></span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>  var2 = var1 * var1 * dig_P6</span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a>  var2 = var2 + ((var1 * dig_P5) <span class="kw">lshift</span> <span class="dv">17</span>)</span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>  var2 = var2 + (dig_P4 <span class="kw">lshift</span> <span class="dv">35</span>)</span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>  var1 = ((var1 * var1 * dig_P3) <span class="kw">rshift</span> <span class="dv">8</span>) + ((var1 * dig_P2) <span class="kw">lshift</span> <span class="dv">12</span>)</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>  var1 = (((<span class="dv">1</span> <span class="kw">lshift</span> <span class="dv">47</span>) + var1)) * dig_P1 <span class="kw">rshift</span> <span class="dv">33</span></span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if </span>(var1 == <span class="dv">0</span>) <span class="kw">then re</span>turn <span class="dv">0</span></span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a>  P = <span class="dv">1048576</span> -  P_uncompensated</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a>  P = (((P <span class="kw">lshift</span> <span class="dv">31</span>) - var2) * <span class="dv">3125</span>) / var1</span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a>  var1 = (dig_P9 * (P <span class="kw">rshift</span> <span class="dv">13</span>) * (P <span class="kw">rshift</span> <span class="dv">13</span>)) <span class="kw">rshift</span> <span class="dv">25</span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>  var2 = (dig_P8 * P) <span class="kw">rshift</span> <span class="dv">19</span></span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>  P = ((P + var1 + var2) <span class="kw">rshift</span> <span class="dv">8</span>) + (dig_P7 <span class="kw">lshift</span> <span class="dv">4</span>)</span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>  P = P/<span class="dv">256</span></span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> [T, P]</span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<h3 id="st7789---tft-rgb-display">2. ST7789 - TFT RGB Display</h3>
+<figure>
+<img src="./images/st7789_wiring.png" alt="Wiring ST7789" />
+<figcaption aria-hidden="true">Wiring ST7789</figcaption>
+</figure>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> spi</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> gpio</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> canvas</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> DC   = <span class="dv">17</span>      <span class="co">&#39; Data or command -&gt; HIGH = data / LOW = command </span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> RST  = <span class="dv">27</span>      <span class="co">&#39; Chip reset</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BL   = <span class="dv">22</span>      <span class="co">&#39; Blacklight control</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_NOP            = <span class="dv">0x00</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_SWRESET        = <span class="dv">0x01</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_SLPOUT         = <span class="dv">0x11</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_NORON          = <span class="dv">0x13</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_INVON          = <span class="dv">0x21</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_DISPON         = <span class="dv">0x29</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_CASET          = <span class="dv">0x2A</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_RASET          = <span class="dv">0x2B</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_RAMWR          = <span class="dv">0x2C</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_COLMOD         = <span class="dv">0x3A</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL         = <span class="dv">0x36</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL_MY      = <span class="dv">0x80</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL_MX      = <span class="dv">0x40</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL_MV      = <span class="dv">0x20</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL_ML      = <span class="dv">0x10</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_MADCTL_RGB     = <span class="dv">0x00</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_240x240_XSTART = <span class="dv">0</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_240x240_YSTART = <span class="dv">0</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_TFTWIDTH       = <span class="dv">240</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ST7789_TFTHEIGHT      = <span class="dv">240</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BLACK   = <span class="dv">0x0000</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BLUE    = <span class="dv">0x001F</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> RED     = <span class="dv">0xF800</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GREEN   = <span class="dv">0x07E0</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> CYAN    = <span class="dv">0x07FF</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> MAGENTA = <span class="dv">0xF81F</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> YELLOW  = <span class="dv">0xFFE0</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> WHITE   = <span class="dv">0xFFFF</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> HIGH      = <span class="dt">TRUE</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LOW       = <span class="dt">FALSE</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_DELAY = <span class="dv">0</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>colstart = <span class="dv">0</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>rowstart = <span class="dv">0</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>ystart   = <span class="dv">0</span></span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>xstart   = <span class="dv">0</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> WIDTH    = <span class="dv">240</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> HEIGHT   = <span class="dv">240</span></span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>Setup(<span class="dv">240</span>, <span class="dv">240</span>)             <span class="co">&#39; parameter: TFT width , TFT height</span></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Init canvas</span></span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>c = canvas.create(WIDTH, HEIGHT, BLACK)</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>c._fontSize = <span class="dv">29</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Draw some graphics</span></span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>c._pen = BLACK                                 </span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>canvas.draw_rect_filled(c, <span class="dv">0</span>, <span class="dv">0</span>, WIDTH, HEIGHT) <span class="co">&#39; Clear screen</span></span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>c._pen = RED                                  </span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>canvas.draw_circle(c, <span class="dv">25</span>, <span class="dv">210</span>, <span class="dv">16</span>, <span class="dt">true</span>)</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>c._pen = RGBto565(<span class="dv">140</span>, <span class="dv">130</span>,<span class="dv">255</span>)</span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>canvas.draw_string(c, <span class="st">&quot;SPI with&quot;</span>, <span class="dv">90</span>, <span class="dv">15</span>)</span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>canvas.draw_string(c, <span class="st">&quot;SMALLBASIC&quot;</span>, <span class="dv">90</span>, <span class="dv">50</span>)</span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>c._pen = WHITE</span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>canvas.draw_line(c, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">239</span>, <span class="dv">239</span>)</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>canvas.draw_rect(c, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">239</span>, <span class="dv">239</span>)</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>t1 = <span class="fu">ticks</span>()</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>TransferFramebuffer(c._dat)         <span class="co">&#39; c._dat is the canvas framebuffer</span></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> <span class="fu">ticks</span>() - t1</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>spi.<span class="fu">close</span>()</span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> <span class="st">&quot;done&quot;</span></span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;########################################</span></span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>Setup(w, h)</span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Connect to TFT&quot;</span></span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    spi.<span class="fu">open</span>(<span class="st">&quot;/dev/spidev0.0&quot;</span>)</span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> <span class="st">&quot;Max. speed: &quot;</span>, spi.GetMaxSpeed()</span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Set speed to 10 MHz&quot;</span></span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a>    spi.SetMaxSpeed(<span class="dv">10000000</span>)</span>
+<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Set mode to SPI 0&quot;</span></span>
+<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>    spi.SetMode(<span class="dv">0</span>)</span>
+<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Open GPIO&quot;</span></span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a>    gpio.<span class="fu">Open</span>()</span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Configure gpio&quot;</span>    </span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>    gpio.SetOutput(RST)</span>
+<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a>    gpio.SetOutput(DC)</span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>    gpio.SetOutput(BL)</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>    <span class="kw">Print</span> <span class="st">&quot;Connection established&quot;</span></span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if(</span>w == <span class="dv">240</span> <span class="kw">and</span> h == <span class="dv">240</span>) <span class="kw">then ro</span>wstart = <span class="dv">80</span></span>
+<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a>    width = w</span>
+<span id="cb26-96"><a href="#cb26-96" aria-hidden="true" tabindex="-1"></a>    height = h</span>
+<span id="cb26-97"><a href="#cb26-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-98"><a href="#cb26-98" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39; Background light on</span></span>
+<span id="cb26-99"><a href="#cb26-99" aria-hidden="true" tabindex="-1"></a>    gpio.<span class="fu">write</span>(BL, HIGH)</span>
+<span id="cb26-100"><a href="#cb26-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-101"><a href="#cb26-101" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39; Hardware reset</span></span>
+<span id="cb26-102"><a href="#cb26-102" aria-hidden="true" tabindex="-1"></a>    gpio.<span class="fu">write</span>(RST, HIGH)</span>
+<span id="cb26-103"><a href="#cb26-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delay</span>(<span class="dv">50</span>)</span>
+<span id="cb26-104"><a href="#cb26-104" aria-hidden="true" tabindex="-1"></a>    gpio.<span class="fu">write</span>(RST, LOW)</span>
+<span id="cb26-105"><a href="#cb26-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delay</span>(<span class="dv">50</span>)</span>
+<span id="cb26-106"><a href="#cb26-106" aria-hidden="true" tabindex="-1"></a>    gpio.<span class="fu">write</span>(RST, HIGH)</span>
+<span id="cb26-107"><a href="#cb26-107" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delay</span>(<span class="dv">150</span>)</span>
+<span id="cb26-108"><a href="#cb26-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-109"><a href="#cb26-109" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39;Init</span></span>
+<span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_SWRESET) : <span class="fu">delay</span>(<span class="dv">150</span>)</span>
+<span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_SLPOUT)  : <span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_COLMOD)  : writeData8(<span class="dv">0x55</span>) : <span class="fu">delay</span>(<span class="dv">10</span>)     <span class="co">&#39; RGB565</span></span>
+<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_MADCTL)  : writeData8(<span class="dv">0x0</span>)</span>
+<span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_CASET)   : writeData16(ST7789_240x240_XSTART) : writeData16(ST7789_TFTWIDTH + ST7789_240x240_XSTART)</span>
+<span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_RASET)   : writeData16(ST7789_240x240_YSTART) : writeData16(ST7789_TFTHEIGHT + ST7789_240x240_YSTART)</span>
+<span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_INVON)   : <span class="fu">delay</span>(<span class="dv">10</span>)</span>
+<span id="cb26-117"><a href="#cb26-117" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_NORON)   : <span class="fu">delay</span>(<span class="dv">10</span>)</span>
+<span id="cb26-118"><a href="#cb26-118" aria-hidden="true" tabindex="-1"></a>    writeCmd(ST7789_DISPON)  : <span class="fu">delay</span>(<span class="dv">10</span>)</span>
+<span id="cb26-119"><a href="#cb26-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-120"><a href="#cb26-120" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39;SetRotation(2)</span></span>
+<span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>RGBto565(r,g,b)</span>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> ((((r) <span class="kw">BAND</span> <span class="dv">0xF8</span>) <span class="kw">lshift</span> <span class="dv">8</span>) <span class="kw">BOR</span> (((g) <span class="kw">BAND</span> <span class="dv">0xFC</span>) <span class="kw">lshift</span> <span class="dv">3</span>) <span class="kw">BOR</span> ((b) <span class="kw">rshift</span> <span class="dv">3</span>)) </span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>WriteCmd(c) </span>
+<span id="cb26-128"><a href="#cb26-128" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">write</span>(DC, LOW)</span>
+<span id="cb26-129"><a href="#cb26-129" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>(c)</span>
+<span id="cb26-130"><a href="#cb26-130" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-131"><a href="#cb26-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-132"><a href="#cb26-132" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>WriteData8(Data_Uint8)</span>
+<span id="cb26-133"><a href="#cb26-133" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">write</span>(DC, HIGH)</span>
+<span id="cb26-134"><a href="#cb26-134" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>(Data_Uint8)</span>
+<span id="cb26-135"><a href="#cb26-135" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-136"><a href="#cb26-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-137"><a href="#cb26-137" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>WriteData16(Data_Uint16)</span>
+<span id="cb26-138"><a href="#cb26-138" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">write</span>(DC, HIGH)</span>
+<span id="cb26-139"><a href="#cb26-139" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>([Data_Uint16 <span class="kw">rshift</span> <span class="dv">8</span>, Data_Uint16 <span class="kw">BAND</span> <span class="dv">0xFF</span>])</span>
+<span id="cb26-140"><a href="#cb26-140" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-141"><a href="#cb26-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-142"><a href="#cb26-142" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>SetRotation(m) </span>
+<span id="cb26-143"><a href="#cb26-143" aria-hidden="true" tabindex="-1"></a>  writeCmd(ST7789_MADCTL)</span>
+<span id="cb26-144"><a href="#cb26-144" aria-hidden="true" tabindex="-1"></a>  rotation = m <span class="kw">BAND</span> <span class="dv">3</span></span>
+<span id="cb26-145"><a href="#cb26-145" aria-hidden="true" tabindex="-1"></a>  <span class="kw">select case </span>rotation</span>
+<span id="cb26-146"><a href="#cb26-146" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> <span class="dv">0</span></span>
+<span id="cb26-147"><a href="#cb26-147" aria-hidden="true" tabindex="-1"></a>      writeData8(ST7789_MADCTL_MX <span class="kw">BOR</span> ST7789_MADCTL_MY <span class="kw">BOR</span> ST7789_MADCTL_RGB)</span>
+<span id="cb26-148"><a href="#cb26-148" aria-hidden="true" tabindex="-1"></a>      xstart = colstart</span>
+<span id="cb26-149"><a href="#cb26-149" aria-hidden="true" tabindex="-1"></a>      ystart = rowstart</span>
+<span id="cb26-150"><a href="#cb26-150" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> <span class="dv">1</span></span>
+<span id="cb26-151"><a href="#cb26-151" aria-hidden="true" tabindex="-1"></a>      writeData8(ST7789_MADCTL_MY <span class="kw">BOR</span> ST7789_MADCTL_MV <span class="kw">BOR</span> ST7789_MADCTL_RGB)</span>
+<span id="cb26-152"><a href="#cb26-152" aria-hidden="true" tabindex="-1"></a>      ystart = colstart</span>
+<span id="cb26-153"><a href="#cb26-153" aria-hidden="true" tabindex="-1"></a>      xstart = rowstart</span>
+<span id="cb26-154"><a href="#cb26-154" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> <span class="dv">2</span></span>
+<span id="cb26-155"><a href="#cb26-155" aria-hidden="true" tabindex="-1"></a>      writeData8(ST7789_MADCTL_RGB)</span>
+<span id="cb26-156"><a href="#cb26-156" aria-hidden="true" tabindex="-1"></a>      xstart = <span class="dv">0</span></span>
+<span id="cb26-157"><a href="#cb26-157" aria-hidden="true" tabindex="-1"></a>      ystart = <span class="dv">0</span></span>
+<span id="cb26-158"><a href="#cb26-158" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> <span class="dv">3</span></span>
+<span id="cb26-159"><a href="#cb26-159" aria-hidden="true" tabindex="-1"></a>      writeData8(ST7789_MADCTL_MX <span class="kw">BOR</span> ST7789_MADCTL_MV <span class="kw">BOR</span> ST7789_MADCTL_RGB)</span>
+<span id="cb26-160"><a href="#cb26-160" aria-hidden="true" tabindex="-1"></a>      xstart = <span class="dv">0</span></span>
+<span id="cb26-161"><a href="#cb26-161" aria-hidden="true" tabindex="-1"></a>      ystart = <span class="dv">0</span></span>
+<span id="cb26-162"><a href="#cb26-162" aria-hidden="true" tabindex="-1"></a>  <span class="kw">end select</span></span>
+<span id="cb26-163"><a href="#cb26-163" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-164"><a href="#cb26-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-165"><a href="#cb26-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-166"><a href="#cb26-166" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;sub setAddrWindow(xs, xe, ys, ye)</span></span>
+<span id="cb26-167"><a href="#cb26-167" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>setAddrWindow(xs, ys, xe, ye)</span>
+<span id="cb26-168"><a href="#cb26-168" aria-hidden="true" tabindex="-1"></a>  xs += xstart</span>
+<span id="cb26-169"><a href="#cb26-169" aria-hidden="true" tabindex="-1"></a>  xe += xstart</span>
+<span id="cb26-170"><a href="#cb26-170" aria-hidden="true" tabindex="-1"></a>  ys += ystart</span>
+<span id="cb26-171"><a href="#cb26-171" aria-hidden="true" tabindex="-1"></a>  ye += ystart</span>
+<span id="cb26-172"><a href="#cb26-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-173"><a href="#cb26-173" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39;CASET</span></span>
+<span id="cb26-174"><a href="#cb26-174" aria-hidden="true" tabindex="-1"></a>  WriteCmd(ST7789_CASET)  </span>
+<span id="cb26-175"><a href="#cb26-175" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">write</span>(DC, HIGH)                                  <span class="co">&#39; data (active high)</span></span>
+<span id="cb26-176"><a href="#cb26-176" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>([xs <span class="kw">rshift</span> <span class="dv">8</span>, xs <span class="kw">BAND</span> <span class="dv">0xFF</span>])</span>
+<span id="cb26-177"><a href="#cb26-177" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>([xe <span class="kw">rshift</span> <span class="dv">8</span>, xe <span class="kw">BAND</span> <span class="dv">0xFF</span>])</span>
+<span id="cb26-178"><a href="#cb26-178" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; RASET</span></span>
+<span id="cb26-179"><a href="#cb26-179" aria-hidden="true" tabindex="-1"></a>  WriteCmd(ST7789_RASET)</span>
+<span id="cb26-180"><a href="#cb26-180" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">write</span>(DC, HIGH)                                  <span class="co">&#39; data (active high)</span></span>
+<span id="cb26-181"><a href="#cb26-181" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>([ys <span class="kw">rshift</span> <span class="dv">8</span>, ys <span class="kw">BAND</span> <span class="dv">0xFF</span>])</span>
+<span id="cb26-182"><a href="#cb26-182" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">write</span>([ye <span class="kw">rshift</span> <span class="dv">8</span>, ye <span class="kw">BAND</span> <span class="dv">0xFF</span>])</span>
+<span id="cb26-183"><a href="#cb26-183" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb26-184"><a href="#cb26-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-185"><a href="#cb26-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-186"><a href="#cb26-186" aria-hidden="true" tabindex="-1"></a><span class="kw">sub </span>TransferFramebuffer(<span class="dt">byref</span> fb)</span>
+<span id="cb26-187"><a href="#cb26-187" aria-hidden="true" tabindex="-1"></a>  <span class="dt">local</span> ii, xx, yy, FrameBuffer_8bit, w, h</span>
+<span id="cb26-188"><a href="#cb26-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-189"><a href="#cb26-189" aria-hidden="true" tabindex="-1"></a>  <span class="dt">dim</span> FrameBuffer_8bit(<span class="dv">2</span> * WIDTH * HEIGHT)</span>
+<span id="cb26-190"><a href="#cb26-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-191"><a href="#cb26-191" aria-hidden="true" tabindex="-1"></a>  ii = <span class="dv">0</span></span>
+<span id="cb26-192"><a href="#cb26-192" aria-hidden="true" tabindex="-1"></a>  h = HEIGHT - <span class="dv">1</span></span>
+<span id="cb26-193"><a href="#cb26-193" aria-hidden="true" tabindex="-1"></a>  w = WIDTH - <span class="dv">1</span></span>
+<span id="cb26-194"><a href="#cb26-194" aria-hidden="true" tabindex="-1"></a>  <span class="kw">for </span>xx = <span class="dv">0</span> <span class="kw">to</span> w</span>
+<span id="cb26-195"><a href="#cb26-195" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for </span>yy = <span class="dv">0</span> <span class="kw">to</span> h</span>
+<span id="cb26-196"><a href="#cb26-196" aria-hidden="true" tabindex="-1"></a>      FrameBuffer_8bit[ii]     = fb[xx, yy] <span class="kw">rshift</span> <span class="dv">8</span></span>
+<span id="cb26-197"><a href="#cb26-197" aria-hidden="true" tabindex="-1"></a>      FrameBuffer_8bit[ii + <span class="dv">1</span>] = fb[xx, yy] <span class="kw">BAND</span> <span class="dv">0xFF</span></span>
+<span id="cb26-198"><a href="#cb26-198" aria-hidden="true" tabindex="-1"></a>      ii += <span class="dv">2</span></span>
+<span id="cb26-199"><a href="#cb26-199" aria-hidden="true" tabindex="-1"></a>    <span class="kw">next</span></span>
+<span id="cb26-200"><a href="#cb26-200" aria-hidden="true" tabindex="-1"></a>  <span class="kw">next </span></span>
+<span id="cb26-201"><a href="#cb26-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-202"><a href="#cb26-202" aria-hidden="true" tabindex="-1"></a>  setAddrWindow(<span class="dv">0</span>, <span class="dv">0</span>, w, h) </span>
+<span id="cb26-203"><a href="#cb26-203" aria-hidden="true" tabindex="-1"></a>  WriteCmd(ST7789_RAMWR)</span>
+<span id="cb26-204"><a href="#cb26-204" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">Write</span>(DC, HIGH)</span>
+<span id="cb26-205"><a href="#cb26-205" aria-hidden="true" tabindex="-1"></a>  spi.<span class="fu">Write</span>(FrameBuffer_8bit)</span>
+<span id="cb26-206"><a href="#cb26-206" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

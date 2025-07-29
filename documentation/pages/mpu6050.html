@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>MPU6050 - Acceleromter and Gyroscope</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 16.11.2024</div>
+<h1>MPU6050 - Acceleromter and Gyroscope</h1>
+<p>The MPU6050 is a acceleration sensor and gyroscope using the
+I2C-protocol for communication.</p>
+<h2 id="library">Library</h2>
+<p>To use the MPU6050, import the library <code>mpu6050</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> mpu6050</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>Open()
+Open(interface)
+Open(interface, address)</code></pre>
+<p>Open the MPU6050 on interface <code>interface</code> with I2C address
+<code>address</code>.</p>
+<ul>
+<li><code>interface</code>
+<ul>
+<li>String</li>
+<li>Path to I2C-Interface.</li>
+<li>Optional parameter. Default value is <code>"/dev/i2c-1"</code></li>
+</ul></li>
+<li><code>address</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device address</li>
+<li>Optional parameter. Default value is <code>0x68</code>.</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x68</span>)</span></code></pre></div>
+<h3 id="measure-acceleration">Measure Acceleration</h3>
+<pre><code>a = Acceleration()</code></pre>
+<p>Measure acceleration in x, y and z direction.</p>
+<ul>
+<li><code>a</code>
+<ul>
+<li>1D-array of 3 float</li>
+<li><code>a[0]</code>: acceleration in x</li>
+<li><code>a[1]</code>: acceleration in y</li>
+<li><code>a[2]</code>: acceleration in z</li>
+<li>in m/s^2</li>
+</ul></li>
+</ul>
+<h3 id="read-gyroscope">Read Gyroscope</h3>
+<pre><code>g = Gyroscope()</code></pre>
+<p>Read gyroscope data in x, y and z direction.</p>
+<ul>
+<li><code>g</code>
+<ul>
+<li>1D-array of 3 float</li>
+<li><code>g[0]</code>: in x</li>
+<li><code>g[1]</code>: in y</li>
+<li><code>g[2]</code>: in z</li>
+<li>in °/s</li>
+</ul></li>
+</ul>
+<h3 id="measure-temperature">Measure Temperature</h3>
+<pre><code>t = Temperature()</code></pre>
+<p>Measure temperature in °C.</p>
+<ul>
+<li><code>t</code>
+<ul>
+<li>Float</li>
+<li>Temperature in °C</li>
+</ul></li>
+</ul>
+<h3 id="configure-gyrscope">Configure Gyrscope</h3>
+<pre><code>GyroscopeConfig(range)</code></pre>
+<p>Sets the full scale range of the gyroscope. <code>range</code> can
+have the values 250, 500, 1000, or 2000 in °/s.</p>
+<ul>
+<li><code>range</code>
+<ul>
+<li>Integer: 250, 500, 1000, or 2000</li>
+<li>Full scale range in °/s</li>
+</ul></li>
+</ul>
+<h3 id="configure-acceleromter">Configure Acceleromter</h3>
+<pre><code>AccelerationConfig(range)</code></pre>
+<p>Sets the full scale range of the acceleromter. <code>range</code> can
+have the values 2, 4, 8, or 16 in g (9.81 m/s^2).</p>
+<ul>
+<li><code>range</code>
+<ul>
+<li>Integer: 2, 4, 8, or 16</li>
+<li>Full scale range in g (9.81 m/s^2)</li>
+</ul></li>
+</ul>
+<h3 id="close-device">Close device</h3>
+<pre><code>Close()</code></pre>
+<p>Close the MPU6050 device.</p>
+<h2 id="example">Example</h2>
+<p>For running this example, you need a MPU6050. SmallBASIC PiGPIO 2 is
+using the I2C-protocol for communication. The Raspberry Pi supports this
+protocol in hardware, but by default the protocol is disabled. Therefore
+you have to setup I2C as described <a
+href="./setupi2c.html">here</a>.</p>
+<p>In the next step please wire the sensor as shown in the following
+image.</p>
+<figure>
+<img src="./images/mpu6050_wiring.png" alt="Wiring MPU6050" />
+<figcaption aria-hidden="true">Wiring MPU6050</figcaption>
+</figure>
+<p>The I2C bus is using pin 2 (SDA) and 3 (SCL). The sensor can be
+driven with a voltage of 3.3V.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> mpu6050</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mpu6050.<span class="fu">open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x68</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">1000</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    A = mpu6050.Acceleration()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    G = mpu6050.Gyroscope()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    T = mpu6050.Temperature()</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">locate</span> <span class="dv">5</span>,<span class="dv">0</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> <span class="st">&quot;Acc: [&quot;</span>;</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> USING <span class="st">&quot;##.00 &quot;</span>; A[<span class="dv">0</span>], A[<span class="dv">1</span>], A[<span class="dv">2</span>];</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> <span class="st">&quot;]  Gryo: [&quot;</span>;</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> USING <span class="st">&quot;####.00 &quot;</span>; G[<span class="dv">0</span>], G[<span class="dv">1</span>], G[<span class="dv">2</span>];</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> <span class="st">&quot;] Temp : &quot;</span>;</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> USING <span class="st">&quot;##.00 &quot;</span>; T</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delay</span>(<span class="dv">100</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

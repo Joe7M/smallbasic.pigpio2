@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>BMP180 - Measure temperature and pressure</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 07.11.2024</div>
+<h1>BMP180 - Measure temperature and pressure</h1>
+<p>The BMP180 is a temperature and pressure sensors using the
+I2C-protocol for communication.</p>
+<h2 id="library">Library</h2>
+<p>To use the BMP180, import the library <code>bmp180</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> bmp180</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>Open()
+Open(interface)
+Open(interface, address)</code></pre>
+<p>Open the BMP180 on interface <code>interface</code> with I2C address
+<code>address</code>.</p>
+<ul>
+<li><code>interface</code>
+<ul>
+<li>String</li>
+<li>Path to I2C-Interface.</li>
+<li>Optional parameter. Default value is <code>"/dev/i2c-1"</code></li>
+</ul></li>
+<li><code>address</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device address</li>
+<li>Optional parameter. Default value is <code>0x77</code>.</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x77</span>)</span></code></pre></div>
+<h3 id="measure">Measure</h3>
+<pre><code>M = StartMeasurement()</code></pre>
+<p>Measure temperature and pressure.</p>
+<ul>
+<li><code>M</code>
+<ul>
+<li>1d-array with two real values</li>
+<li><code>M[0]</code>: Temperature in °C</li>
+<li><code>M[1]</code>: Pressure in Pascal</li>
+</ul></li>
+</ul>
+<h3 id="close-device">Close device</h3>
+<pre><code>Close()</code></pre>
+<p>Close the BMP180 device.</p>
+<h2 id="example">Example</h2>
+<p>For running this example, you need a BMP180. SmallBASIC PiGPIO 2 is
+using the I2C-protocol for communication. The Raspberry Pi supports this
+protocol in hardware, but by default the protocol is disabled. Therefore
+you have to setup I2C as described <a
+href="./setupi2c.html">here</a>.</p>
+<p>In the next step please wire the sensor as shown in the following
+image.</p>
+<figure>
+<img src="./images/bmp180_wiring.png" alt="Wiring BMP180" />
+<figcaption aria-hidden="true">Wiring BMP180</figcaption>
+</figure>
+<p>The I2C bus is using pin 2 (SDA1) and 3 (SCL1). The sensor can be
+driven with a voltage of 3.3V.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> bmp180</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>bmp180.<span class="fu">open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x77</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">50</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  M = bmp180.StartMeasurement()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">locate</span> <span class="dv">5</span>,<span class="dv">0</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">print</span> <span class="st">&quot;T: &quot;</span>; M[<span class="dv">0</span>]; <span class="st">&quot;  P: &quot;</span>; M[<span class="dv">1</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>ST7789 - RGB TFT Display</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 26.07.2025</div>
+<h1>ST7789 - RGB TFT Display</h1>
+<p>The ST7789 is a controller for RGB Displays. Data is transferred
+using the SPI interface. Displays are available in different sizes and
+amount of pixels. Please setup <a href="./setup_spi.html">SPI</a> before
+using the display.</p>
+<h2 id="library">Library</h2>
+<p>To use the ST7789, import the library <code>st7789</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> st7789</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>Open()
+Open(LCD_WIDTH)
+Open(LCD_WIDTH, LCD_HEIGHT)
+Open(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE)
+Open(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP)
+Open(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL)
+Open(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL, SPI_SPEED)
+Open(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL, SPI_SPEED, SPI_PAGESIZE)</code></pre>
+<p>Open the ST7789 using the SPI interface.</p>
+<ul>
+<li><code>LCD_WIDTH</code>
+<ul>
+<li>Integer: &gt;0</li>
+<li>Number of pixels in x.</li>
+<li>Optional: default value is <code>240</code></li>
+</ul></li>
+<li><code>LCD_HEIGHT</code>
+<ul>
+<li>Integer: &gt;0</li>
+<li>Number of pixels in y.</li>
+<li>Optional: default value is <code>240</code></li>
+</ul></li>
+<li><code>SPI_DEVICE</code>
+<ul>
+<li>String</li>
+<li>SPI device</li>
+<li>Optional: default value is <code>/dev/spidev0.0</code></li>
+</ul></li>
+<li><code>GPIO_CHIP</code>
+<ul>
+<li>String</li>
+<li>GPIO chip name</li>
+<li>Optional: default value is <code>gpiochip0</code></li>
+</ul></li>
+<li><code>PIN_RST</code>
+<ul>
+<li>Integer: 1 … 53</li>
+<li>GPIO-Pin number of the reset line</li>
+<li>Optional: default value is <code>27</code> (for pin 13)</li>
+</ul></li>
+<li><code>PIN_DC</code>
+<ul>
+<li>Integer: 1 … 53</li>
+<li>GPIO-Pin number of the Data/Comand line</li>
+<li>Optional: default value is <code>17</code> (for pin 11)</li>
+</ul></li>
+<li><code>PIN_BL</code>
+<ul>
+<li>Integer: 1 … 53</li>
+<li>GPIO-Pin number of the background light line</li>
+<li>Optional: default value is <code>22</code> (for pin 15)</li>
+</ul></li>
+<li><code>SPI_SPEED</code>
+<ul>
+<li>Integer: 3800 … 250000000</li>
+<li>SPI Frequency in Hz</li>
+<li>Optional: default value is <code>10000000</code></li>
+<li>Maximum speed depends on many parameters. Test max. speed at which
+your display is still happy to work. I was able to drive my display with
+125MHz. But I don’t know how stable the data transfer will be over time
+at that speed.</li>
+</ul></li>
+<li><code>SPI_PAGESIZE</code>
+<ul>
+<li>Integer: &gt;0</li>
+<li>SPI page size (buffer size)</li>
+<li>Optional: default value is <code>4096</code></li>
+<li>The default value on a Raspberry Pi is 4096. You can check the
+current settings with:
+<code>cat /sys/module/spidev/parameters/bufsiz</code>. If you want to
+set a different page size, you have to edit
+<code>/boot/cmdline.txt</code> and add
+i.e. <code>spidev.bufsiz=32768</code> for a new buffer size of 32768
+bytes.</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_WIDTH    = <span class="dv">240</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_HEIGHT   = <span class="dv">240</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_DEVICE   = <span class="st">&quot;/dev/spidev0.0&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_CHIP    = <span class="st">&quot;gpiochip0&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_RST      = <span class="dv">27</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_DC       = <span class="dv">17</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_BL       = <span class="dv">22</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_SPEED    = <span class="dv">50000000</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_PAGESIZE = <span class="dv">4096</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Open</span>(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL, SPI_SPEED, SPI_PAGESIZE)</span></code></pre></div>
+<blockquote>
+<p>If your board does not have a pin for the background light, you still
+have to specify a GPIO pin. This GPIO pin will be used by the library,
+even if nothing is connected.</p>
+</blockquote>
+<h3 id="close-device">Close Device</h3>
+<pre><code>Close()</code></pre>
+<p>Close the ST7789 controller.</p>
+<h3 id="display-buffer">Display Buffer</h3>
+<pre><code>Display()</code></pre>
+<p>Display the current buffer. If you perform a drawing command, only
+the buffer will be changed. The display will not show the changes until
+<code>Display()</code> is called.</p>
+<h3 id="set-color">Set Color</h3>
+<pre><code>Color(fg)
+Color(fg, bg)</code></pre>
+<p>Set the foreground color <code>fg</code> and background color
+<code>bg</code>.</p>
+<ul>
+<li><code>fg</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Foreground color</li>
+</ul></li>
+<li><code>bg</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Background color</li>
+<li>Optional parameter. Default value is current background color.</li>
+</ul></li>
+</ul>
+<h3 id="clear-screen">Clear Screen</h3>
+<pre><code>Cls()
+Cls(color)</code></pre>
+<p>Clear the screen using color <code>color</code>. If color is omitted,
+the current background color is used.</p>
+<ul>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Clear color</li>
+<li>Optional parameter. Default value is current background color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-pixel">Draw a Pixel</h3>
+<pre><code>Pset(x1, y1)
+Pset(x1, y1, color)</code></pre>
+<p>Draw a pixel at point <code>(x1, y1)</code> with color
+<code>color</code></p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-line">Draw a Line</h3>
+<pre><code>Line(x1, y1, x2, y2)
+Line(x1, y1, x2, y2, color)</code></pre>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of start point in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of end point in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle">Draw a Rectangle</h3>
+<pre><code>Rect(x1, y1, x2, y2)
+Rect(x1, y1, x2, y2, color)
+Rect(x1, y1, x2, y2, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code>. If <code>fill</code> is 1 (true), a
+filled rectangle will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle-with-round-corners">Draw a Rectangle with Round
+Corners</h3>
+<pre><code>Roundrect(x1, y1, x2, y2)
+Roundrect(x1, y1, x2, y2, radius)
+Roundrect(x1, y1, x2, y2, radius, color)
+Roundrect(x1, y1, x2, y2, radius, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code> and rounded corners. The radius in
+pixel of the corners if given by <code>radius</code>. If
+<code>fill</code> is 1 (true), a filled rectangle will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Radius if corners in pixel</li>
+<li>Optional parameter. Default value is 4.</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-circle">Draw a Circle</h3>
+<pre><code>Circle(x, y, radius)
+Circle(x, y, radius, color)
+Circle(x, y, radius, color, fill)</code></pre>
+<p>Draw a circle at position <code>(x, y)</code> with radius
+<code>radius</code> in pixel. <code>color</code> defines the line color.
+If <code>fill</code> is set to <code>1</code> (<code>true</code>), then
+the circle is filled with <code>color</code>. If no color is given, the
+current foreground color will be used.</p>
+<ul>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Radius of the circle in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line or fill color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled circle will be drawn</li>
+<li>Optional parameter. Default value 0</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-triangle">Draw a Triangle</h3>
+<pre><code>Triangle(x1, y1, x2, y2, x3, y3)
+Triangle(x1, y1, x2, y2, x3, y3, color)
+Triangle(x1, y1, x2, y2, x3, y3, color, fill)</code></pre>
+<p>Draw a triangle with the corner points <code>(x1, y1)</code>,
+<code>(x2, y2)</code> and <code>(x3, y3)</code> with line color
+<code>color</code>. If <code>fill</code> is 1 (true), a filled triangle
+will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>, <code>x2, y2</code>, <code>x3, y3</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of corner points in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="print-text">Print Text</h3>
+<pre><code>Print(text)
+Print(text, color)</code></pre>
+<p>Print text <code>text</code> with text color <code>color</code>.
+After printing the text, the text cursor advances by one text-line. The
+following special characters are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Character</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>\a</code></td>
+<td style="text-align: left;">Set cursor position to upper left (0,
+0)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\b</code></td>
+<td style="text-align: left;">Move cursor back by one position</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>\n</code></td>
+<td style="text-align: left;">Go to start of current line</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\r</code></td>
+<td style="text-align: left;">Go to line below</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>text</code>
+<ul>
+<li>String</li>
+<li>Text to be printed</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+</ul>
+<h3 id="set-text-cursor-position">Set Text Cursor Position</h3>
+<pre><code>At()
+At(x)
+At(x, y)</code></pre>
+<p>Set the text cursor to the pixel <code>(x, y)</code>.</p>
+<ul>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="set-text-size">Set Text Size</h3>
+<pre><code>SetTextSize(size)</code></pre>
+<p>Set text size to <code>size</code>. <code>size</code> must be an
+multiple of 8.</p>
+<ul>
+<li><code>size</code>
+<ul>
+<li>Integer: 8, 16, 24, 32, …, 8*n</li>
+<li>Text size in pixel</li>
+</ul></li>
+</ul>
+<h3 id="copy-array-to-screen">Copy Array to Screen</h3>
+<pre><code>SetArray(A)
+SetArray(A, x)
+SetArray(A, x, y)
+SetArray(A, x, y, trans)</code></pre>
+<p>Copy the content of the 2D-array <code>A</code> to screen at position
+<code>(x,y)</code> using transparency mode <code>trans</code>. The
+following transparency modes are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Mode</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: left;">no transparency</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Every element of <code>A</code> with value
+<code>0</code> will be transparent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long.</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>trans</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>Transparency mode</li>
+<li>0 -&gt; no transparency</li>
+<li>1 -&gt; transparancy</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="copy-screen-to-array">Copy Screen to Array</h3>
+<pre><code>A = GetArray()
+A = GetArray(x)
+A = GetArray(x, y)
+A = GetArray(x, y, w)
+A = GetArray(x, y, w, h)</code></pre>
+<p>Copy the screen context inside the rectangle with top-left corner at
+<code>(x, y)</code>, a width of <code>w</code> and a height of
+<code>h</code> to the 2D-array <code>A</code>.</p>
+<ul>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top-left corner of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>w</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Width if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in x.</li>
+</ul></li>
+<li><code>h</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Height if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in y.</li>
+</ul></li>
+</ul>
+<h2 id="example">Example</h2>
+<p>For running this example, you need a ST7789 compatible display. The
+examples are based on the Waveshare 1,3”, 240 x 240 Pixel. This display
+runs with 5V. Check your display. Many displays only support 3.3V. The
+naming of the pins can be slightly different.</p>
+<p>Please wire the display as shown in the following two examples:</p>
+<pre><code> ----------------         ----------
+  RPi            |       | TFT
+  PIN 19 (MOSI)  |-------| DIN, MOSI, SDA
+  PIN 23 (SCLK)  |-------| CLK, SCL
+  PIN 24 (CE0)   |-------| CS
+  PIN 11 (GPIO17)|-------| DC, D/C
+  PIN 13 (GPIO27)|-------| RST, RES
+  PIN 15 (GPIO22)|-------| BL
+  GND            |-------| GND
+  5V             |-------| VIN
+ ----------------         ---------</code></pre>
+<figure>
+<img src="./images/st7789_wiring.png" alt="Wiring st7789" />
+<figcaption aria-hidden="true">Wiring st7789</figcaption>
+</figure>
+<h3 id="example-1">1. Example</h3>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> st7789</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>RGBto565(r,g,b)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">&#39;Convert RGB 888 to 16bit RGB565 and swap bytes</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> ( (r <span class="kw">BAND</span> <span class="dv">0</span>b11111000) <span class="kw">BOR</span> (g <span class="kw">rshift</span> <span class="dv">5</span>) <span class="kw">BOR</span> ((g <span class="kw">BAND</span> <span class="dv">0</span>b00011100) <span class="kw">lshift</span> <span class="dv">11</span>) <span class="kw">BOR</span> ((b <span class="kw">BAND</span> <span class="dv">0</span>b11111000) <span class="kw">lshift</span> <span class="dv">5</span>) ) </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BLACK   = <span class="dv">0</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BLUE    = RGBto565(<span class="dv">0</span>  ,  <span class="dv">0</span>,<span class="dv">255</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> RED     = RGBto565(<span class="dv">255</span>,  <span class="dv">0</span>,<span class="dv">0</span>  )</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GREEN   = RGBto565(  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">0</span>  )</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> CYAN    = RGBto565(  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> MAGENTA = RGBto565(<span class="dv">255</span>,  <span class="dv">0</span>,<span class="dv">255</span>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> YELLOW  = RGBto565(<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">0</span>  )</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> WHITE   = RGBto565(<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> DRAW_FILLED = <span class="dv">1</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_WIDTH    = <span class="dv">240</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_HEIGHT   = <span class="dv">240</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_DEVICE   = <span class="st">&quot;/dev/spidev0.0&quot;</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_CHIP    = <span class="st">&quot;gpiochip0&quot;</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_RST      = <span class="dv">27</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_DC       = <span class="dv">17</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_BL       = <span class="dv">22</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_SPEED    = <span class="dv">50000000</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_PAGESIZE = <span class="dv">4096</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Open</span>(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL, SPI_SPEED, SPI_PAGESIZE)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; if you have a 240x240 TFT and don&#39;t need any extra configuration, then use:</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; st7789.Open()</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Cls</span>()</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Color</span>(WHITE, <span class="dv">0</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Line</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">239</span>,<span class="dv">239</span>)</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>st7789.RoundRect(<span class="dv">60</span>,<span class="dv">60</span>,<span class="dv">120</span>,<span class="dv">120</span>,<span class="dv">5</span>, BLUE)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Circle</span>(<span class="dv">119</span>,<span class="dv">119</span>,<span class="dv">50</span>, RED, DRAW_FILLED)</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">At</span>(<span class="dv">30</span>,<span class="dv">10</span>)</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>st7789.SetTextSize(<span class="dv">24</span>)</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>st7789.<span class="kw">Print</span>(<span class="st">&quot;SmallBASIC&quot;</span>)</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>(  <span class="dv">0</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,   BLACK, DRAW_FILLED)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>( <span class="dv">29</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,     RED, DRAW_FILLED)</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>( <span class="dv">59</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,   GREEN, DRAW_FILLED)</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>( <span class="dv">89</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,    BLUE, DRAW_FILLED)</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>(<span class="dv">119</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,    CYAN, DRAW_FILLED)</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>(<span class="dv">149</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>, MAGENTA, DRAW_FILLED)</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>(<span class="dv">179</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,  YELLOW, DRAW_FILLED)</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Rect</span>(<span class="dv">209</span>,<span class="dv">209</span>, <span class="dv">30</span>,<span class="dv">30</span>,   WHITE, DRAW_FILLED)</span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>st7789.Display()</span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Close</span>()</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span>(<span class="st">&quot;Done&quot;</span>)</span></code></pre></div>
+<h3 id="example-speed-test">2. Example: Speed Test</h3>
+<p>You can test different SPI transfer speeds and check if the
+controller still works. Set <code>SPI_SPEED</code> to a small value and
+then go for higher Frequencies.</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> st7789</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="kw">func </span>RGBto565(r,g,b)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> ((r <span class="kw">BAND</span> <span class="dv">0</span>b11111000) <span class="kw">BOR</span> (g <span class="kw">rshift</span> <span class="dv">5</span>) <span class="kw">BOR</span> ((g <span class="kw">BAND</span> <span class="dv">0</span>b00011100) <span class="kw">lshift</span> <span class="dv">11</span>) <span class="kw">BOR</span> ((b <span class="kw">BAND</span> <span class="dv">0</span>b11111000) <span class="kw">lshift</span> <span class="dv">5</span>)) </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> WHITE   = RGBto565(<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> DRAW_FILLED = <span class="dv">1</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_WIDTH = <span class="dv">240</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> LCD_HEIGHT = <span class="dv">240</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_DEVICE = <span class="st">&quot;/dev/spidev0.0&quot;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_CHIP = <span class="st">&quot;gpiochip0&quot;</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_RST = <span class="dv">27</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_DC = <span class="dv">17</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_BL = <span class="dv">22</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_SPEED = <span class="dv">50000000</span>  <span class="co">&#39; Test the max speed i.e. 1000000 (1MHz), 10000000 (10MHz), 50000000 (50MHz), 125000000 (125MHz)</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> SPI_PAGESIZE = <span class="dv">4096</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Open</span>(LCD_WIDTH, LCD_HEIGHT, SPI_DEVICE, GPIO_CHIP, PIN_RST, PIN_DC, PIN_BL, SPI_SPEED, SPI_PAGESIZE)</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Color</span>(WHITE, <span class="dv">0</span>)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>TimeStart = <span class="fu">ticks</span>()</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>yy = <span class="dv">20</span> <span class="kw">to</span> <span class="dv">220</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  ii++</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  st7789.<span class="fu">Cls</span>()</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  st7789.<span class="fu">Circle</span>(<span class="dv">119</span>, yy,<span class="dv">20</span>, WHITE, DRAW_FILLED)</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  st7789.Display()</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> ii / (<span class="fu">ticks</span>() - TimeStart) * <span class="dv">1000</span>; <span class="st">&quot; FPS&quot;</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>st7789.<span class="fu">Close</span>()</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span>(<span class="st">&quot;Done&quot;</span>)</span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

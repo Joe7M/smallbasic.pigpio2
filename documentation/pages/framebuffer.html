@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>Graphic with Linux Framebuffer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 08.11.2024</div>
+<h1>Graphic with Linux Framebuffer</h1>
+<p>Many SPI-displays provide a framebuffer device
+(i.e. <code>/dev/fb0</code>). With SmallBASIC GPIO 2’s framebuffer
+plugin graphics can be displayed on these displays. If you don’t have a
+graphical desktop running on your Raspberry Pi and you are using the
+terminal instead, the connected monitor is accessible as a framebuffer
+device, too.</p>
+<h2 id="library">Library</h2>
+<p>To use the framebuffer, import the library
+<code>framebuffer</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> framebuffer</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>id = Open()
+id = Open(device)
+id = Open(device, UseMouse)
+id = Open(device, UseMouse, HideText)
+</code></pre>
+<p>Open the framebuffer with device name <code>device</code> and return
+a device id <code>id</code>. Serveral framebuffers can be opened at the
+same time. <code>id</code> is used to select a framebuffer.
+<code>UseMouse</code> can be set to <code>0</code>, if you don’t want to
+use the mouse. If <code>HideText</code> is <code>1</code>, the current
+text dislay on the console will be hidden. Additionally the blinking
+text cursor will be disabled. After ending the program, the console will
+be restored.</p>
+<ul>
+<li><code>device</code>
+<ul>
+<li>String</li>
+<li>Framebuffer device</li>
+<li>Parameter is optional. Default value is <code>"/dev/fb0"</code></li>
+</ul></li>
+<li><code>UseMouse</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, the mouse will be initialized</li>
+<li>Optional parameter. Default value is 1.</li>
+</ul></li>
+<li><code>HideText</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, console text will be hidden and cursor disabled.</li>
+<li>Optional parameter. Default value is 1.</li>
+</ul></li>
+<li><code>id</code>
+<ul>
+<li>Device id</li>
+</ul></li>
+</ul>
+<h3 id="close-device">Close Device</h3>
+<pre><code>Close(id)</code></pre>
+<p>Close the framebuffer device with device id <code>id</code>.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+</ul>
+<h3 id="get-framebuffer-information">Get Framebuffer Information</h3>
+<pre><code>info = GetInfo(id)</code></pre>
+<p>Provide resolution, color bit-depth per pixel (bpp) and if double
+buffering is enabled.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>info</code>
+<ul>
+<li>1d-array of integers</li>
+<li><code>info[0]</code>: pixel in x</li>
+<li><code>info[1]</code>: pixel in y</li>
+<li><code>info[2]</code>: bits per pixel</li>
+<li><code>info[3]</code>: 0,1
+<ul>
+<li>0: Double buffering disabled</li>
+<li>1: Double buffering enabled</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="set-color">Set Color</h3>
+<pre><code>Color(id, fgcolor)
+Color(id, fgcolor, bgcolor)</code></pre>
+<p>Set foreground color <code>fgcolor</code> and background color
+<code>bgcolor</code>. The color value depends on your framebuffer
+device.</p>
+<p>For example: If you have a 32bit framebuffer with ARGB color order,
+then bit 0 to 7 contain the blue channel; bit 8 to 15 the green channel;
+bit 16 to 23 the red channel and bit 24 to 31 the alpha (transparency)
+channel. The standard framebuffer of a screen connected to HDMI is
+32bit.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>fgcolor</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Foreground color color</li>
+</ul></li>
+<li><code>bgcolor</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Background color</li>
+<li>Optional parameter. Default value is current background color.</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> BLUE   = <span class="dv">0x000000FF</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GREEN  = <span class="dv">0x0000FF00</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> RED    = <span class="dv">0x00FF0000</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> YELLOW = <span class="dv">0x00FFFF00</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ORANGE = <span class="dv">0x00FFAA00</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">Color</span>(id, BLUE)</span></code></pre></div>
+<h3 id="clear-screen">Clear Screen</h3>
+<pre><code>Cls(id)
+Cls(id, color)</code></pre>
+<p>Clear the screen using color <code>color</code>. If color is omitted,
+the current background color is used.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Clear color</li>
+<li>Optional parameter. Default value is current background color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-pixel">Draw a Pixel</h3>
+<pre><code>Pset(id, x1, y1)
+Pset(id, x1, y1, color)</code></pre>
+<p>Draw a pixel at point <code>(x1, y1)</code> with color
+<code>color</code></p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-line">Draw a Line</h3>
+<pre><code>Line(id, x1, y1, x2, y2)
+Line(id, x1, y1, x2, y2, color)</code></pre>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of start point in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of end point in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle">Draw a Rectangle</h3>
+<pre><code>Rect(id, x1, y1, x2, y2)
+Rect(id, x1, y1, x2, y2, color)
+Rect(id, x1, y1, x2, y2, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code>. If <code>fill</code> is 1 (true), a
+filled rectangle will be drawn.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle-with-round-corners">Draw a Rectangle with Round
+Corners</h3>
+<pre><code>Roundrect(id, x1, y1, x2, y2)
+Roundrect(id, x1, y1, x2, y2, radius)
+Roundrect(id, x1, y1, x2, y2, radius, color)
+Roundrect(id, x1, y1, x2, y2, radius, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code> and rounded corners. The radius in
+pixel of the corners if given by <code>radius</code>. If
+<code>fill</code> is 1 (true), a filled rectangle will be drawn.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Radius if corners in pixel</li>
+<li>Optional parameter. Default value is 4.</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-circle">Draw a Circle</h3>
+<pre><code>Circle(id, x, y, radius)
+Circle(id, x, y, radius, color)
+Circle(id, x, y, radius, color, fill)</code></pre>
+<p>Draw a circle at position <code>(x, y)</code> with radius
+<code>radius</code> in pixel. <code>color</code> defines the line color.
+If <code>fill</code> is set to <code>1</code> (<code>true</code>), then
+the circle is filled with <code>color</code>. If no color is given, the
+current foreground color will be used.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Radius of the circle in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line or fill color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled circle will be drawn</li>
+<li>Optional parameter. Default value 0</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-triangle">Draw a Triangle</h3>
+<pre><code>Triangle(id, x1, y1, x2, y2, x3, y3)
+Triangle(id, x1, y1, x2, y2, x3, y3, color)
+Triangle(id, x1, y1, x2, y2, x3, y3, color, fill)</code></pre>
+<p>Draw a triangle with the corner points <code>(x1, y1)</code>,
+<code>(x2, y2)</code> and <code>(x3, y3)</code> with line color
+<code>color</code>. If <code>fill</code> is 1 (true), a filled triangle
+will be drawn.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>, <code>x2, y2</code>, <code>x3, y3</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of corner points in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="print-text">Print Text</h3>
+<pre><code>Print(id, text)
+Print(id, text, color)</code></pre>
+<p>Print text <code>text</code> with text color <code>color</code>.
+After printing the text, the text cursor advances by one text-line. The
+following special characters are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Character</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>\a</code></td>
+<td style="text-align: left;">Set cursor position to upper left (0,
+0)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\b</code></td>
+<td style="text-align: left;">Move cursor back by one position</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>\n</code></td>
+<td style="text-align: left;">Go to start of current line</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\r</code></td>
+<td style="text-align: left;">Go to line below</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>text</code>
+<ul>
+<li>String</li>
+<li>Text to be printed</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+</ul>
+<h3 id="set-text-cursor-position">Set Text Cursor Position</h3>
+<pre><code>At(id)
+At(id, x)
+At(id, x, y)</code></pre>
+<p>Set the text cursor to the pixel <code>(x, y)</code>.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="set-text-size">Set Text Size</h3>
+<pre><code>SetTextSize(id, size)</code></pre>
+<p>Set text size to <code>size</code>. <code>size</code> must be an
+multiple of 8.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>size</code>
+<ul>
+<li>Integer: 8, 16, 24, 32, …, 8*n</li>
+<li>Text size in pixel</li>
+</ul></li>
+</ul>
+<h3 id="copy-array-to-screen">Copy Array to Screen</h3>
+<pre><code>SetArray(id, A)
+SetArray(id, A, x)
+SetArray(id, A, x, y)
+SetArray(id, A, x, y, trans)</code></pre>
+<p>Copy the content of the 2D-array <code>A</code> to screen at position
+<code>(x,y)</code> using transparency mode <code>trans</code>. The
+following transparency modes are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Mode</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: left;">no transparency</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Every element of <code>A</code> with value
+<code>0</code> will be transparent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long.</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>trans</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>Transparency mode</li>
+<li>0 -&gt; no transparency</li>
+<li>1 -&gt; transparancy</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="copy-screen-to-array">Copy Screen to Array</h3>
+<pre><code>A = GetArray(id)
+A = GetArray(id, x)
+A = GetArray(id, x, y)
+A = GetArray(id, x, y, w)
+A = GetArray(id, x, y, w, h)</code></pre>
+<p>Copy the screen context inside the rectangle with top-left corner at
+<code>(x, y)</code>, a width of <code>w</code> and a height of
+<code>h</code> to the 2D-array <code>A</code>.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top-left corner of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>w</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Width if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in x.</li>
+</ul></li>
+<li><code>h</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Height if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in y.</li>
+</ul></li>
+</ul>
+<h3 id="double-buffering">Double Buffering</h3>
+<pre><code>SwapBuffer(id)</code></pre>
+<p>If the framebuffer device supports double buffering, drawing is
+always performed in a not visible back-buffer. When calling
+<code>SwapBuffer</code>, back-buffer and front-buffer will be swapped
+and the results of the drawing command will be visible.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+</ul>
+<h3 id="wait-for-vertical-sync">Wait for Vertical Sync</h3>
+<pre><code>WaitForVSync(id)</code></pre>
+<p>If the framebuffer device supports vertical sync,
+<code>WaitForVSync</code> will wait until the whole frame is displayed.
+This can be used to suppress artifacts, when swapping front- and
+back-buffer.</p>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+</ul>
+<h3 id="get-mouse-data">Get Mouse Data</h3>
+<pre><code>A = GetMouse()</code></pre>
+<p>Return an 1D-array with current mouse data.</p>
+<ul>
+<li><code>A</code>
+<ul>
+<li>1D-array with five integer</li>
+<li><code>A[0]</code>: x-position of cursor</li>
+<li><code>A[1]</code>: y-position of cursor</li>
+<li><code>A[2]</code>: Status of left mouse button</li>
+<li><code>A[3]</code>: Status of middle mouse button</li>
+<li><code>A[4]</code>: Status of right mouse button</li>
+</ul></li>
+</ul>
+<h2 id="example">Example</h2>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">OPTION</span> BASE <span class="dv">1</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> Framebuffer <span class="kw">as</span> FB</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>FILL = <span class="dt">true</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>TRANSPARENT = <span class="dt">true</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="dt">dim</span> a(<span class="dv">100</span>,<span class="dv">100</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>xx = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">100</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for </span>yy = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">100</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        a[xx,yy] = <span class="fu">floor</span>(<span class="fu">rnd</span>*<span class="dv">2</span>^<span class="dv">32</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">next</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>xx = <span class="dv">10</span> <span class="kw">to</span> <span class="dv">40</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for </span>yy = <span class="dv">10</span> <span class="kw">to</span> <span class="dv">40</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        a[xx,yy] = <span class="dv">0</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">next</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>id = FB.<span class="fu">Open</span>(<span class="st">&quot;/dev/fb0&quot;</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>FB.Clear(id)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Color</span>(id, <span class="dv">0x0000FF00</span>)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>FB.SetPixel(id, <span class="dv">10</span>,<span class="dv">10</span>)</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>FB.SetPixel(id, <span class="dv">20</span>,<span class="dv">10</span>, <span class="dv">0x0000FFFF</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>FB.setPixel(id, <span class="dv">30</span>,<span class="dv">10</span>, <span class="dv">0x000000FF</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Line</span>(id, <span class="dv">50</span>,<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">60</span>, <span class="dv">0x00FFFFFF</span>)</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Rect</span>(id, <span class="dv">110</span>,<span class="dv">10</span>,<span class="dv">160</span>,<span class="dv">60</span>, <span class="dv">0x00AA8899</span>, FILL)</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Rect</span>(id, <span class="dv">110</span>,<span class="dv">10</span>,<span class="dv">160</span>,<span class="dv">60</span>, <span class="dv">0x00AA4477</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>FB.RoundRect(id, <span class="dv">170</span>,<span class="dv">10</span>,<span class="dv">220</span>,<span class="dv">60</span>, <span class="dv">4</span>, <span class="dv">0x00AA8899</span>, FILL)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>FB.RoundRect(id, <span class="dv">170</span>,<span class="dv">10</span>,<span class="dv">220</span>,<span class="dv">60</span>, <span class="dv">4</span>, <span class="dv">0x00AA4477</span>)</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Circle</span>(id, <span class="dv">255</span>,<span class="dv">35</span>,<span class="dv">20</span>, <span class="dv">0x00AA8899</span>, FILL)</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Circle</span>(id, <span class="dv">255</span>,<span class="dv">35</span>,<span class="dv">20</span>, <span class="dv">0x00AA4477</span>)</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>FB.Triangle(id, <span class="dv">280</span>,<span class="dv">60</span>, <span class="dv">305</span>,<span class="dv">10</span>, <span class="dv">330</span>,<span class="dv">60</span>, <span class="dv">0x00AA8899</span>, FILL)</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>FB.Triangle(id, <span class="dv">280</span>,<span class="dv">60</span>, <span class="dv">305</span>,<span class="dv">10</span>, <span class="dv">330</span>,<span class="dv">60</span>,<span class="dv">0x00AA4477</span>)</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">At</span>(id, <span class="dv">10</span>, <span class="dv">70</span>)</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>FB.<span class="kw">Print</span>(id, <span class="st">&quot;test1&quot;</span>)</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>FB.SetTextSize(id, <span class="dv">16</span>)</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">At</span>(id, <span class="dv">10</span>, <span class="dv">90</span>)</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>FB.<span class="kw">Print</span>(id, <span class="st">&quot;test2&quot;</span>, <span class="dv">0x00118833</span>)</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>FB.SetArray(id, a, <span class="dv">10</span>, <span class="dv">120</span>, TRANSPARENT)</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;x,y,w,h</span></span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>b = FB.GetArray(id, <span class="dv">10</span>, <span class="dv">120</span>, <span class="dv">50</span>, <span class="dv">50</span>)</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>FB.SetArray(id, b, <span class="dv">120</span>, <span class="dv">120</span>)</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>FB.WaitForVSync(id)</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1</span>)</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>FB.SwapBuffer(id)</span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>FB.<span class="fu">Close</span>(id)</span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

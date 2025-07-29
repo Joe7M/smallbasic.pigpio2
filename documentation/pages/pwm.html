@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>PWM - Pulse Width Modulation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 11.07.2025</div>
+<h1>PWM - Pulse Width Modulation</h1>
+<p>Before using PWM, the correct overlays have to be activated. Please
+check the <a href="setup_pwm.html">PWM setup instructions</a>.</p>
+<h2 id="pwm-pins">PWM Pins</h2>
+<p>The Raspberry Pi supports up to two hardware controlled PWM
+channels.</p>
+<figure>
+<img src="./images/RaspberryPiGPIO.png" alt="Pin numbering" />
+<figcaption aria-hidden="true">Pin numbering</figcaption>
+</figure>
+<p>Depending on the configuration of your Raspberry PI the PWM pins
+are:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Pin Number</th>
+<th style="text-align: center;">PWM Channel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">PWM0 (default)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">32</td>
+<td style="text-align: center;">PWM0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">35</td>
+<td style="text-align: center;">PWM1 (default)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">33</td>
+<td style="text-align: center;">PWM1</td>
+</tr>
+</tbody>
+</table>
+<p>In default configuration the PWM pins are 12 and 35.</p>
+<h2 id="library">Library</h2>
+<p>To access the PWM pins import the library <code>pwm</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> pwm</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open">Open</h3>
+<pre><code>Open()
+Open(chipname)</code></pre>
+<p>Open PWM access to the PWM chip specified by the optional parameter
+<code>chipname</code>. If <code>chipname</code> is not provided, the
+standard PWM chip of the Raspberry Pi will be opened.</p>
+<ul>
+<li><code>chipname</code>
+<ul>
+<li>String</li>
+<li>PWM chip name</li>
+<li>Optional parameter. Default value is <code>pwmchip0</code></li>
+</ul></li>
+</ul>
+<h3 id="period">Period</h3>
+<pre><code>Period(P)
+Period(P, Ch)</code></pre>
+<p>Set the period <code>P</code> of the PWM signal. <code>P</code> is in
+nanoseconds. To set the frequency of the signal to 1kHz, the
+corresponding period is <code>P = 1000000</code>. <code>Ch</code> is the
+number of the PWM channel: <code>0</code> for PWM0 and <code>1</code>
+for PWM1. <code>Ch</code> is an optional parameter. The default value is
+<code>0</code>.</p>
+<ul>
+<li><code>P</code>
+<ul>
+<li>Integer &gt;= 0</li>
+<li>Period of the PWM signal in nanoseconds</li>
+</ul></li>
+<li><code>Ch</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li>PWM channel: <code>0</code> for PWM0 and <code>1</code> for
+PWM1</li>
+</ul></li>
+</ul>
+<h3 id="dutycycle">DutyCycle</h3>
+<pre><code>DutyCycle(D)
+DutyCycle(D, Ch)</code></pre>
+<p>Set the duty cycle <code>D</code> of the PWM signal. <code>D</code>
+is the active time in nanoseconds. Minimum value of <code>D</code> is
+<code>0</code> and maximum value is the period of the PWM signal.
+<code>Ch</code> is the number of the PWM channel: <code>0</code> for
+PWM0 and <code>1</code> for PWM1. <code>Ch</code> is an optional
+parameter. The default value is <code>0</code>.</p>
+<ul>
+<li><code>D</code>
+<ul>
+<li>Integer 0 … Period</li>
+<li>Active time of the PWM signal in nanoseconds</li>
+</ul></li>
+<li><code>Ch</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li>PWM channel: <code>0</code> for PWM0 and <code>1</code> for
+PWM1</li>
+</ul></li>
+</ul>
+<h3 id="enable">Enable</h3>
+<pre><code>Enable()
+Enable(E)
+Enable(E, Ch)</code></pre>
+<p>Enable or disable a PWM channel. Only an enabled channel will output
+a signal. If <code>E</code> is <code>1</code>, the PWM channel will be
+enabled. If <code>E</code> is <code>0</code> the PWM channel will be
+disabled. <code>Ch</code> is the number of the PWM channel:
+<code>0</code> for PWM0 and <code>1</code> for PWM1. <code>E</code> is
+an optional parameter. The default value is <code>1</code>.
+<code>Ch</code> is an optional parameter. The default value is
+<code>0</code>.</p>
+<ul>
+<li><code>E</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li>Enable or disable</li>
+</ul></li>
+<li><code>Ch</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li>PWM channel: <code>0</code> for PWM0 and <code>1</code> for
+PWM1</li>
+</ul></li>
+</ul>
+<h2 id="example-code">Example Code</h2>
+<h3 id="single-channel-pwm">Single channel PWM</h3>
+<p>In the following image you can see how to wire a LED to use with
+PWM.</p>
+<figure>
+<img src="./images/pwm_1_ch_wiring.png" alt="1 LED wiring for PWM" />
+<figcaption aria-hidden="true">1 LED wiring for PWM</figcaption>
+</figure>
+<p>Depending on the type of LED you need a certain resistor. When using
+the LED without a resistor, you will destroy the LED and maybe even
+parts of your Raspberry Pi.</p>
+<p>When you buy a LED, look for two important values in the
+specification: Forward Voltage and Forward Current. The third important
+value is the Supply Voltage. In case of a Raspberry Pi it is 3.3V.
+Online you can find many LED resistor calculators. But if you want to
+see your LED blinking without studying to much and you don’t expect
+maximum brightness, then go for 220 Ohms or even 1000 Ohms.</p>
+<p>Connect the resistor to pin 12 and the LED to ground.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> pwm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Initialize </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pwm.<span class="fu">open</span>(<span class="st">&quot;pwmchip0&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>pwm.Period(<span class="dv">1000000</span>)         <span class="co">&#39; in ns -&gt; 1kHz</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pwm.DutyCycle(<span class="dv">0</span>)            <span class="co">&#39; Active time in ns  -&gt; 0 = off</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>pwm.Enable()                <span class="co">&#39; enable pwm0</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Fade from dark to bright</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">1000000</span> Step <span class="dv">10000</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  pwm.DutyCycle(ii)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">10</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span></code></pre></div>
+<h3 id="dual-channel-pwm">Dual channel PWM</h3>
+<p>In the following image you can see how to wire two LEDs to use with
+PWM.</p>
+<figure>
+<img src="./images/pwm_2_ch_wiring.png" alt="2 LED wiring for PWM" />
+<figcaption aria-hidden="true">2 LED wiring for PWM</figcaption>
+</figure>
+<p>Connect the first 1kOhm resistor to pin 12 and the first LED to
+ground. The second resistor is connected to pin 35 and the second LED to
+ground.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> pwm</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Initialize </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>pwm.<span class="fu">open</span>(<span class="st">&quot;pwmchip0&quot;</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>pwm.Period(<span class="dv">1000000</span>, <span class="dv">0</span>)      <span class="co">&#39; pwm0: in ns -&gt; 1kHz</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>pwm.Period(<span class="dv">1000000</span>, <span class="dv">1</span>)      <span class="co">&#39; pwm1: in ns -&gt; 1kHz</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>pwm.DutyCycle(<span class="dv">0</span>,<span class="dv">0</span>)          <span class="co">&#39; pwm0: Active time in ns  -&gt; 0 = off</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>pwm.DutyCycle(<span class="dv">0</span>,<span class="dv">1</span>)          <span class="co">&#39; pwm1: Active time in ns  -&gt; 0 = off</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>pwm.Enable(<span class="dv">1</span>,<span class="dv">0</span>)             <span class="co">&#39; enable pwm0</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>pwm.Enable(<span class="dv">1</span>,<span class="dv">1</span>)             <span class="co">&#39; enable pwm1</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Fade from dark to bright at pwm0</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; and from bright to dark at pwm1</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">0</span> <span class="kw">to</span> <span class="dv">1000000</span> Step <span class="dv">10000</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  pwm.DutyCycle(ii,<span class="dv">0</span>)             <span class="co">&#39; pwm0  </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  pwm.DutyCycle(<span class="dv">1000000</span> - ii,<span class="dv">1</span>)   <span class="co">&#39; pwm1</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">10</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

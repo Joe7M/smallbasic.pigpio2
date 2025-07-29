@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>Installation Instructions</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 20.06.2025</div>
+<h1>Installation Instructions</h1>
+<h3 id="setup-the-raspberry-pi">Setup the Raspberry Pi</h3>
+<ol type="1">
+<li>Install the newest Raspberry Pi OS on a SD card.</li>
+<li>Insert the SD card and boot your Raspberry Pi. Setup the desktop,
+login to wifi and install your favorite software.</li>
+<li>You can find a beginners guide here: <a
+href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/0">www.raspberrypi.org</a>.</li>
+</ol>
+<h3 id="install-smallbasic">Install SmallBASIC</h3>
+<p>Right now there aren’t any SmallBasic packages or executable files
+for the Raspberry Pi. You have to compile SmallBASIC by yourself. Don’t
+be afraid, it is fairly easy.</p>
+<p>Open a console and copy paste the following commands one at a time to
+build the SDL2-version:</p>
+<pre><code>cd ~
+sudo apt update
+sudo apt dist-upgrade
+sudo apt install autotools-dev automake libsdl2-dev libfreetype6-dev libfontconfig1-dev xxd
+wget https://github.com/smallbasic/SmallBASIC/releases/download/12_27/smallbasic-12.27.tar.gz
+tar -xvzf smallbasic-12.27.tar.gz
+cd smallbasic-12.27
+export CC=gcc
+export PACKAGE_LIBS=-latomic
+./configure --enable-sdl
+make
+sudo make install</code></pre>
+<p>The <code>make</code> command will take quite a while. Don’t get
+inpatient. After you finished the installation, you can type
+<code>sbasicg</code> in the console and SmallBASIC should start.</p>
+<p>Usually it is quite nice to use the console version of SmallBASIC,
+especially if you don’t have any graphical output to the computer
+screen. To build the console version copy and paste the following
+commands one at a time after you build the SDL2-version:</p>
+<pre><code>./configure
+make
+sudo make install</code></pre>
+<h3 id="install-smallbasic-pigpio-2">Install SmallBASIC PIGPIO 2</h3>
+<p>Open again a console and copy paste the following commands one at a
+time:</p>
+<pre><code>sudo apt install libtool libgpiod-dev libi2c-dev
+cd ~
+git clone https://github.com/Joe7M/smallbasic.pigpio2.git
+cd smallbasic.pigpio2/src
+sh ./autogen.sh
+./configure
+make
+sudo make install</code></pre>
+<p>The libraries have been installed in
+<code>/usr/local/lib/smallbasic</code>.</p>
+<h3 id="start-smallbasic-with-the-plugin">Start SmallBASIC with the
+plugin</h3>
+<p>Start a terminal and type:</p>
+<pre><code>sbasicg -m/usr/local/lib/smallbasic -r &#39;file&#39;</code></pre>
+<p>to start the SDL2-version of SmallBASIC.</p>
+<p>For example you want to execute <code>gpio_led.bas</code> in the
+example folder:</p>
+<pre><code>cd ~
+cd smallbasic.pigpio2/examples
+sbasicg -m/usr/local/lib/smallbasic -r gpio_led.bas</code></pre>
+<p>If you want to use the console version of SmallBASIC please use:</p>
+<pre><code>sbasic -m /usr/local/lib/smallbasic &#39;file&#39;</code></pre>
+<p>For example:</p>
+<pre><code>cd ~
+cd smallbasic.pigpio2/examples
+sbasic -m /usr/local/lib/smallbasic gpio_led.bas</code></pre>
+<p>Now you can start coding your own programs. :)</p>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>SmallBASIC PiGPIO 2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 11.07.2025</div>
+<h1>SmallBASIC PiGPIO 2</h1>
+<p>If you want to let a LED blink or measure the temperature in your
+room, you can use <a href="https://smallbasic.github.io">SmallBASIC</a>
+on a Raspberry PI. As an example you can connect a LED and a resistor to
+a GPIO-Pin of your Raspberry Pi, write a short SmallBASIC programm and
+enjoy the blinking LED:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> gpio</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> PIN_GPIO4 = <span class="dv">4</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>gpio.SetOutput(PIN_GPIO4)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">5</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">Write</span>(PIN_GPIO4, <span class="dv">1</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  gpio.<span class="fu">Write</span>(PIN_GPIO4, <span class="dv">0</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span></code></pre></div>
+<figure>
+<img src="./images/blink.gif" alt="Blinking LED" />
+<figcaption aria-hidden="true">Blinking LED</figcaption>
+</figure>
+<h2 id="news">News</h2>
+<p><strong>July 11 2025</strong>: SmallBASIC PiGPIO 2 supports now all
+Pi’s from Zero to 5. It can even run on other LINUX systems. The API got
+a complete rewrite and is therefore not anymore compatible with
+SmallBASIC PiGPIO 1.</p>
+<h2 id="setup-and-pin-numbering">Setup and Pin Numbering</h2>
+<ul>
+<li><a href="./setup.html">Setup SmallBASIC PIGPIO 2</a></li>
+<li><a href="./setup_i2c.html">Setup I2C</a></li>
+<li><a href="./setup_spi.html">Setup SPI</a></li>
+<li><a href="./setup_pwm.html">Setup PWM</a></li>
+<li><a href="./gpio_numbering.html">Naming and Numbering of the GPIO
+pins</a></li>
+</ul>
+<h2 id="function-reference-and-examples">Function Reference and
+Examples</h2>
+<ul>
+<li><a href="./gpio.html">Generic GPIO</a>: Digital input and
+output</li>
+<li><a href="./i2c.html">Generic I2C</a>: Generic I2C and SMBus
+interface</li>
+<li><a href="./spi.html">Generic SPI</a>: Generic SPI interface</li>
+<li><a href="./pwm.html">PWM</a>: PWM output</li>
+<li><a href="./framebuffer.html">Framebuffer</a>: Graphics output to the
+Linux framebuffer</li>
+<li><a href="./ssd1306.html">SSD1306 compatible OLED Display</a>:
+Graphics on this a small and cheap b&amp;w OLED display</li>
+<li><a href="./ads1x15.html">ADS1015 and ADS1115 Voltage Sensor</a>:
+Measure voltages</li>
+<li><a href="./bmp180.html">BMP180</a>: Measure temperature and
+pressure</li>
+<li><a href="./mpu6050.html">MPU6050</a>: Accelerometer and
+gyroscope</li>
+<li><a href="./st7789.html">ST7789</a>: SPI color display</li>
+<li>HD44780: Text display - coming soon</li>
+<li>DS18B20: Temperature sensor - coming soon</li>
+</ul>
+<h2 id="supported-hardware">Supported Hardware</h2>
+<ul>
+<li><a href="./ads1x15.html">ADS1015 and ADS1115</a>: Analog to Digital
+Converter (Voltage Sensor)</li>
+<li><a href="./i2c.html">BH1750</a>: Ambient Light Sensor (generic
+I2C)</li>
+<li><a href="./bmp180.html">BMP180</a>: Temperature and Pressure
+Sensor</li>
+<li><a href="./spi.html">BMP280</a>: Temperature and Pressure Sensor
+(generic SPI)</li>
+<li><a href="./gpio.html">LED</a>: Control a LED (generic GPIO)</li>
+<li><a href="./mpu6050.html">MPU6050</a>: Accelerometer and
+Gyroscope</li>
+<li><a href="./i2c.html">Pi Sugar 3 plus</a>: Battery/USB power supply
+and charger (generic I2C)</li>
+<li><a href="./gpio.html">Push Button</a>: Read buttons (generic
+GPIO)</li>
+<li><a href="./ssd1306.html">SSD1306</a>: OLED Display</li>
+<li><a href="./st7789.html">ST7789</a>: SPI color display</li>
+</ul>
+<h2 id="links">Links</h2>
+<ul>
+<li><a
+href="https://github.com/Joe7M/smallbasic.pigpio2">SmallBasicPIGPIO at
+Github</a></li>
+<li><a href="https://smallbasic.github.io/">SmallBASIC website</a></li>
+<li><a href="https://smallbasic.discourse.group/">SmallBASIC
+forum</a></li>
+</ul>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

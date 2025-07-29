@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>ADS1X15 - Analog to Digital Converter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 07.11.2024</div>
+<h1>ADS1X15 - Analog to Digital Converter</h1>
+<p>The ADS1015 and ADS1115 are analog voltage sensors using the
+I2C-protocol for communication.</p>
+<h2 id="library">Library</h2>
+<p>To use the ADS1x15, import the library <code>ads1x15</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ads1x15</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>Open()
+Open(interface)
+Open(interface, address)
+Open(interface, address, version)</code></pre>
+<p>Open the ADS1X15 on interface <code>interface</code> with I2C address
+<code>address</code> and device type <code>version</code>.</p>
+<ul>
+<li><code>interface</code>
+<ul>
+<li>String</li>
+<li>Path to I2C-Interface.</li>
+<li>Optional: default value is <code>"/dev/i2c-1"</code></li>
+</ul></li>
+<li><code>address</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device address</li>
+<li>Optional: default value is <code>0x48</code></li>
+</ul></li>
+<li><code>version</code>
+<ul>
+<li>Integer: 0 or 1</li>
+<li>ADS1115 -&gt; <code>version = 1</code></li>
+<li>ADS1015 -&gt; <code>version = 0</code></li>
+<li>Optional: default value is <code>1</code></li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x48</span>, <span class="dv">1</span>)</span></code></pre></div>
+<h3 id="set-channel">Set Channel</h3>
+<pre><code>Channel(n)</code></pre>
+<p>Set channel for measurement.</p>
+<ul>
+<li><code>n</code>
+<ul>
+<li><p>Integer: 0 … 7</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">n</th>
+<th style="text-align: center;">Type</th>
+<th style="text-align: center;">Pin</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">differential</td>
+<td style="text-align: center;">A0 - A1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">differential</td>
+<td style="text-align: center;">A0 - A3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">differential</td>
+<td style="text-align: center;">A1 - A3</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">differential</td>
+<td style="text-align: center;">A2 - A3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">single-ended</td>
+<td style="text-align: center;">A0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">single-ended</td>
+<td style="text-align: center;">A1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">single-ended</td>
+<td style="text-align: center;">A2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">single-ended</td>
+<td style="text-align: center;">A3</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+<h3 id="set-voltage-range">Set Voltage Range</h3>
+<pre><code>VoltageRange()
+VoltageRange(V)</code></pre>
+<p>Set the voltage range in Volts. Any value less than the minimum value
+will set the minimum voltage range. Any value greater than the maximum
+value will set the maximum voltage range. The first voltage range
+greater than or equal the the specified value will be set.</p>
+<ul>
+<li><code>V</code>
+<ul>
+<li>Float: 0.256, 0.512, 1.024, 2.048, 4.096 or 6.144</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<pre class="samallbasic"><code>VoltageRange(1024)  &#39; Set voltage range to 1.024V
+VoltageRange(1025)  &#39; Set voltage range to 2.048V</code></pre>
+<h3 id="set-sample-rate">Set Sample Rate</h3>
+<pre><code>SampleRate()
+SampleRate(S)</code></pre>
+<p>Set the sample rate in samples/second. Any value less than the
+minimum value will set the minimum sample range. Any value greater than
+the maximum value will set the maximum sample range. The first sample
+range greater than or equal the the specified value will be set.</p>
+<ul>
+<li><code>S</code>
+<ul>
+<li>Integer
+<ul>
+<li>ADS1015: 128, 250, 490, 1600, 2400, 3300</li>
+<li>ADS1115: 8, 16, 32, 64, 128, 250, 475, 860</li>
+<li>Optional: default value is 128</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>SampleRate(<span class="dv">128</span>)</span></code></pre></div>
+<h3 id="read-voltage">Read Voltage</h3>
+<pre><code>V = Read()</code></pre>
+<p>Measure the voltage.</p>
+<ul>
+<li><code>V</code>
+<ul>
+<li>Float</li>
+<li>Measured voltage in Volts</li>
+</ul></li>
+</ul>
+<h3 id="set-continious-mode">Set continious mode</h3>
+<pre><code>ContiniousMode()</code></pre>
+<p>Set ADS1X15 to continious measurement mode. ADS1x15 will measure with
+the specified sample rate. The read-command will return the value of the
+last measurement.</p>
+<h3 id="set-single-shot-mode">Set single shot mode</h3>
+<pre><code>SingleShotMode()</code></pre>
+<p>Set ADS1x15 to single shot mode. Each read-command will initiate a
+measurement.</p>
+<h3 id="close-device">Close device</h3>
+<pre><code>Close()</code></pre>
+<p>Close the ADS1X15 device.</p>
+<h2 id="example">Example</h2>
+<p>For running this example, you need an ADS1015 or ADS1115 sensor.
+SmallBASIC PiGPIO 2 is using the I2C-protocol for communication. The
+Raspberry Pi supports this protocol in hardware, but by default the
+protocol is disabled. Therefore you have to setup I2C as described <a
+href="./setupi2c.html">here</a>.</p>
+<p>In the next step please wire the sensor as shown in the following
+image. The example is using an ADS1115 but the ADS1015 will work, too.
+Use a 10K potentiometer.</p>
+<figure>
+<img src="./images/ads1115_wiring.png" alt="Wiring ads1115" />
+<figcaption aria-hidden="true">Wiring ads1115</figcaption>
+</figure>
+<p>The I2C bus is using pin 2 (SDA1) and 3 (SCL1). The sensor can be
+driven with a voltage from 2.2 to 5.5V. The input pins can be connected
+to -0.3V to VDD + 0.3V. If you drive the sensor with 5V from the Pi, the
+maximum allowed voltage at the input pins is 5.3V. If you drive the
+sensor with 3.3V, the maximum allowed voltage at the input pins is
+3.6V.</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ads1x15 <span class="kw">as</span> adc</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A0  = <span class="dv">4</span>   <span class="co">&#39; Input A0</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A1  = <span class="dv">5</span>   <span class="co">&#39; Input A1</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A2  = <span class="dv">6</span>   <span class="co">&#39; Input A2</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A3  = <span class="dv">7</span>   <span class="co">&#39; Input A3</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A01 = <span class="dv">0</span>   <span class="co">&#39; Differential Input A0 - A1</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A03 = <span class="dv">1</span>   <span class="co">&#39; Differential Input A0 - A3</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A13 = <span class="dv">2</span>   <span class="co">&#39; Differential Input A1 - A3</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> A23 = <span class="dv">3</span>   <span class="co">&#39; Differential Input A2 - A3</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>adc.<span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x48</span>)    <span class="co">&#39; Open device</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>adc.Channel(A0)                 <span class="co">&#39; Set input channel A0</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>adc.VoltageRange(<span class="dv">6.144</span>)         <span class="co">&#39; Set Voltage range from 0 to 6.144V</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>adc.SampleRate(<span class="dv">128</span>)             <span class="co">&#39; 128 Samples per second</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>ii = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">10</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">delay</span>(<span class="dv">500</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">print</span> adc.<span class="fu">Read</span>()            <span class="co">&#39; Returns voltage as float</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>adc.<span class="fu">Close</span>()                     <span class="co">&#39; Close connection</span></span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>SSD1306 - Monochrom OLED display</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 14.11.2024</div>
+<h1>SSD1306 - Monochrom OLED display</h1>
+<p>The SSD1306 OLEDs are monochrom graphics displays using the
+I2C-interface. Displays with 128x64 and 128x32 pixels are supported.
+Additionally two-color display exists, but I haven’t tested these.</p>
+<h2 id="library">Library</h2>
+<p>To use the SSD1306, import the library <code>ssd1306</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ssd1306</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>Open()
+Open(interface)
+Open(interface, address)
+Open(interface, address, nx)
+Open(interface, address, nx, ny)</code></pre>
+<p>Open the SSD1306 on interface <code>interface</code> with I2C address
+<code>address</code> and number of pixels <code>nx</code>,
+<code>ny</code>. Only OLEDs with 128x64 or 128x32 pixels are
+supported.</p>
+<ul>
+<li><code>interface</code>
+<ul>
+<li>String</li>
+<li>Path to I2C-Interface.</li>
+<li>Optional: default value is <code>"/dev/i2c-1"</code></li>
+</ul></li>
+<li><code>address</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Device address</li>
+<li>Optional: default value is <code>0x3C</code></li>
+</ul></li>
+<li><code>nx</code>
+<ul>
+<li>Integer: 0 … 32768</li>
+<li>Number of pixel in x direction</li>
+<li>Optional: default value is <code>128</code></li>
+</ul></li>
+<li><code>ny</code>
+<ul>
+<li>Integer: 0 … 32768</li>
+<li>Number of pixel in y direction</li>
+<li>Optional: default value is <code>64</code></li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x3C</span>, <span class="dv">128</span>, <span class="dv">32</span>)</span></code></pre></div>
+<h3 id="close-device">Close Device</h3>
+<pre><code>Close()</code></pre>
+<p>Close the SSD1306 OLED device.</p>
+<h3 id="display-buffer">Display Buffer</h3>
+<pre><code>Display()</code></pre>
+<p>Display the current buffer. If you perform a drawing command, only
+the buffer will be changed. The display will not show the changes until
+<code>Display()</code> is called.</p>
+<h3 id="clear-screen">Clear Screen</h3>
+<pre><code>Cls()
+Cls(color)</code></pre>
+<p>Clear the screen using color <code>color</code>. If color is omitted,
+the current background color is used.</p>
+<ul>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Clear color</li>
+<li>Optional parameter. Default value is current background color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-pixel">Draw a Pixel</h3>
+<pre><code>Pset(x1, y1)
+Pset(x1, y1, color)</code></pre>
+<p>Draw a pixel at point <code>(x1, y1)</code> with color
+<code>color</code></p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-line">Draw a Line</h3>
+<pre><code>Line(x1, y1, x2, y2)
+Line(x1, y1, x2, y2, color)</code></pre>
+<ul>
+<li><code>id</code>
+<ul>
+<li>Deviced id</li>
+</ul></li>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of start point in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of end point in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle">Draw a Rectangle</h3>
+<pre><code>Rect(x1, y1, x2, y2)
+Rect(x1, y1, x2, y2, color)
+Rect(x1, y1, x2, y2, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code>. If <code>fill</code> is 1 (true), a
+filled rectangle will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-rectangle-with-round-corners">Draw a Rectangle with Round
+Corners</h3>
+<pre><code>Roundrect(x1, y1, x2, y2)
+Roundrect(x1, y1, x2, y2, radius)
+Roundrect(x1, y1, x2, y2, radius, color)
+Roundrect(x1, y1, x2, y2, radius, color, fill)</code></pre>
+<p>Draw a rectangle with the top left corner at point
+<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
+with line color <code>color</code> and rounded corners. The radius in
+pixel of the corners if given by <code>radius</code>. If
+<code>fill</code> is 1 (true), a filled rectangle will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top left corner in pixel</li>
+</ul></li>
+<li><code>x2, y2</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of bottom right corner in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Radius if corners in pixel</li>
+<li>Optional parameter. Default value is 4.</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-circle">Draw a Circle</h3>
+<pre><code>Circle(x, y, radius)
+Circle(x, y, radius, color)
+Circle(x, y, radius, color, fill)</code></pre>
+<p>Draw a circle at position <code>(x, y)</code> with radius
+<code>radius</code> in pixel. <code>color</code> defines the line color.
+If <code>fill</code> is set to <code>1</code> (<code>true</code>), then
+the circle is filled with <code>color</code>. If no color is given, the
+current foreground color will be used.</p>
+<ul>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+</ul></li>
+<li><code>radius</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Radius of the circle in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line or fill color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled circle will be drawn</li>
+<li>Optional parameter. Default value 0</li>
+</ul></li>
+</ul>
+<h3 id="draw-a-triangle">Draw a Triangle</h3>
+<pre><code>Triangle(x1, y1, x2, y2, x3, y3)
+Triangle(x1, y1, x2, y2, x3, y3, color)
+Triangle(x1, y1, x2, y2, x3, y3, color, fill)</code></pre>
+<p>Draw a triangle with the corner points <code>(x1, y1)</code>,
+<code>(x2, y2)</code> and <code>(x3, y3)</code> with line color
+<code>color</code>. If <code>fill</code> is 1 (true), a filled triangle
+will be drawn.</p>
+<ul>
+<li><code>x1, y1</code>, <code>x2, y2</code>, <code>x3, y3</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of corner points in pixel</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color</li>
+</ul></li>
+<li><code>fill</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>If 1, a filled rectangle will be drawn.</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="print-text">Print Text</h3>
+<pre><code>Print(text)
+Print(text, color)</code></pre>
+<p>Print text <code>text</code> with text color <code>color</code>.
+After printing the text, the text cursor advances by one text-line. The
+following special characters are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Character</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>\a</code></td>
+<td style="text-align: left;">Set cursor position to upper left (0,
+0)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\b</code></td>
+<td style="text-align: left;">Move cursor back by one position</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>\n</code></td>
+<td style="text-align: left;">Go to start of current line</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>\r</code></td>
+<td style="text-align: left;">Go to line below</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>text</code>
+<ul>
+<li>String</li>
+<li>Text to be printed</li>
+</ul></li>
+<li><code>color</code>
+<ul>
+<li>Integer: 32bit</li>
+<li>Line color</li>
+<li>Optional parameter. Default value is current foreground color.</li>
+</ul></li>
+</ul>
+<h3 id="set-text-cursor-position">Set Text Cursor Position</h3>
+<pre><code>At()
+At( x)
+At(x, y)</code></pre>
+<p>Set the text cursor to the pixel <code>(x, y)</code>.</p>
+<ul>
+<li><code>x</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>X-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+<li><code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Y-position in pixel</li>
+<li>Optional parameter. Default value is <code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="set-text-size">Set Text Size</h3>
+<pre><code>SetTextSize(size)</code></pre>
+<p>Set text size to <code>size</code>. <code>size</code> must be an
+multiple of 8.</p>
+<ul>
+<li><code>size</code>
+<ul>
+<li>Integer: 8, 16, 24, 32, …, 8*n</li>
+<li>Text size in pixel</li>
+</ul></li>
+</ul>
+<h3 id="copy-array-to-screen">Copy Array to Screen</h3>
+<pre><code>SetArray(A)
+SetArray(A, x)
+SetArray(A, x, y)
+SetArray(A, x, y, trans)</code></pre>
+<p>Copy the content of the 2D-array <code>A</code> to screen at position
+<code>(x,y)</code> using transparency mode <code>trans</code>. The
+following transparency modes are supported:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Mode</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: left;">no transparency</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Every element of <code>A</code> with value
+<code>0</code> will be transparent</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long.</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>trans</code>
+<ul>
+<li>Integer: 0, 1</li>
+<li>Transparency mode</li>
+<li>0 -&gt; no transparency</li>
+<li>1 -&gt; transparancy</li>
+<li>Optional parameter. Default value is 0.</li>
+</ul></li>
+</ul>
+<h3 id="copy-screen-to-array">Copy Screen to Array</h3>
+<pre><code>A = GetArray()
+A = GetArray(x)
+A = GetArray(x, y)
+A = GetArray(x, y, w)
+A = GetArray(x, y, w, h)</code></pre>
+<p>Copy the screen context inside the rectangle with top-left corner at
+<code>(x, y)</code>, a width of <code>w</code> and a height of
+<code>h</code> to the 2D-array <code>A</code>.</p>
+<ul>
+<li><code>A</code>
+<ul>
+<li>2D-Array of integers: Every element is 32bit long</li>
+<li>Every element contains the color of a pixel</li>
+</ul></li>
+<li><code>x</code> and <code>y</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Position of top-left corner of copied area in pixel</li>
+<li>Optional parameter. Default value is (0, 0).</li>
+</ul></li>
+<li><code>w</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Width if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in x.</li>
+</ul></li>
+<li><code>h</code>
+<ul>
+<li>Integer: 0 … 65535</li>
+<li>Height if copy area in pixel</li>
+<li>Optional parameter. Default value is screen size in y.</li>
+</ul></li>
+</ul>
+<h3 id="set-brightness">Set Brightness</h3>
+<pre><code>SetBrightness()
+SetBrightness(b)</code></pre>
+<p>Set brightness of the display from 0 to 255. 0 is dark, 255
+bright.</p>
+<ul>
+<li><code>b</code>
+<ul>
+<li>Integer: 0 … 255</li>
+<li>Brightness of display.</li>
+<li>0: dark</li>
+<li>255: bright</li>
+<li>Optional parameter. Default value is 255.</li>
+</ul></li>
+</ul>
+<h3 id="invert-display">Invert Display</h3>
+<pre><code>InvertDisplay()</code></pre>
+<p>Invert display: Black to white and white to black.</p>
+<h3 id="turn-on-display">Turn on Display</h3>
+<pre><code>DisplayOn()</code></pre>
+<p>Turn display on.</p>
+<h3 id="turn-off-display">Turn off Display</h3>
+<pre><code>DisplayOff()</code></pre>
+<p>Turn display off.</p>
+<h2 id="example">Example</h2>
+<p>For running this example, you need a SSD1306 compatible OLED display.
+OLEDs with 128x64 or 128x32 pixels are supported. SmallBASIC PiGPIO 2 is
+using the I2C-protocol for communication. The Raspberry Pi support this
+protocol in hardware, but by default the protocol is disabled. Therefore
+you have to setup I2C as described <a
+href="./setupi2c.html">here</a>.</p>
+<p>In the next step please wire the display as shown in the following
+image.</p>
+<figure>
+<img src="./images/ssd1306_wiring.png" alt="Wiring ssd1306" />
+<figcaption aria-hidden="true">Wiring ssd1306</figcaption>
+</figure>
+<p>The I2C bus is using pin 2 (SDA1) and 3 (SCL1). Please be careful,
+these OLEDs are usually driven with 3.3V. Don’t connect to 5V unless you
+know what you are doing.</p>
+<h3 id="example-1">1. Example</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ssd1306</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> ADDRESS = <span class="dv">0x3C</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> WIDTH   = <span class="dv">128</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> HEIGHT  = <span class="dv">64</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="kw">Print</span> <span class="st">&quot;Connect to SSD1306 OLED display&quot;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, ADDRESS)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="kw">Print</span> <span class="st">&quot;Connection established&quot;</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">2000</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Cls</span>()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Circle</span>(<span class="dv">25</span>, <span class="dv">40</span>, <span class="dv">16</span>, <span class="dv">1</span>, <span class="dt">true</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">At</span>(<span class="dv">50</span>,<span class="dv">5</span>): ssd1306.<span class="kw">Print</span>(<span class="st">&quot;I2C with&quot;</span>, <span class="dv">1</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">At</span>(<span class="dv">50</span>,<span class="dv">14</span>): ssd1306.<span class="kw">Print</span>(<span class="st">&quot;SMALLBASIC&quot;</span>, <span class="dv">1</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">line</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">127</span>, <span class="dv">63</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">rect</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">127</span>,<span class="dv">63</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Transfer framebuffer to display</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>s = <span class="fu">ticks</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>ssd1306.Display()</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> <span class="fu">ticks</span> - s</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">2000</span>)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Set brightness</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>ssd1306.SetBrightness(<span class="dv">20</span>)</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>ssd1306.SetBrightness(<span class="dv">255</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Display on/off</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>ssd1306.DisplayOff()</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>ssd1306.DisplayOn()</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="co">&#39; Set inverse</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>ssd1306.InvertDisplay()</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>ssd1306.InvertDisplay()</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span> <span class="st">&quot;done&quot;</span></span></code></pre></div>
+<h3 id="example-copy-array">2. Example: Copy Array</h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ssd1306</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>ssd1306.SetBrightness(<span class="dv">128</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Cls</span>()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Pset</span>(<span class="dv">10</span>,<span class="dv">0</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Line</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">127</span>,<span class="dv">63</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>ssd1306.RoundRect(<span class="dv">58</span>,<span class="dv">26</span>,<span class="dv">40</span>,<span class="dv">20</span>,<span class="dv">5</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Circle</span>(<span class="dv">118</span>,<span class="dv">10</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="co">&#39;Filled with white</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>ssd1306.Triangle(<span class="dv">118</span>,<span class="dv">30</span>, <span class="dv">113</span>,<span class="dv">45</span>, <span class="dv">123</span>,<span class="dv">45</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="co">&#39;Filled with white</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">At</span>(<span class="dv">0</span>,<span class="dv">46</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>ssd1306.SetTextSize(<span class="dv">16</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="kw">Print</span>(<span class="st">&quot;SmallBASIC&quot;</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>ssd1306.Display()</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;Let&#39;s move a image of a smiley with transparency over the screen</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;Create an image array with 16x16 Pixels</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="dt">dim</span> SmilyGuyArray(<span class="dv">15</span>,<span class="dv">15</span>)</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>yy = <span class="dv">0</span> <span class="kw">to</span> <span class="dv">15</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">for </span>xx = <span class="dv">0</span> <span class="kw">to</span> <span class="dv">15</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read</span> d</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    SmilyGuyArray(xx,yy) = d</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">next</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="dt">dim</span> Background</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a><span class="kw">for </span>xx = <span class="dv">1</span> <span class="kw">to</span> <span class="dv">127</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Save the part of the OLED display, where we want to draw the smiley.</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  Background = ssd1306.GetArray(xx, <span class="dv">25</span>, <span class="dv">16</span>, <span class="dv">16</span>)</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Copy the array to the display: </span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Mode = 3 -&gt; Pixel value: 0=Black;</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; 255=White; Every other number is</span></span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; rendered transparent</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>  ssd1306.SetArray(SmilyGuyArray, xx, <span class="dv">25</span>, <span class="dv">3</span>)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>  ssd1306.Display()</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; Copy the saved background back to the display. This will remove the</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; smiley. In the next iteration of the loop, you have the original</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">&#39; background image.</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>  ssd1306.SetArray(Background, xx, <span class="dv">25</span>)</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a><span class="kw">next</span></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">2000</span>)</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Close</span>()</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span>(<span class="st">&quot;Done&quot;</span>)</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;Smiley Guy</span></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;0=Black; 255=White; Every other number is transparent</span></span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>  ,<span class="dv">0</span>  ,<span class="dv">255</span>,<span class="dv">1</span></span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span> <span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span></span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span> <span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span></span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span> <span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span></span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span></span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span></span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,  <span class="dv">0</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a><span class="dt">DATA</span>   <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,<span class="dv">255</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span></span></code></pre></div>
+<h3 id="example-128x32-pixel">3. Example: 128x32 pixel</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> ssd1306</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Open</span>(<span class="st">&quot;/dev/i2c-1&quot;</span>, <span class="dv">0x3C</span>, <span class="dv">128</span>, <span class="dv">32</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">1000</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>ssd1306.SetBrightness(<span class="dv">128</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Cls</span>()</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Pset</span>(<span class="dv">10</span>,<span class="dv">0</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Line</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">127</span>,<span class="dv">31</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>ssd1306.RoundRect(<span class="dv">58</span>,<span class="dv">5</span>,<span class="dv">40</span>,<span class="dv">20</span>,<span class="dv">5</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Circle</span>(<span class="dv">118</span>,<span class="dv">10</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="co">&#39;Filled with white</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">At</span>(<span class="dv">0</span>,<span class="dv">46</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>ssd1306.SetTextSize(<span class="dv">16</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="kw">Print</span>(<span class="st">&quot;SmallBASIC&quot;</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>ssd1306.Display()</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="fu">delay</span>(<span class="dv">2000</span>)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>ssd1306.<span class="fu">Close</span>()</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="kw">print</span>(<span class="st">&quot;Done&quot;</span>)</span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>
