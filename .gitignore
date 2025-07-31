@@ -134,10 +134,11 @@ dkms.conf
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,autotools
 
-/documentation/_build/_out
+/docs/_build/_out
 *~
 .*
 !.gitignore
+!.nojekyll
 Makefile
-!/documentation/_build/Makefile
+!/docs/_build/Makefile
 /src/libtool

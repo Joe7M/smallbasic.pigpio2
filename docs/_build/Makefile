@@ -14,11 +14,10 @@ $(out)/pages/%.html: pages/%.md
 	$(pandoc) $(pandoc_options) -o $@ $<
 
 all: $(pages) style.css
-	@mkdir -p ../pages
-	@cp $(out)/pages/*.html ../pages
-	@cp -r pages/images ../pages/
-	@cp -r pages/files ../pages/
-	@cp style.css ../pages
+	@cp $(out)/pages/*.html ../
+	@cp -r pages/images ../
+	@cp -r pages/files ../
+	@cp style.css ../
 
 clean:
 	rm -rf $(out)

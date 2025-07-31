@@ -197,23 +197,23 @@ Line(x1, y1, x2, y2, color)</code></pre>
 </ul></li>
 </ul>
 <h3 id="draw-a-rectangle">Draw a Rectangle</h3>
-<pre><code>Rect(x1, y1, x2, y2)
-Rect(x1, y1, x2, y2, color)
-Rect(x1, y1, x2, y2, color, fill)</code></pre>
+<pre><code>Rect(x1, y1, w, h)
+Rect(x1, y1, w, h, color)
+Rect(x1, y1, w, h, color, fill)</code></pre>
 <p>Draw a rectangle with the top left corner at point
-<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
-with line color <code>color</code>. If <code>fill</code> is 1 (true), a
-filled rectangle will be drawn.</p>
+<code>(x1, y1)</code>, a width of <code>w</code>and a height of
+<code>h</code> with line color <code>color</code>. If <code>fill</code>
+is 1 (true), a filled rectangle will be drawn.</p>
 <ul>
 <li><code>x1, y1</code>
 <ul>
 <li>Integer: 0 … 65535</li>
 <li>Position of top left corner in pixel</li>
 </ul></li>
-<li><code>x2, y2</code>
+<li><code>w, h</code>
 <ul>
 <li>Integer: 0 … 65535</li>
-<li>Position of bottom right corner in pixel</li>
+<li>Width and height in pixel</li>
 </ul></li>
 <li><code>color</code>
 <ul>
@@ -230,14 +230,14 @@ filled rectangle will be drawn.</p>
 </ul>
 <h3 id="draw-a-rectangle-with-round-corners">Draw a Rectangle with Round
 Corners</h3>
-<pre><code>Roundrect(x1, y1, x2, y2)
-Roundrect(x1, y1, x2, y2, radius)
-Roundrect(x1, y1, x2, y2, radius, color)
-Roundrect(x1, y1, x2, y2, radius, color, fill)</code></pre>
+<pre><code>Roundrect(x1, y1, w, h)
+Roundrect(x1, y1, w, h, radius)
+Roundrect(x1, y1, w, h, radius, color)
+Roundrect(x1, y1, w, h, radius, color, fill)</code></pre>
 <p>Draw a rectangle with the top left corner at point
-<code>(x1, y1)</code> and bottom right corner at <code>(x2, y2)</code>
-with line color <code>color</code> and rounded corners. The radius in
-pixel of the corners if given by <code>radius</code>. If
+<code>(x1, y1)</code>, a width of <code>w</code>and a height of
+<code>h</code> with line color <code>color</code> and rounded corners.
+The radius in pixel of the corners if given by <code>radius</code>. If
 <code>fill</code> is 1 (true), a filled rectangle will be drawn.</p>
 <ul>
 <li><code>x1, y1</code>
