@@ -1,6 +1,6 @@
 ---
 title: SmallBASIC PiGPIO 2
-date: 11.07.2025
+date: 31.07.2025
 ---
 
 If you want to let a LED blink or measure the temperature in your room, you can use
@@ -26,6 +26,8 @@ next
 ![Blinking LED](./images/blink.gif)
 
 ## News
+
+__July 31 2025__: Add support for ST7789 color TFT displays
 
 __July 11 2025__: SmallBASIC PiGPIO 2 supports now all Pi's from Zero to 5. It can
 even run on other LINUX systems. The API got a complete rewrite and is therefore not
