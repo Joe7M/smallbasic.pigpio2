@@ -37,7 +37,7 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [Setup I2C](./setup_i2c.html)
 - [Setup SPI](./setup_spi.html)
 - [Setup PWM](./setup_pwm.html)
-- [Naming and Numbering of the GPIO pins](./gpio_numbering.html)
+- [Naming and Numbering of the GPIO pins](./rpi_pins.html)
 
 ## Function Reference and Examples
 
