@@ -13,3 +13,5 @@ Plugin for SmallBASIC to access GPIO pins on a Raspberry Pi. Currently the follo
 - MPU6050 - Accelerometer and gyroscope
 - PiSugar3 plus - Battery/USB power supply (using generic SMBus)
 - ST7789 - RGB LCD (using generic SPI)
+
+More information at: https://joe7m.github.io/smallbasic.pigpio2

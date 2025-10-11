@@ -33,7 +33,7 @@ static FUNC_SIG lib_proc[] =
   {1, 1, "SetInput", CMD_SetInput},
   {1, 1, "SetOutput", CMD_SetOutput},
   {2, 2, "Write", CMD_Write},
-  {1, 2, "Trigger", CMD_Trigger},
+  {1, 3, "Trigger", CMD_Trigger},
   {1, 1, "ClosePin", CMD_ReleaseLine}
 };
 

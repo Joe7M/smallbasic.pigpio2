@@ -158,9 +158,8 @@ int CMD_Trigger(int argc, slib_par_t *params, var_t *retval)
   // Default value is 50us.
 
   uint8_t  Pin         = get_param_int(argc, params, 0, 0);
-  uint8_t  Level       = get_param_int(argc, params, 1, 1);
-  uint16_t PulseLength = get_param_int(argc, params, 2, 50);
-
+  uint16_t PulseLength = get_param_int(argc, params, 1, 50);
+  uint8_t  Level       = get_param_int(argc, params, 2, 1);
 
   if(Pin > MAX_GPIO_LINE)
   {

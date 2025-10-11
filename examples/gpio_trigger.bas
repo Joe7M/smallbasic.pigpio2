@@ -17,7 +17,7 @@ gpio.Open()
 gpio.SetOutput(21)
 
 for ii = 1 to 10
-  gpio.Trigger(21)
+  gpio.Trigger(21, 50, 1)
   delay(200)
 next
 
