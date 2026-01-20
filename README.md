@@ -1,6 +1,6 @@
 # SmallBASIC PIGPIO 2
 
-Works with Raspberry Pi OS Bookworm or older. For Raspberry Pi OS Trixi or newer please see main branch.
+>Works with Raspberry Pi OS Bookworm or older. For Raspberry Pi OS Trixi or newer please see main branch.
 
 Plugin for SmallBASIC to access GPIO pins on a Raspberry Pi. Currently the following functions are implemented:
 
