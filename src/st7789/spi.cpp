@@ -19,7 +19,7 @@
 
 int32_t SPI_Open(char *device)
 {
-	int32_t fd = open(device, O_RDWR);
+  int32_t fd = open(device, O_RDWR);
   return(fd);
 }
 

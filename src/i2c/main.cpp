@@ -24,8 +24,8 @@ FUNC_SIG lib_func[] =
   {1, 2, "Open", CMD_Open},
   {1, 2, "Read", CMD_Read},
   {2, 3, "ReadReg", CMD_Read_Reg},
-  {2, 2, "Smbus_ReadReg_Byte", CMD_Smbus_ReadReg_Byte},
-  {2, 2, "Smbus_ReadReg_Word", CMD_Smbus_ReadReg_Word}
+  {2, 2, "SmbusReadByte", CMD_Smbus_ReadReg_Byte},
+  {2, 2, "SmbusReadWord", CMD_Smbus_ReadReg_Word}
 };
 
 static FUNC_SIG lib_proc[] =
@@ -33,8 +33,8 @@ static FUNC_SIG lib_proc[] =
   {1, 1, "Close", CMD_Close},
   {2, 2, "Write", CMD_Write},
   {3, 3, "WriteReg", CMD_Write_Reg},
-  {2, 2, "Smbus_Write_Byte", CMD_Smbus_Write_Byte},
-  {3, 3, "Smbus_WriteReg_Byte", CMD_Smbus_Write_Word}
+  {2, 2, "SmbusWriteByte", CMD_Smbus_Write_Byte},
+  {3, 3, "SmbusWriteWord", CMD_Smbus_Write_Word}
 };
 
 SBLIB_API int sblib_proc_count()

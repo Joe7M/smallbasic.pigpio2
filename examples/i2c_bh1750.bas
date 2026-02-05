@@ -28,15 +28,15 @@ Print "Connection established"
 i2c.write(sensor, 0x00)
 ' Power on
 i2c.write(sensor, 0x01)
-delay(1000)
+delay(500)
 
-' Read one time with low resolution
-d = i2c.ReadReg(sensor, 0x23, 2)
-ValueLowRes = ((d[0] lshift 8) BOR d[1]) / 1.2
-delay(1000)
-' Read one time with high resolution
-d = i2c.ReadReg(sensor, 0x20, 2)
-ValueHighRes = ((d[0] lshift 8) BOR d[1]) / 1.2
+' Send "Continuously H-resolution mode" instruction
+i2c.write(sensor, 0b00010000)
+delay(200)
 
-print "Low resolution : " + ValueLowRes  + " lx"
-print "High resolution: " + valueHighRes + " lx"
+for i = 1 to 10
+  d = i2c.Read(sensor, 2)
+  ValueHighRes = ((d[0] lshift 8) BOR d[1]) / 1.2
+  print "High resolution: " + valueHighRes + " lx"
+  delay(500)
+next

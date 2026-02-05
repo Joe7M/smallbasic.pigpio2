@@ -28,7 +28,6 @@ adc.Channel(A0)                 ' Set input channel A0
 adc.VoltageRange(6.144)         ' Set Voltage range from 0 to 6.144V
 adc.SampleRate(128)             ' 128 Samples per second
 
-
 for ii = 1 to 10
     delay(500)
     print adc.Read()            ' Returns voltage as float

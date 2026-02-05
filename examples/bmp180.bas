@@ -11,8 +11,8 @@
 ' BMP180 |       | RPi
 '    VIN |-------| 3.3V
 '    GND |-------| GND
-'    SDA |-------| GPIO 2 (SDA)
-'    SCL |-------| GPIO 3 (SCL)
+'    SDA |-------| GPIO2 (SDA) -> Pin 3
+'    SCL |-------| GPIO3 (SCL) -> Pin 5
 '
 ' To run type:
 ' sbasic -m /usr/local/lib/smallbasic/ bmp180.bas

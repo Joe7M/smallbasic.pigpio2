@@ -25,6 +25,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <gpiod.h>
+#include <time.h>
 
 #include "gpio.h"
 #include "spi.h"
@@ -33,7 +34,7 @@
 
 #define _swap(a, b) { int16_t t = a; a = b; b = t; }
 
-#define MAX_GPIO_LINE 				53
+#define MAX_GPIO_LINE 53
 
 #define ST7789_NOP            0x00
 #define ST7789_SWRESET        0x01
@@ -56,8 +57,6 @@
 #define ST7789_TFTWIDTH       240
 #define ST7789_TFTHEIGHT      240
 
-struct gpiod_chip *gpiochip;
-struct gpiod_line *gpiolines[MAX_GPIO_LINE];
 uint8_t Pin_RST;
 uint8_t Pin_DC;
 uint8_t Pin_BL;
@@ -91,26 +90,26 @@ void msleep(uint32_t msec)
 
 void WriteCmd(uint8_t command)
 {
-	uint8_t buffer[1];
-	buffer[0] = command;
-  GPIO_Write(gpiolines, Pin_DC, 0);
+  uint8_t buffer[1];
+  buffer[0] = command;
+  GPIO_Write(Pin_DC, 0);
   SPI_Write(fd_spi, buffer, 1, PageSize);
 }
 
 void WriteData8(uint8_t data)
 {
-	uint8_t buffer[1];
-	buffer[0] = data;
-  GPIO_Write(gpiolines, Pin_DC, 1);
+  uint8_t buffer[1];
+  buffer[0] = data;
+  GPIO_Write(Pin_DC, 1);
   SPI_Write(fd_spi, buffer, 1, PageSize);
 }
 
 void WriteData16(uint16_t data)
 {
-	uint8_t buffer[2];
-	buffer[0] = (uint8_t) (data >> 8);
-	buffer[1] = (uint8_t) (data & 0xFF);
-  GPIO_Write(gpiolines, Pin_DC, 1);
+  uint8_t buffer[2];
+  buffer[0] = (uint8_t) (data >> 8);
+  buffer[1] = (uint8_t) (data & 0xFF);
+  GPIO_Write(Pin_DC, 1);
   SPI_Write(fd_spi, buffer, 2, PageSize);
 }
 
@@ -123,7 +122,7 @@ void SetAddrWindow(uint32_t xs, uint32_t ys, uint32_t xe, uint32_t ye)
 
   // CASET
   WriteCmd(ST7789_CASET);
-  GPIO_Write(gpiolines, Pin_DC, 1);
+  GPIO_Write(Pin_DC, 1);
   uint8_t buffer[2];
 
   buffer[0] = xs >> 8;
@@ -135,7 +134,7 @@ void SetAddrWindow(uint32_t xs, uint32_t ys, uint32_t xe, uint32_t ye)
 
   // RASET
   WriteCmd(ST7789_RASET);
-  GPIO_Write(gpiolines, Pin_DC, 1);
+  GPIO_Write(Pin_DC, 1);
   buffer[0] = ys >> 8;
   buffer[1] = ys & 0xFF;
   SPI_Write(fd_spi, buffer, 2, PageSize);
@@ -143,7 +142,6 @@ void SetAddrWindow(uint32_t xs, uint32_t ys, uint32_t xe, uint32_t ye)
   buffer[1] = ye & 0xFF;
   SPI_Write(fd_spi, buffer, 2, PageSize);
 }
-
 
 int CMD_Open(int argc, slib_par_t *params, var_t *retval)
 {
@@ -191,60 +189,37 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval)
     return(0);
   }
 
-	// Init gpio
-  const char *text2 = get_param_str(argc, params, 3, "gpiochip0");
+  // Init gpio
+  const char *text2 = get_param_str(argc, params, 3, "/dev/gpiochip0");
   char *gpiochipname = new char[strlen(text2) + 2];
   strcpy(gpiochipname, text2);
 
-  if(GPIO_Open(gpiochipname, &gpiochip))
-  {
-    char buffer[30 + strlen(text2) + 2];
-    sprintf(buffer, "Error opening gpio chip %s", gpiochipname);
-    v_setstr(retval, buffer);
-		SPI_Close(fd_spi);
-    return(0);
-  }
-
-
-	Pin_RST = get_param_int(argc, params, 4, 27);
-	Pin_DC  = get_param_int(argc, params, 5, 17);
-	Pin_BL  = get_param_int(argc, params, 6, 22);
+  Pin_RST = get_param_int(argc, params, 4, 27);
+  Pin_DC  = get_param_int(argc, params, 5, 17);
+  Pin_BL  = get_param_int(argc, params, 6, 22);
 
   if(Pin_RST > MAX_GPIO_LINE)
   {
     v_setstr(retval, "RST pin number out of range.");
- 		SPI_Close(fd_spi);
+    SPI_Close(fd_spi);
     return(0);
   }
   if(Pin_DC > MAX_GPIO_LINE)
   {
     v_setstr(retval, "DC pin number out of range.");
- 		SPI_Close(fd_spi);
+    SPI_Close(fd_spi);
     return(0);
   }
   if(Pin_BL > MAX_GPIO_LINE)
   {
     v_setstr(retval, "BL pin number out of range.");
- 		SPI_Close(fd_spi);
+    SPI_Close(fd_spi);
     return(0);
   }
 
-  if(GPIO_SetOutput(&gpiochip, gpiolines, Pin_RST))
+  if(GPIO_SetOutput(gpiochipname, Pin_RST, Pin_DC, Pin_BL))
   {
-    v_setstr(retval, "Error setting RST pin to output");
- 		SPI_Close(fd_spi);
-    return(0);
-  }
-
-  if(GPIO_SetOutput(&gpiochip, gpiolines, Pin_DC))
-  {
-    v_setstr(retval, "Error setting DC pin to output");
- 		SPI_Close(fd_spi);
-    return(0);
-  }
-  if(GPIO_SetOutput(&gpiochip, gpiolines, Pin_BL))
-  {
-    v_setstr(retval, "Error setting BL pin to output");
+    v_setstr(retval, "Error setting RST, DC, BL pin to output");
     SPI_Close(fd_spi);
     return(0);
   }
@@ -255,14 +230,14 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval)
   if(LCDWIDTH == 240 && LCDHEIGHT == 240) rowstart = 80;
 
   // Background light on
-  GPIO_Write(gpiolines, Pin_BL, 1);
+  GPIO_Write(Pin_BL, 1);
 
   // Hardware reset
-  GPIO_Write(gpiolines, Pin_RST, 1);
+  GPIO_Write(Pin_RST, 1);
   msleep(50);
-  GPIO_Write(gpiolines, Pin_RST, 0);
+  GPIO_Write(Pin_RST, 0);
   msleep(50);
-  GPIO_Write(gpiolines, Pin_RST, 1);
+  GPIO_Write(Pin_RST, 1);
   msleep(150);
 
   // Init
@@ -302,7 +277,7 @@ int CMD_Display(int argc, slib_par_t *params, var_t *retval)
 
 //	SetAddrWindow(0, 0, LCDWIDTH, LCDHEIGHT);
   WriteCmd(ST7789_RAMWR);
-  GPIO_Write(gpiolines, Pin_DC, 1);
+  GPIO_Write(Pin_DC, 1);
   SPI_Write(fd_spi, Framebuffer, 2*LCDWIDTH*LCDHEIGHT, PageSize);
 
   return(1);

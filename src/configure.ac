@@ -15,9 +15,9 @@ AM_INIT_AUTOMAKE([subdir-objects foreign])
 
 BUILD_SUBDIRS=""
 
-AC_CHECK_LIB(gpiod, gpiod_chip_open_by_name, [have_gpiod="yes"], [have_gpiod="no"])
+AC_CHECK_LIB(gpiod, gpiod_chip_open, [have_gpiod="yes"], [have_gpiod="no"])
 if test "${have_gpiod}" = "no" ; then
-    AC_MSG_WARN([libgpiod v1.6. not installed: building without gpio support.])
+     AC_MSG_WARN([libgpiod v2 not installed: building without gpio support.])
 else
     GPIO_LDFLAGS="-lgpiod"
     AC_SUBST(GPIO_LDFLAGS)

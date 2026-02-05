@@ -10,8 +10,7 @@
 #include <gpiod.h>
 #include <stdint.h>
 
-int GPIO_Open(char *gpiochipname, struct gpiod_chip **gpiochip);
-int GPIO_SetOutput(struct gpiod_chip **gpiochip, struct gpiod_line **gpiolines, uint8_t Pin);
-int GPIO_Write(struct gpiod_line **gpiolines, uint8_t Pin, bool HighLow);
+int GPIO_SetOutput(char *Chipname, unsigned int Pin_RST, unsigned int Pin_DC, unsigned int Pin_BL);
+int GPIO_Write(unsigned int Pin, unsigned int HighLow);
 
 #endif /* !_GPIO_H_ */

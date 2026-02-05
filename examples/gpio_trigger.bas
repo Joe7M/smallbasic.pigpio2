@@ -4,7 +4,7 @@
 ' =====================================================
 '
 ' This example demonstrates how to emmit a trigger
-' pulse on pin 40 (GPIO21)
+' pulse.
 '
 ' To run type:
 ' sbasic -m /usr/local/lib/smallbasic/ gpio_trigger.bas
@@ -14,10 +14,10 @@
 import gpio
 
 gpio.Open()
-gpio.SetOutput(21)
+gpio.SetOutput(18)  ' GPIO18 -> Pin 12
 
 for ii = 1 to 10
-  gpio.Trigger(21, 50, 1)
+  gpio.Trigger(18, 50, 1)
   delay(200)
 next
 

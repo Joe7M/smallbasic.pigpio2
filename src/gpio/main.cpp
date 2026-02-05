@@ -30,11 +30,12 @@ static FUNC_SIG lib_proc[] =
 {
   {0, 1, "Open", CMD_Open},
   {0, 0, "Close", CMD_Close},
-  {1, 1, "SetInput", CMD_SetInput},
+  {1, 2, "SetInput", CMD_SetInput},
   {1, 1, "SetOutput", CMD_SetOutput},
+  {1, 2, "SetTriggerIn", CMD_SetTrigger},
   {2, 2, "Write", CMD_Write},
   {1, 3, "Trigger", CMD_Trigger},
-  {1, 1, "ClosePin", CMD_ReleaseLine}
+  {1, 1, "ReleasePin", CMD_ReleasePin}
 };
 
 SBLIB_API int sblib_proc_count()
@@ -87,7 +88,7 @@ SBLIB_API int sblib_proc_exec(int index, int argc, slib_par_t *params, var_t *re
       result = lib_proc[index]._command(argc, params, retval);
     }
   } else {
-    fprintf(stderr, "SmallBasicPIGPIO: PROC index error [%d]\n", index);
+    fprintf(stderr, "GPIO: PROC index error [%d]\n", index);
     result = 0;
   }
   return result;
@@ -109,7 +110,7 @@ SBLIB_API int sblib_func_exec(int index, int argc, slib_par_t *params, var_t *re
       result = lib_func[index]._command(argc, params, retval);
     }
   } else {
-    fprintf(stderr, "SmallBasicPIGPIO: FUNC index error [%d]\n", index);
+    fprintf(stderr, "GPIO: FUNC index error [%d]\n", index);
     result = 0;
   }
   return result;

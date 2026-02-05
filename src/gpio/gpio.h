@@ -18,11 +18,12 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval);
 int CMD_Close(int argc, slib_par_t *params, var_t *retval);
 int CMD_SetInput(int argc, slib_par_t *params, var_t *retval);
 int CMD_SetOutput(int argc, slib_par_t *params, var_t *retval);
+int CMD_SetTrigger(int argc, slib_par_t *params, var_t *retval);
 int CMD_Write(int argc, slib_par_t *params, var_t *retval);
 int CMD_Read(int argc, slib_par_t *params, var_t *retval);
 int CMD_Pwm(int argc, slib_par_t *params, var_t *retval);
 int CMD_Trigger(int argc, slib_par_t *params, var_t *retval);
 int CMD_WaitEvent(int argc, slib_par_t *params, var_t *retval);
-int CMD_ReleaseLine(int argc, slib_par_t *params, var_t *retval);
+int CMD_ReleasePin(int argc, slib_par_t *params, var_t *retval);
 
 #endif /* !_GPIO_H_ */ 

@@ -9,34 +9,94 @@
 #include <linux/i2c-dev.h>
 #include <gpiod.h>
 #include <stdint.h>
+#include <stdio.h>
 
-int GPIO_Open(char *gpiochipname, struct gpiod_chip **gpiochip)
+struct gpiod_line_request *RequestOutput = NULL;
+
+int GPIO_SetOutput(char *chipname, unsigned int Pin_RST, unsigned int Pin_DC, unsigned int Pin_BL)
 {
-  *gpiochip = gpiod_chip_open_by_name(gpiochipname);
-  if(*gpiochip == NULL ) return(1);
-  return(0);
-}
+  struct gpiod_request_config *req_cfg = NULL;
+  struct gpiod_line_settings *settings;
+  struct gpiod_line_config *line_cfg;
+  struct gpiod_chip *chip;
+  int ret, result = 0;
 
-int GPIO_SetOutput(struct gpiod_chip **gpiochip, struct gpiod_line **gpiolines, uint8_t Pin)
-{
-  if(gpiolines[Pin] != NULL) gpiod_line_release(gpiolines[Pin]);
+  chip = gpiod_chip_open(chipname);
+  if (!chip) return(3);
 
-  gpiolines[Pin] = gpiod_chip_get_line(*gpiochip, Pin);
-  if(gpiolines[Pin] == NULL) return(1);
-
-  if(gpiod_line_request_output(gpiolines[Pin], "SmallBasicPIGPIO", 0) == -1)
+  settings = gpiod_line_settings_new();
+  if (!settings)
   {
-    gpiod_line_release(gpiolines[Pin]);
-    return(1);
+    result = 4;
+    goto close_chip;
   }
 
+  gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
+  gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_INACTIVE);
+
+  line_cfg = gpiod_line_config_new();
+  if (!line_cfg)
+  {
+    result = 5;
+    goto free_settings;
+  }
+
+  static const unsigned int Pins[3] = {Pin_RST, Pin_DC, Pin_BL};
+  ret = gpiod_line_config_add_line_settings(line_cfg, Pins, 3, settings);
+  if (ret)
+  {
+    result = 6;
+    goto free_line_config;
+  }  
+
+  req_cfg = gpiod_request_config_new();
+  if (!req_cfg)
+  {
+    result = 7;
+    goto free_line_config;
+  }
+  gpiod_request_config_set_consumer(req_cfg, "SmallBASIC");
+
+  RequestOutput = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
+  if (!RequestOutput)
+  {
+    result = 8;
+  }
+
+  gpiod_request_config_free(req_cfg);
+free_line_config:
+  gpiod_line_config_free(line_cfg);
+free_settings:
+  gpiod_line_settings_free(settings);
+close_chip:
+  gpiod_chip_close(chip);
+
+  printf("error: %d\n",result);
+  return(result);
+}
+
+int GPIO_Write(unsigned int Pin, unsigned int HighLow)
+{
+  enum gpiod_line_value value;
+
+  if (HighLow)
+  {
+    value = GPIOD_LINE_VALUE_ACTIVE;
+  }
+  else
+  {
+    value = GPIOD_LINE_VALUE_INACTIVE;
+  }
+
+  if (gpiod_line_request_set_value(RequestOutput, Pin, value) == -1)
+  {
+    return 1;
+  }
   return(0);
 }
 
-int GPIO_Write(struct gpiod_line **gpiolines, uint8_t Pin, bool HighLow)
-{
-  gpiod_line_set_value(gpiolines[Pin], HighLow);
-  return(0);
-}
+
+
+
 
 #endif /* !_GPIO_H_ */

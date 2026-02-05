@@ -5,8 +5,8 @@
 '
 ' This example demonstrates how to turn on/off a LED.
 '
-' Connect a LED and a 1kOhm resistor to the RPi pin 7
-' (GPIO4) and pin 6 (GND).
+' Connect a LED and a 1kOhm resistor to the RPi pin 12
+' (GPIO18) and pin 6 (GND).
 
 ' To run type:
 ' sbasic -m /usr/local/lib/smallbasic/ gpio_led.bas
