@@ -119,7 +119,7 @@ int RequestLine(int Pin, int Type, int EdgeDirection, int Bias)
   switch (Type)
   {
     case TRIGGER:
-      if (EdgeDirection == 3)
+      if (EdgeDirection == 2)
       {
         gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_BOTH);
       }

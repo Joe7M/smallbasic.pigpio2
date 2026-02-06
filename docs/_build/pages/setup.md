@@ -40,7 +40,7 @@ make
 sudo make install
 ```
 
-### Install SmallBASIC PIGPIO 2
+### Install SmallBASIC PiGPIO 2
 
 Open again a console and copy paste the following commands one at a time:
 
@@ -56,6 +56,9 @@ sudo make install
 ```
 
 The libraries have been installed in `/usr/local/lib/smallbasic`.
+
+> If you want to build PiGPIO2 on Raspberry Pi OS older then Trixi, i.e. Bookworm
+> switch branch before starting autogen.sh by using `git switch libgpiodv1.6`
 
 ### Start SmallBASIC with the plugin
 

@@ -8,7 +8,7 @@
 </head>
 <body>
 <img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
-<div id="float-left">Last update: 31.07.2025</div>
+<div id="float-left">Last update: 06.02.2026</div>
 <h1>SmallBASIC PiGPIO 2</h1>
 <p>If you want to let a LED blink or measure the temperature in your
 room, you can use <a href="https://smallbasic.github.io">SmallBASIC</a>
@@ -33,6 +33,12 @@ class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id
 <figcaption aria-hidden="true">Blinking LED</figcaption>
 </figure>
 <h2 id="news">News</h2>
+<p><strong>February 6 2025</strong>: Fixed GPIO at Raspberry Pi OS
+Trixi: GPIO access at the newest Raspberry Pi OS (Trixi) was broken,
+because Debian updated libgpiod to version 2. Some functions of the
+SmallBASIC GPIO library changed and therefore rewrite of your code might
+be necessary. Several new features were added, i.e. define pullup or
+pulldown, or read and write multiple pins simultaneously.</p>
 <p><strong>July 31 2025</strong>: Add support for ST7789 color TFT
 displays</p>
 <p><strong>July 11 2025</strong>: SmallBASIC PiGPIO 2 supports now all

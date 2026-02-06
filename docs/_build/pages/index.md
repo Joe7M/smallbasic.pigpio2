@@ -1,6 +1,6 @@
 ---
 title: SmallBASIC PiGPIO 2
-date: 31.07.2025
+date: 06.02.2026
 ---
 
 If you want to let a LED blink or measure the temperature in your room, you can use
@@ -26,6 +26,12 @@ next
 ![Blinking LED](./images/blink.gif)
 
 ## News
+
+__February 6 2025__: Fixed GPIO at Raspberry Pi OS Trixi: GPIO access at the newest Raspberry
+Pi OS (Trixi) was broken, because Debian updated libgpiod to version 2. Some functions of 
+the SmallBASIC GPIO library changed and therefore rewrite of your code might be necessary.
+Several new features were added, i.e. define pullup or pulldown, or read and write multiple
+pins simultaneously.
 
 __July 31 2025__: Add support for ST7789 color TFT displays
 
