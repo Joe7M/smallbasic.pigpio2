@@ -12,5 +12,6 @@
 
 int GPIO_SetOutput(char *Chipname, unsigned int Pin_RST, unsigned int Pin_DC, unsigned int Pin_BL);
 int GPIO_Write(unsigned int Pin, unsigned int HighLow);
+int GPIO_Close(void);
 
 #endif /* !_GPIO_H_ */

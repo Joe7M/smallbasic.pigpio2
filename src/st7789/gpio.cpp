@@ -71,7 +71,6 @@ free_settings:
 close_chip:
   gpiod_chip_close(chip);
 
-  printf("error: %d\n",result);
   return(result);
 }
 
@@ -95,8 +94,11 @@ int GPIO_Write(unsigned int Pin, unsigned int HighLow)
   return(0);
 }
 
-
-
-
+int GPIO_Close(void)
+{
+  if (RequestOutput) gpiod_line_request_release(RequestOutput);
+  RequestOutput = NULL;
+  return(1);
+}
 
 #endif /* !_GPIO_H_ */

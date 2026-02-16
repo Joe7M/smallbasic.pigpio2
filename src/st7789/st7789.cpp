@@ -261,6 +261,7 @@ int CMD_Open(int argc, slib_par_t *params, var_t *retval)
 void Close(void)
 {
   SPI_Close(fd_spi);
+  GPIO_Close();
 }
 
 int CMD_Close(int argc, slib_par_t *params, var_t *retval)
