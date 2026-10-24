@@ -11,22 +11,20 @@ date: 20.06.2025
 
 ### Install SmallBASIC
 
-Right now there aren't any SmallBasic packages or executable files for the Raspberry Pi. You have to compile SmallBASIC by yourself. Don't be afraid, it is fairly easy.
+Right now there aren't any SmallBASIC packages or executable files for the Raspberry Pi. You have to compile SmallBASIC by yourself. Don't be afraid, it is fairly easy.
 
-Open a console and copy paste the following commands one at a time to build the SDL2-version:
+Open a console and copy paste the following commands one at a time to build the SDL3-version:
 
 ```
 cd ~
 sudo apt update
 sudo apt dist-upgrade
-sudo apt install autotools-dev automake libsdl2-dev libfreetype6-dev libfontconfig1-dev xxd
-wget https://github.com/smallbasic/SmallBASIC/releases/download/12_27/smallbasic-12.27.tar.gz
-tar -xvzf smallbasic-12.27.tar.gz
-cd smallbasic-12.27
-export CC=gcc
-export PACKAGE_LIBS=-latomic
+sudo apt install autotools-dev automake libsdl3-dev libfreetype6-dev libfontconfig1-dev xxd
+wget https://github.com/Joe7M/SmallBASIC/releases/download/v12.35/smallbasic-12.35.tar.gz
+tar -xvzf smallbasic-12.35.tar.gz
+cd smallbasic-12.35
 ./configure --enable-sdl
-make
+make -j 4
 sudo make install
 ```
 
@@ -36,7 +34,7 @@ Usually it is quite nice to use the console version of SmallBASIC, especially if
 
 ```
 ./configure
-make
+make -j 4
 sudo make install
 ```
 
@@ -51,7 +49,7 @@ git clone https://github.com/Joe7M/smallbasic.pigpio2.git
 cd smallbasic.pigpio2/src
 sh ./autogen.sh
 ./configure
-make
+make -j 4
 sudo make install
 ```
 
@@ -68,7 +66,7 @@ Start a terminal and type:
 sbasicg -m/usr/local/lib/smallbasic -r 'file'
 ```
 
-to start the SDL2-version of SmallBASIC.
+to start the SDL3-version of SmallBASIC.
 
 For example you want to execute `gpio_led.bas` in the example folder:
 

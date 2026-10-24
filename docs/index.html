@@ -33,18 +33,16 @@ class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id
 <figcaption aria-hidden="true">Blinking LED</figcaption>
 </figure>
 <h2 id="news">News</h2>
+<p><strong>October 24 2026</strong>: Add support for <a
+href="./hd44780.html">HD44780</a> text displays. Please update
+SmallBASIC to version 12.35. See <a href="./setup.html">setup</a> for
+more information.</p>
 <p><strong>February 6 2025</strong>: Fixed GPIO at Raspberry Pi OS
 Trixi: GPIO access at the newest Raspberry Pi OS (Trixi) was broken,
 because Debian updated libgpiod to version 2. Some functions of the
 SmallBASIC GPIO library changed and therefore rewrite of your code might
 be necessary. Several new features were added, i.e. define pullup or
 pulldown, or read and write multiple pins simultaneously.</p>
-<p><strong>July 31 2025</strong>: Add support for ST7789 color TFT
-displays</p>
-<p><strong>July 11 2025</strong>: SmallBASIC PiGPIO 2 supports now all
-Pi’s from Zero to 5. It can even run on other LINUX systems. The API got
-a complete rewrite and is therefore not anymore compatible with
-SmallBASIC PiGPIO 1.</p>
 <h2 id="setup-and-pin-numbering">Setup and Pin Numbering</h2>
 <ul>
 <li><a href="./setup.html">Setup SmallBASIC PIGPIO 2</a></li>
@@ -74,7 +72,7 @@ pressure</li>
 <li><a href="./mpu6050.html">MPU6050</a>: Accelerometer and
 gyroscope</li>
 <li><a href="./st7789.html">ST7789</a>: SPI color display</li>
-<li>HD44780: Text display - coming soon</li>
+<li><a href="./hd44780.html">HD44780</a>: Text display</li>
 <li>DS18B20: Temperature sensor - coming soon</li>
 </ul>
 <h2 id="supported-hardware">Supported Hardware</h2>

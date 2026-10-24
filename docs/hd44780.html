@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="date" content=''>
+<title>HD44780 - Text LCD</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<img src="./images/logo_smallbasicpigpio.png" alt="SmallBASIC PiGPIO 2 logo">
+<div id="float-left">Last update: 24.10.2026</div>
+<h1>HD44780 - Text LCD</h1>
+<p>The HD44780 is a text liquid-crystal display usually with 2x16 or
+4x16 characters.</p>
+<h2 id="library">Library</h2>
+<p>To use the HD44780, import the library <code>hd44780</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> hd44780</span></code></pre></div>
+<h2 id="function-reference">Function Reference</h2>
+<h3 id="open-device">Open Device</h3>
+<pre><code>OPEN()
+OPEN(DB4, DB5, DB6, DB7, E, RS)
+OPEN(DB4, DB5, DB6, DB7, E, RS, gpiochip)</code></pre>
+<p>Open the HD44780 in 4bit mode using the Pins <code>DB4</code> to
+<code>DB7</code> for data and the enable Pin <code>E</code> und the RS
+pin <code>RS</code>.</p>
+<ul>
+<li><code>DB4</code> tp <code>DB7</code>
+<ul>
+<li>Integer: 0 … 53</li>
+<li>GPIO pin on the Raspberry Pi</li>
+<li>Optional: default values are <code>DB4 = 0</code>,
+<code>DB5 = 5</code>, <code>DB6 = 6</code>, <code>DB7 = 13</code></li>
+</ul></li>
+<li><code>E</code>
+<ul>
+<li>Integer: 0 … 53</li>
+<li>GPIO pin on the Raspberry Pi</li>
+<li>Optional: default value is <code>19</code></li>
+</ul></li>
+<li><code>RS</code>
+<ul>
+<li>Integer: 0 … 53</li>
+<li>GPIO pin on the Raspberry Pi</li>
+<li>Optional: default value is <code>26</code></li>
+</ul></li>
+<li><code>gpiochip</code>
+<ul>
+<li>String</li>
+<li>GPIO chip</li>
+<li>Optional: default value is <code>/dev/gpiochip0</code></li>
+</ul></li>
+</ul>
+<h3 id="clear-display">Clear display</h3>
+<pre><code>CLS()</code></pre>
+<p>Clears the display and sets cursor to 1,1</p>
+<h3 id="print-string">Print string</h3>
+<pre><code>PRINT s</code></pre>
+<p>Prints the string <code>s</code>.</p>
+<ul>
+<li><code>s</code>
+<ul>
+<li>String</li>
+</ul></li>
+</ul>
+<p>Example:</p>
+<pre class="samallbasic"><code>print &quot;Hello World&quot;</code></pre>
+<h3 id="turn-off-display">Turn off display</h3>
+<pre><code>Off()</code></pre>
+<p>Turns off the display.</p>
+<h3 id="turn-on-display">Turn on display</h3>
+<pre><code>On()</code></pre>
+<p>Turns on the display</p>
+<h3 id="close-device">Close device</h3>
+<pre><code>Close()</code></pre>
+<p>Closes the HD44780.</p>
+<h2 id="example">Example</h2>
+<p>For running this example, you need an HD44780 compatible text
+display. SmallBASIC PiGPIO 2 uses GPIO for communication. Please be
+awarem that some text displays have an additional I2C module for
+communication. These display will not work with this library.</p>
+<p>Please wire the display as shown in the following image.</p>
+<figure>
+<img src="./images/hd44780_wiring.png" alt="Wiring hd44780" />
+<figcaption aria-hidden="true">Wiring hd44780</figcaption>
+</figure>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">import</span> hd44780 <span class="kw">as</span> LCD</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_DB4 = <span class="dv">0</span>     <span class="co">&#39; Pin 27</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_DB5 = <span class="dv">5</span>     <span class="co">&#39; Pin 29</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_DB6 = <span class="dv">6</span>     <span class="co">&#39; Pin 31</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_DB7 = <span class="dv">13</span>    <span class="co">&#39; Pin 33</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_E   = <span class="dv">19</span>    <span class="co">&#39; Pin 35</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> GPIO_RS  = <span class="dv">26</span>    <span class="co">&#39; Pin 37</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>LCD.<span class="fu">OPEN</span>(GPIO_DB4, GPIO_DB5, GPIO_DB6, GPIO_DB7, GPIO_E, GPIO_RS)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>LCD.<span class="fu">CLS</span>()</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>LCD.<span class="kw">PRINT</span>(<span class="st">&quot;  Hello  World&quot;</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>LCD.<span class="fu">LOCATE</span>(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>LCD.<span class="kw">PRINT</span>(<span class="st">&quot;-= SmallBASIC =-&quot;</span>)</span></code></pre></div>
+<br>
+<a href="index.html">[Back to main page]</a>
+</body>
+</html>

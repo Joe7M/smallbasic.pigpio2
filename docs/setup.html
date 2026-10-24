@@ -19,22 +19,20 @@ login to wifi and install your favorite software.</li>
 href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/0">www.raspberrypi.org</a>.</li>
 </ol>
 <h3 id="install-smallbasic">Install SmallBASIC</h3>
-<p>Right now there aren’t any SmallBasic packages or executable files
+<p>Right now there aren’t any SmallBASIC packages or executable files
 for the Raspberry Pi. You have to compile SmallBASIC by yourself. Don’t
 be afraid, it is fairly easy.</p>
 <p>Open a console and copy paste the following commands one at a time to
-build the SDL2-version:</p>
+build the SDL3-version:</p>
 <pre><code>cd ~
 sudo apt update
 sudo apt dist-upgrade
-sudo apt install autotools-dev automake libsdl2-dev libfreetype6-dev libfontconfig1-dev xxd
-wget https://github.com/smallbasic/SmallBASIC/releases/download/12_27/smallbasic-12.27.tar.gz
-tar -xvzf smallbasic-12.27.tar.gz
-cd smallbasic-12.27
-export CC=gcc
-export PACKAGE_LIBS=-latomic
+sudo apt install autotools-dev automake libsdl3-dev libfreetype6-dev libfontconfig1-dev xxd
+wget https://github.com/Joe7M/SmallBASIC/releases/download/v12.35/smallbasic-12.35.tar.gz
+tar -xvzf smallbasic-12.35.tar.gz
+cd smallbasic-12.35
 ./configure --enable-sdl
-make
+make -j 4
 sudo make install</code></pre>
 <p>The <code>make</code> command will take quite a while. Don’t get
 inpatient. After you finished the installation, you can type
@@ -44,7 +42,7 @@ especially if you don’t have any graphical output to the computer
 screen. To build the console version copy and paste the following
 commands one at a time after you build the SDL2-version:</p>
 <pre><code>./configure
-make
+make -j 4
 sudo make install</code></pre>
 <h3 id="install-smallbasic-pigpio-2">Install SmallBASIC PiGPIO 2</h3>
 <p>Open again a console and copy paste the following commands one at a
@@ -55,7 +53,7 @@ git clone https://github.com/Joe7M/smallbasic.pigpio2.git
 cd smallbasic.pigpio2/src
 sh ./autogen.sh
 ./configure
-make
+make -j 4
 sudo make install</code></pre>
 <p>The libraries have been installed in
 <code>/usr/local/lib/smallbasic</code>.</p>
@@ -68,7 +66,7 @@ i.e. Bookworm switch branch before starting autogen.sh by using
 plugin</h3>
 <p>Start a terminal and type:</p>
 <pre><code>sbasicg -m/usr/local/lib/smallbasic -r &#39;file&#39;</code></pre>
-<p>to start the SDL2-version of SmallBASIC.</p>
+<p>to start the SDL3-version of SmallBASIC.</p>
 <p>For example you want to execute <code>gpio_led.bas</code> in the
 example folder:</p>
 <pre><code>cd ~

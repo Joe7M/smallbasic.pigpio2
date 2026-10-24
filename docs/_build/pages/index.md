@@ -27,17 +27,14 @@ next
 
 ## News
 
+__October 24 2026__: Add support for [HD44780](./hd44780.html) text displays. Please update SmallBASIC to
+version 12.35. See [setup](./setup.html) for more information.
+
 __February 6 2025__: Fixed GPIO at Raspberry Pi OS Trixi: GPIO access at the newest Raspberry
 Pi OS (Trixi) was broken, because Debian updated libgpiod to version 2. Some functions of 
 the SmallBASIC GPIO library changed and therefore rewrite of your code might be necessary.
 Several new features were added, i.e. define pullup or pulldown, or read and write multiple
 pins simultaneously.
-
-__July 31 2025__: Add support for ST7789 color TFT displays
-
-__July 11 2025__: SmallBASIC PiGPIO 2 supports now all Pi's from Zero to 5. It can
-even run on other LINUX systems. The API got a complete rewrite and is therefore not
-anymore compatible with SmallBASIC PiGPIO 1.
 
 ## Setup and Pin Numbering
 
@@ -59,7 +56,7 @@ anymore compatible with SmallBASIC PiGPIO 1.
 - [BMP180](./bmp180.html): Measure temperature and pressure
 - [MPU6050](./mpu6050.html): Accelerometer and gyroscope
 - [ST7789](./st7789.html): SPI color display
-- HD44780: Text display - coming soon
+- [HD44780](./hd44780.html): Text display
 - DS18B20: Temperature sensor - coming soon
 
 
