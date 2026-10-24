@@ -88,7 +88,7 @@ void DelayMicro(uint32_t us)
 void SendEnable(void)
 {
   GPIO_Write(Pin_E, 1);
-  DelayMicro(100);
+  DelayMicro(500);
   GPIO_Write(Pin_E, 0);
   DelayMicro(100);
 }
