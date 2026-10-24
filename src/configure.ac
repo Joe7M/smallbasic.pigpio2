@@ -21,7 +21,7 @@ if test "${have_gpiod}" = "no" ; then
 else
     GPIO_LDFLAGS="-lgpiod"
     AC_SUBST(GPIO_LDFLAGS)
-    BUILD_SUBDIRS="${BUILD_SUBDIRS} gpio st7789"
+    BUILD_SUBDIRS="${BUILD_SUBDIRS} gpio st7789 hd44780"
 fi
 
 AC_CHECK_LIB(i2c, i2c_smbus_read_byte_data, [have_i2c="yes"], [have_i2c="no"])
@@ -60,6 +60,7 @@ mpu6050/Makefile
 bmp180/Makefile
 spi/Makefile
 pwm/Makefile
-st7789/Makefile])
+st7789/Makefile
+hd44780/Makefile])
 
 AC_OUTPUT
