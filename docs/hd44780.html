@@ -21,14 +21,14 @@ class="sourceCode smallbasic"><code class="sourceCode smallbasicsyntax"><span id
 <pre><code>OPEN()
 OPEN(DB4, DB5, DB6, DB7, E, RS)
 OPEN(DB4, DB5, DB6, DB7, E, RS, gpiochip)</code></pre>
-<p>Open the HD44780 in 4bit mode using the Pins <code>DB4</code> to
-<code>DB7</code> for data and the enable Pin <code>E</code> und the RS
-pin <code>RS</code>.</p>
+<p>Opens the HD44780 in 4bit mode using the Pins <code>DB4</code> to
+<code>DB7</code> for data, the enable Pin <code>E</code> and the RS pin
+<code>RS</code>.</p>
 <ul>
-<li><code>DB4</code> tp <code>DB7</code>
+<li><code>DB4</code> to <code>DB7</code>
 <ul>
 <li>Integer: 0 … 53</li>
-<li>GPIO pin on the Raspberry Pi</li>
+<li>GPIO pins on the Raspberry Pi</li>
 <li>Optional: default values are <code>DB4 = 0</code>,
 <code>DB5 = 5</code>, <code>DB6 = 6</code>, <code>DB7 = 13</code></li>
 </ul></li>
@@ -53,9 +53,9 @@ pin <code>RS</code>.</p>
 </ul>
 <h3 id="clear-display">Clear display</h3>
 <pre><code>CLS()</code></pre>
-<p>Clears the display and sets cursor to 1,1</p>
+<p>Clears the display and sets cursor to 1,1.</p>
 <h3 id="print-string">Print string</h3>
-<pre><code>PRINT s</code></pre>
+<pre><code>PRINT(s)</code></pre>
 <p>Prints the string <code>s</code>.</p>
 <ul>
 <li><code>s</code>
@@ -64,7 +64,7 @@ pin <code>RS</code>.</p>
 </ul></li>
 </ul>
 <p>Example:</p>
-<pre class="samallbasic"><code>print &quot;Hello World&quot;</code></pre>
+<pre class="samallbasic"><code>print(&quot;Hello World&quot;)</code></pre>
 <h3 id="turn-off-display">Turn off display</h3>
 <pre><code>Off()</code></pre>
 <p>Turns off the display.</p>
@@ -75,10 +75,10 @@ pin <code>RS</code>.</p>
 <pre><code>Close()</code></pre>
 <p>Closes the HD44780.</p>
 <h2 id="example">Example</h2>
-<p>For running this example, you need an HD44780 compatible text
-display. SmallBASIC PiGPIO 2 uses GPIO for communication. Please be
-awarem that some text displays have an additional I2C module for
-communication. These display will not work with this library.</p>
+<p>For running this example, you need a HD44780 compatible text display.
+SmallBASIC PiGPIO 2 uses GPIO for communication. Please be awarem that
+some text displays have an additional I2C module for communication.
+These display will not work with this library.</p>
 <p>Please wire the display as shown in the following image.</p>
 <figure>
 <img src="./images/hd44780_wiring.png" alt="Wiring hd44780" />
